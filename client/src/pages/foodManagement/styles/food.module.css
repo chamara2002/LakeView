@@ -1,0 +1,46 @@
+.foodCard {
+    background-color: #1a1a2e;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 200px;
+    margin: 10px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .foodImage {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  .foodDetails h3 {
+    margin: 10px 0;
+  }
+  
+  .foodRating {
+    margin-top: 10px;
+    font-size: 1.2em;
+  }
+  
+  .favoriteIcon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5em;
+    color: #ffcc00;
+    cursor: pointer;
+  }
+  
+  .foodList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  .foodHeader {
+    text-align: center;
+    margin: 20px 0;
+  }
+  

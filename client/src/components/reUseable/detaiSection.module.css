@@ -1,0 +1,24 @@
+.details_parent{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    margin: 0 auto;
+    max-width: 742px;
+    width: 100%;
+    padding: 1rem;
+    background-color: #FFBB00;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.Topic{
+    font-weight: 700;
+    color: white;
+}
+
+.sub{
+    color: #FFBB00;
+    font-size: 20px;
+    font-weight: 600;    
+}

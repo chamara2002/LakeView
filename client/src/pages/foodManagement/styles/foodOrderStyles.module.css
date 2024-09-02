@@ -1,0 +1,85 @@
+/* foodOrderStyles.module.css */
+
+.main {
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    min-height: 100vh; /* Ensure the container takes at least the full viewport height */
+    padding: 20px;
+    background-color: #161E38; /* Example background color */
+  }
+  
+  .mainContainer {
+    display: flex;
+    flex-direction: column; /* Stack header and body vertically */
+    justify-content: center; /* Center content vertically within mainContainer */
+    align-items: center; /* Center content horizontally within mainContainer */
+    max-width: 800px; /* Optional: Limit the width for better readability */
+    width: 100%;
+    text-align: center; /* Center text inside */
+    background-color: #1E2A47; /* Optional: Different background for mainContainer */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mainContainerHeader {
+    margin-bottom: 20px; /* Space between header and body */
+  }
+  
+  .mainContainerTitle h3 {
+    font-size: 2rem;
+    color: #FFD700; /* Example title color */
+    margin: 0;
+  }
+  
+  
+  
+  .mainContainerBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .foodcaption {
+    font-size: 1rem;
+    color: #e6dfdf; /* Example text color */
+    margin: 10px 0;
+  }
+  
+  .imageContainer {
+    margin-top: 30px; /* Space between mainContainer and image */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  .imageContainer img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Optional: Responsive adjustments */
+  @media (min-width: 768px) {
+    .main {
+      flex-direction: row; /* Place mainContainer and imageContainer side by side on larger screens */
+      justify-content: center;
+      align-items: center;
+      gap: 40px; /* Space between mainContainer and imageContainer */
+    }
+  
+    .mainContainer {
+      max-width: 600px;
+    }
+  
+    .imageContainer {
+      max-width: 500px;
+      margin-top: 0; /* Remove top margin when side by side */
+    }
+  }
+  

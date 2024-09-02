@@ -1,0 +1,43 @@
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 0.8;
+  font-weight: 400;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+
+/* For WebKit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 0.5px;  /* Width of the vertical scrollbar */
+  height: 1px; /* Height of the horizontal scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(255, 81, 0); /* Color of the scrollbar thumb */
+  border-radius: 1px;         /* Optional: Rounding the corners */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;    /* Color of the scrollbar track */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin; /* Makes the scrollbar thin */
+  scrollbar-color: darkgrey transparent; /* Thumb and track color */
+}
+
+
+button{
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 5px;
+}

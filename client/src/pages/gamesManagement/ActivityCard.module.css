@@ -1,0 +1,49 @@
+/* src/components/ActivityCard.module.css */
+.card {
+  background-color: #1a2035; /* Dark background similar to the provided image */
+  border-radius: 15px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  text-align: center;
+  width: 200px; /* Adjust width as needed */
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  height: 300px; /* Fixed height for uniformity */
+}
+
+.cardImage {
+  width: 100%;
+  height: 200px; /* Fixed height for uniformity */
+  object-fit: cover;
+  border-radius: 15px;
+  padding-bottom: 20px;
+}
+
+.cardTitle {
+  color: white;
+  margin: 10px 0;
+  font-size: 18px;
+  padding-bottom: 10px;
+}
+
+.cardButton {
+  width: 130px; /* Set the width to 100% of the card's width */
+  max-width: 160px; /* Optional: Set a maximum width for the button */
+  padding: 10px;
+  background-color: #f5a623; /* Yellow button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+  text-align: center; /* Ensure text is centered */
+  margin: 0 auto; /* Center the button */
+}
+
+.cardButton:hover {
+  background-color: #e59400; /* Slightly darker yellow on hover */
+}

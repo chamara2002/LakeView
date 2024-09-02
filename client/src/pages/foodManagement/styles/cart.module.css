@@ -1,0 +1,104 @@
+.addToCartBtn{
+    background-color: #ffcc00;
+    color: #000;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .addToCartBtn:hover {
+    background-color: #e0b800;
+  }
+  
+  .cart {
+    padding: 20px;
+    background-color: #1a1a2e;
+    color: #fff;
+    height: 100vh;
+    height: auto;
+  }
+  
+  .cartItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .cartItemImage {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+  }
+  
+  .cartItemDetails {
+    flex-grow: 1;
+    margin-left: 10px;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #162447;
+    color: #fff;
+  }
+  
+  .cartIcon {
+    position: relative;
+  }
+  
+  .cartIcon a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .cartTable {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    color: #fff;
+  }
+  
+  .cartTable th,
+  .cartTable td {
+    padding: 10px;
+    border-bottom: 1px solid #e5e5e5;
+    text-align: center;
+  }
+  
+  .cartTable th {
+    background-color: #ffcc00;
+    color: #000;
+  }
+  
+  .cartTable td img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+  }
+  
+  .cartTable .delete-btn {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+  }
+  
+  .cartTable button {
+    background-color: #ffcc00;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+  }
+  
+  .cartTable button:hover {
+    background-color: #e0b800;
+  }
+  
+  .cartTable span {
+    margin: 0 10px;
+  }
+  

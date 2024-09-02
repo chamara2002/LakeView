@@ -1,0 +1,11 @@
+
+#root {
+  max-width: 99vw;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  max-width: 99vh;
+}

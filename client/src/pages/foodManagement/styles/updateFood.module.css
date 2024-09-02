@@ -1,0 +1,36 @@
+.updateFoodItem {
+    padding: 20px;
+    background-color: #0d1633;
+    color: white;
+  }
+  
+  .updateFoodItem form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .updateFoodIItem label {
+    margin-bottom: 5px;
+  }
+  
+  .updateFoodItem input {
+    margin-bottom: 15px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: 100%;
+  }
+  
+  .updateFoodItem button {
+    padding: 10px;
+    background-color: #ff4500;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .updateFoodItem button:hover {
+    background-color: #e53935;
+  }
+  

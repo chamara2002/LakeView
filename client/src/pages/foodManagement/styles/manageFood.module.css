@@ -1,0 +1,57 @@
+/* manageFood.module.css */
+
+.manageItems {
+  padding: 20px;
+  background-color: #0d1633;
+  color: white;
+  height: 100vh; /* Adjust if needed */
+  height: auto;
+}
+
+.tableWrapper {
+  max-height: 700px; /* Set max height for scrolling */
+  overflow-y: auto; /* Enables vertical scrolling */
+}
+
+.foodTable {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ddd; /* Optional: Adds border to table */
+  border-radius: 4px;
+}
+
+.foodTable th,
+.foodTable td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.foodTable th {
+  background-color: #1b264f;
+}
+
+.foodTable tr:nth-child(even) {
+  background-color: #1e3461;
+}
+
+.foodImage {
+  width: 50px;
+  height: auto;
+}
+
+.updateButton,
+.deleteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.updateButton {
+  color: #ffd700;
+}
+
+.deleteButton {
+  color: #ff4500;
+}

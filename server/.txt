@@ -1,0 +1,47 @@
+game
+feedback
+rating
+slot
+
+
+
+
+Food Management(Restaurant)
+
+Restaurant Manager
+
+Add Food Menu Items(Add, Update, Delete)-Manage Menu Items
+View Menu Items
+Add available Food items
+View Feedback Details
+Generate Report for Feedback
+View Rating Details
+View Payment Details
+Manage All Order Details
+Generate a report of orders
+Manage Users
+Restaurant Manager Dashboard
+Sent Notification(via SMS and Email)- Order Confirmed
+
+Registered Customer
+
+View Menu Catalog
+Search Food Items
+Filter Food Items
+Place an Order(add to cart)
+Proceed to Checkout
+View Order History
+Provide Ratings and Reviews
+Provide Feedback
+View Rating and Reviews
+View Feedback
+Payment Method(Online / Cash on arrival)
+Receive online receipt
+
+Unregistered Customer
+
+View Menu Catalog
+Search Food Items
+Filter Food Items
+View Rating and Reviews
+View Feedback

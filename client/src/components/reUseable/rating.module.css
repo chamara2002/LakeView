@@ -1,0 +1,18 @@
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between stars and score */
+    color: #ffcc00; /* Default color for stars */
+    font-size: 1.2em; /* Font size for the rating container */
+  }
+  
+  .stars {
+    font-size: 1.5em; /* Larger font size for the stars */
+  }
+  
+  .score {
+    font-size: 1.2em; /* Font size for the score */
+    color: #ffffff; /* Color for the score text */
+    padding-left: 54px;
+  }
+  
