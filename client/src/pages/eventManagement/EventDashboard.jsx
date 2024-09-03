@@ -9,6 +9,7 @@ const EventDashboard = () => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [category, setCategory] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -31,16 +32,20 @@ const EventDashboard = () => {
   }, []);
 
   useEffect(() => {
+    let filtered = events;
+    
     if (category) {
-      const filtered = events.filter((event) => event.category === category);
-      setFilteredEvents(filtered);
-    } else {
-      setFilteredEvents(events);
+      filtered = filtered.filter((event) => event.category === category);
     }
-  }, [category, events]);
 
-  // console.log(events);
-  // console.log(filteredEvents);
+    if (searchQuery) {
+      filtered = filtered.filter((event) =>
+        event.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredEvents(filtered);
+  }, [category, searchQuery, events]);
 
   return (
     <>
@@ -70,6 +75,13 @@ const EventDashboard = () => {
           </div>
         </div>
         <div style={styles.mainContent}>
+          <input
+            type="text"
+            placeholder="Search events by name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={styles.searchBar}
+          />
           {filteredEvents.length === 0 ? (
             <p>No events found.</p>
           ) : (
@@ -129,15 +141,6 @@ const styles = {
     cursor: "pointer",
     border: "none", // To remove the default button border
   },
-  categoryItemhigh: {
-    marginBottom: "10px",
-    padding: "10px",
-    backgroundColor: "#FFBB00",
-    borderRadius: "4px",
-    cursor: "pointer",
-    color: "#0a1e42",
-    border: "none", // To remove the default button border
-  },
   mainContent: {
     display: "flex",
     flexWrap: "wrap",
@@ -145,6 +148,14 @@ const styles = {
     alignItems: "center",
     width: "80%",
     padding: "20px",
+  },
+  searchBar: {
+    width: "100%",
+    padding: "10px",
+    marginBottom: "20px",
+    borderRadius: "4px",
+    border: "1px solid #ccc",
+    color: "#000",
   },
   eventCard: {
     backgroundColor: "#1a2b57",

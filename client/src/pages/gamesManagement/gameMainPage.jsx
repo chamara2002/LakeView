@@ -1,4 +1,3 @@
-// src/components/pages/GameMainPage.jsx
 import React, { useState, useEffect } from "react";
 import NavFunction from "../../functions/navFunction"; // Ensure the path is correct
 import Footer from "../../components/core/Footer"; // Ensure the path is correct
@@ -47,12 +46,17 @@ const GameMainPage = () => {
     setFilteredGames(games); // Reset to show all games
   };
 
-  const handleSearchChange = (e) => {
-    const query = e.target.value.toLowerCase();
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
     setSearchQuery(query);
-    setFilteredGames(
-      games.filter((game) => game.name.toLowerCase().includes(query))
-    );
+
+    if (query === "") {
+      setFilteredGames(games); // Show all games if search is cleared
+    } else {
+      setFilteredGames(
+        games.filter((game) => game.name.toLowerCase().includes(query))
+      );
+    }
   };
 
   return (
@@ -62,7 +66,7 @@ const GameMainPage = () => {
         className="main"
         style={{
           display: "flex",
-          flexDirection: "row", // Added to handle search input above the grid
+          flexDirection: "row",
           justifyContent: "start",
           alignItems: "start",
           flexWrap: "wrap",
@@ -78,19 +82,29 @@ const GameMainPage = () => {
           />
         </div>
 
-        <div style={{ width: "80%",display:"flex",flexFlow:"column wrap" }}>
-          <div style={{height:"200px"}}></div>
+        <div style={{ width: "80%", display: "flex", flexFlow: "column wrap" }}>
+          <div style={{ marginBottom: "20px" }}>
+            <input
+              type="text"
+              placeholder="Search games by name..."
+              value={searchQuery}
+              onChange={handleSearch}
+              style={{
+                marginTop: "20px",
+                marginLeft : "45vh",
+                width: "60%",
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+              }}
+            />
+          </div>
           <ActivitiesGrid activities={filteredGames} />
         </div>
-
-        {/* <ActivitiesGrid activities={filteredGames} /> */}
-        {/* Pass filteredGames to ActivitiesGrid */}
       </div>
       <Footer />
     </section>
   );
 };
-
-
 
 export default GameMainPage;

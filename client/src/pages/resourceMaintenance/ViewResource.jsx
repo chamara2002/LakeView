@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const ResourcesTable = () => {
   const [resources, setResources] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const navigate = useNavigate();
 
@@ -33,19 +34,35 @@ const ResourcesTable = () => {
     }
   };
 
-  console.log(resources);
+  const filteredResources = resources.filter((resource) =>
+    resource.resourceName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div>
       <NavBar />
       <div
-        style={{ backgroundColor: "#1b1f38", padding: "20px", height: "80vh" }}
+        style={{ backgroundColor: "#1b1f38", padding: "20px", minHeight: "80vh" }}
       >
         <div
           style={{
             display: "flex",
             justifyContent: "center",
-            marginTop: "20px",
+            marginBottom: "20px",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Search resources by name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={searchBarStyle}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
           }}
         >
           <table
@@ -68,8 +85,8 @@ const ResourcesTable = () => {
               </tr>
             </thead>
             <tbody>
-              {resources.length > 0 ? (
-                resources.map((resource) => (
+              {filteredResources.length > 0 ? (
+                filteredResources.map((resource) => (
                   <tr key={resource._id}>
                     <td style={cellStyle}>{resource.resourceId}</td>
                     <td style={cellStyle}>{resource.resourceName}</td>
@@ -137,6 +154,14 @@ const buttonStyle = {
   borderRadius: "5px",
   cursor: "pointer",
   transition: "background-color 0.3s",
+};
+
+const searchBarStyle = {
+  padding: "10px",
+  width: "80%",
+  borderRadius: "5px",
+  border: "1px solid #ccc",
+  color: "#000",
 };
 
 export default ResourcesTable;

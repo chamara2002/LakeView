@@ -5,7 +5,10 @@ const FoodCard = ({ food }) => {
   const { dispatch } = useCart();
 
   const addToCart = () => {
-    dispatch({ type: 'ADD_TO_CART', payload: food });
+    dispatch({
+      type: 'ADD_TO_CART',
+      payload: { ...food, quantity: 1 }
+    });
   };
 
   return (
@@ -38,7 +41,7 @@ const styles = {
     width: '300px',
     margin: '20px',
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-    position: 'relative' // Ensure favorite icon can be positioned absolutely
+    position: 'relative'
   },
   foodCardHover: {
     transform: 'translateY(-5px)',
@@ -54,18 +57,9 @@ const styles = {
     padding: '15px',
     textAlign: 'center'
   },
-  foodDetailsTitle: {
-    margin: '0',
-    fontSize: '1.5em',
-    color: '#333'
-  },
-  foodDetailsText: {
-    margin: '5px 0',
-    color: '#666'
-  },
   foodRating: {
     marginTop: '10px',
-    color: '#f39c12' // Gold color for stars
+    color: '#f39c12'
   },
   favoriteIcon: {
     position: 'absolute',

@@ -103,7 +103,7 @@ const MoviePage = () => {
   console.log(filteredMovies);
 
   const handleNavigate = (id) => {
-    navigate(`/movie/${id}`);
+    navigate(`/MoviePage/${id}`);
   };
 
   return (
@@ -184,10 +184,14 @@ const styles = {
   filterSection: {
     width: "250px",
     backgroundColor: "#0c1024",
-    padding: "15px",
+    padding: "20px",
     borderRadius: "10px",
     marginRight: "20px",
     color: "white",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+    position: "sticky",
+    top: "20px", // Sidebar stays fixed while scrolling
+    alignSelf: "flex-start",
   },
   filterContainer: {
     marginBottom: "20px",
@@ -198,20 +202,24 @@ const styles = {
   filterTitle: {
     fontSize: "18px",
     fontWeight: "bold",
+    borderBottom: "2px solid #ff9800",
+    paddingBottom: "5px",
+    marginBottom: "10px",
   },
   filterList: {
     listStyleType: "none",
     paddingLeft: "0",
     color: "white",
     cursor: "pointer",
-    marginBottom: "10px"
-    
+    marginBottom: "10px",
   },
   filterListItem: {
     marginBottom: "10px",
+    padding: "10px",
+    borderRadius: "5px",
+    transition: "background-color 0.3s ease",
   },
-  
-  lsit01:{
+  lsit01: {
     padding: "10px",
   },
   searchBox: {
@@ -219,7 +227,9 @@ const styles = {
     padding: "10px",
     marginBottom: "15px",
     borderRadius: "5px",
-    border: "none",
+    border: "1px solid #ff9800",
+    backgroundColor: "#121528",
+    color: "#fff",
   },
   showtimesButton: {
     backgroundColor: "#ff9800",
@@ -229,6 +239,11 @@ const styles = {
     borderRadius: "5px",
     cursor: "pointer",
     width: "100%",
+    marginTop: "10px",
+    transition: "background-color 0.3s ease",
+  },
+  showtimesButtonHover: {
+    backgroundColor: "#e68900",
   },
   moviesGrid: {
     display: "grid",
@@ -242,6 +257,11 @@ const styles = {
     padding: "15px",
     borderRadius: "10px",
     cursor: "pointer",
+    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+  },
+  movieCardHover: {
+    transform: "scale(1.05)",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
   },
   movieImage: {
     width: "90%",
@@ -252,5 +272,7 @@ const styles = {
     marginTop: "10px",
   },
 };
+
+
 
 export default MoviePage;

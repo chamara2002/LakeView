@@ -5,6 +5,7 @@ import NavBar from "../../components/core/NavBar";
 
 const LeaveDetails = () => {
   const [leaves, setLeaves] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchLeaves = async () => {
@@ -41,11 +42,28 @@ const LeaveDetails = () => {
     }
   };
 
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredLeaves = leaves.filter((leave) => {
+    const leaveDate = new Date(leave.start).toLocaleDateString();
+    return leaveDate.includes(searchTerm);
+  });
+
   return (
     <div>
       <NavBar />
       <div>
         <div style={containerStyle}>
+          <input
+            type="text"
+            placeholder="Search by Date (MM/DD/YYYY)"
+            value={searchTerm}
+            onChange={handleSearch}
+            style={searchBarStyle}
+          />
+
           <table style={tableStyle}>
             <thead>
               <tr>
@@ -58,7 +76,7 @@ const LeaveDetails = () => {
               </tr>
             </thead>
             <tbody>
-              {leaves.map((leave) => (
+              {filteredLeaves.map((leave) => (
                 <tr key={leave._id}>
                   <td style={tdStyle}>{leave._id}</td>
                   <td style={tdStyle}>
@@ -77,7 +95,7 @@ const LeaveDetails = () => {
                   </td>
                   <td style={tdStyle}>
                     <button
-                      style={{ backgroundColor: "red", color: "white" }}
+                      style={deleteButtonStyle}
                       onClick={() => handleDelete(leave._id)}
                     >
                       Delete
@@ -96,9 +114,18 @@ const LeaveDetails = () => {
 
 const containerStyle = {
   padding: "20px",
-  backgroundColor: "#161E38", // Changed background color
-  color: "#234151", // Changed text color to be readable on dark background
-  height: "60vh",
+  backgroundColor: "#161E38",
+  color: "#ffffff",
+  height: "100vh",
+};
+
+const searchBarStyle = {
+  margin: "20px 0",
+  padding: "10px",
+  width: "50%",
+  fontSize: "16px",
+  borderRadius: "5px",
+  border: "1px solid #ccc",
 };
 
 const tableStyle = {
@@ -110,7 +137,7 @@ const tableStyle = {
 const thStyle = {
   padding: "10px",
   border: "1px solid #ccc",
-  backgroundColor: "#f4f4f4",
+  backgroundColor: "#000000",
   fontWeight: "bold",
   textAlign: "left",
 };
@@ -129,12 +156,6 @@ const buttonStyle = {
   borderRadius: "5px",
 };
 
-const updateButtonStyle = {
-  ...buttonStyle,
-  backgroundColor: "#f0ad4e",
-  color: "white",
-};
-
 const deleteButtonStyle = {
   ...buttonStyle,
   backgroundColor: "#d9534f",
@@ -142,3 +163,4 @@ const deleteButtonStyle = {
 };
 
 export default LeaveDetails;
+  

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const GameDetails = () => {
   const [games, setGames] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   const fetchGames = async () => {
@@ -24,18 +25,34 @@ const GameDetails = () => {
   const handleDelete = async (gameId) => {
     try {
       await axios.delete(`http://localhost:3000/api/games/games/${gameId}`);
-      setGames(games.filter((game) => game.gid !== gameId));
-      fetchGames();
+      setGames(games.filter((game) => game._id !== gameId));
     } catch (error) {
       console.error("Error deleting game:", error);
     }
   };
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredGames = games.filter((game) =>
+    game.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
       <NavBar />
       <div style={styles.container}>
         <h2 style={styles.title}>Games Details</h2>
+        
+        <input
+          type="text"
+          placeholder="Search by game name"
+          value={searchTerm}
+          onChange={handleSearch}
+          style={styles.searchBar}
+        />
+
         <table style={styles.table}>
           <thead>
             <tr>
@@ -48,8 +65,8 @@ const GameDetails = () => {
             </tr>
           </thead>
           <tbody>
-            {games.length > 0 ? (
-              games.map((game) => (
+            {filteredGames.length > 0 ? (
+              filteredGames.map((game) => (
                 <tr key={game._id} style={styles.row}>
                   <td style={styles.cell}>{game._id}</td>
                   <td style={styles.cell}>{game.category}</td>
@@ -57,7 +74,6 @@ const GameDetails = () => {
                   <td style={styles.cell}>{game.description}</td>
                   <td style={styles.cell}>Rs. {game.price}</td>
                   <td style={styles.cell}>
-                    {/* <button style={styles.editButton} onClick={()=>navigate(`/gameDetails/edit/${game._id}`)} >Edit</button> */}
                     <button
                       style={styles.deleteButton}
                       onClick={() => handleDelete(game._id)}
@@ -99,6 +115,12 @@ const styles = {
     color: "#fff",
     backgroundColor: "#000",
     padding: "10px",
+  },
+  searchBar: {
+    margin: "20px 0",
+    padding: "10px",
+    width: "80%",
+    fontSize: "16px",
   },
   table: {
     width: "100%",

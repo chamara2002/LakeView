@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Footer from '../../components/core/Footer';
+import NavBar from '../../components/core/NavBar';
 
 const AddFood = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +14,14 @@ const AddFood = () => {
   });
 
   const [errors, setErrors] = useState({});
+
+  // Set the background color of the page
+  useEffect(() => {
+    document.body.style.backgroundColor = '#161E38';
+    return () => {
+      document.body.style.backgroundColor = ''; // Reset the background color when the component unmounts
+    };
+  }, []);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -67,97 +77,101 @@ const AddFood = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.heading}>Add Food Item</h2>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            style={styles.input}
-            placeholder="Enter food name"
-          />
-          {errors.name && <span style={styles.error}>{errors.name}</span>}
-        </div>
+    <div>
+      <NavBar />
+      <div style={styles.container}>
+        <h2 style={styles.heading}>Add Food Item</h2>
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Name</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              style={styles.input}
+              placeholder="Enter food name"
+            />
+            {errors.name && <span style={styles.error}>{errors.name}</span>}
+          </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Ingredients (comma separated)</label>
-          <input
-            type="text"
-            name="ingredients"
-            value={formData.ingredients}
-            onChange={handleChange}
-            style={styles.input}
-            placeholder="Enter ingredients"
-          />
-          {errors.ingredients && <span style={styles.error}>{errors.ingredients}</span>}
-        </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Ingredients (comma separated)</label>
+            <input
+              type="text"
+              name="ingredients"
+              value={formData.ingredients}
+              onChange={handleChange}
+              style={styles.input}
+              placeholder="Enter ingredients"
+            />
+            {errors.ingredients && <span style={styles.error}>{errors.ingredients}</span>}
+          </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Category</label>
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            style={styles.input}
-          >
-            <option value="">Select category</option>
-            <option value="Soups">Soups</option>
-            <option value="Chinese food">Chinese food</option>
-            <option value="Pizza">Pizza</option>
-            <option value="Dessert">Dessert</option>
-            <option value="Drinks">Drinks</option>
-          </select>
-          {errors.category && <span style={styles.error}>{errors.category}</span>}
-        </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Category</label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              style={styles.input}
+            >
+              <option value="">Select category</option>
+              <option value="Soups">Soups</option>
+              <option value="Chinese food">Chinese food</option>
+              <option value="Pizza">Pizza</option>
+              <option value="Dessert">Dessert</option>
+              <option value="Drinks">Drinks</option>
+            </select>
+            {errors.category && <span style={styles.error}>{errors.category}</span>}
+          </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Price</label>
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            style={styles.input}
-            placeholder="Enter price"
-            min="0"
-            step="0.01"
-          />
-          {errors.price && <span style={styles.error}>{errors.price}</span>}
-        </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Price</label>
+            <input
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              style={styles.input}
+              placeholder="Enter price"
+              min="0"
+              step="0.01"
+            />
+            {errors.price && <span style={styles.error}>{errors.price}</span>}
+          </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Available</label>
-          <select
-            name="isAvailable"
-            value={formData.isAvailable}
-            onChange={handleChange}
-            style={styles.input}
-          >
-            <option value={true}>Yes</option>
-            <option value={false}>No</option>
-          </select>
-        </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Available</label>
+            <select
+              name="isAvailable"
+              value={formData.isAvailable}
+              onChange={handleChange}
+              style={styles.input}
+            >
+              <option value={true}>Yes</option>
+              <option value={false}>No</option>
+            </select>
+          </div>
 
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Image URL</label>
-          <input
-            type="text"
-            name="imageUrl"
-            value={formData.imageUrl}
-            onChange={handleChange}
-            style={styles.input}
-            placeholder="Enter image URL"
-          />
-        </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Image URL</label>
+            <input
+              type="text"
+              name="imageUrl"
+              value={formData.imageUrl}
+              onChange={handleChange}
+              style={styles.input}
+              placeholder="Enter image URL"
+            />
+          </div>
 
-        <button type="submit" style={styles.submitButton}>
-          Add Food
-        </button>
-      </form>
+          <button type="submit" style={styles.submitButton}>
+            Add Food
+          </button>
+        </form>
+      </div>
+      <Footer />
     </div>
   );
 };
@@ -170,6 +184,7 @@ const styles = {
     backgroundColor: '#f4f4f4',
     borderRadius: '10px',
     boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+    height: '70vh',
   },
   heading: {
     textAlign: 'center',

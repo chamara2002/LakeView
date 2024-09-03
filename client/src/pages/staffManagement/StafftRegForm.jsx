@@ -109,7 +109,7 @@ const StaffRegistrationForm = () => {
   };
 
   return (
-    <div>
+    <div style={background}>
       <NavBar />
       <div style={formContainerStyle}>
         <form style={{ ...formStyle, ...responsiveGrid }} onSubmit={handleSubmit}>
@@ -218,16 +218,21 @@ const StaffRegistrationForm = () => {
 };
 
 // Styles
+const background = {
+  backgroundColor: '#161E38', // Dark background for the entire page
+  height: '100vh',
+};
+
 const formContainerStyle = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  height: '100vh',
-  backgroundColor: '#f4f4f4',
+  height: '130vh',
+  backgroundColor: '#161E38', // Dark background for form container
 };
 
 const formStyle = {
-  backgroundColor: '#fff',
+  backgroundColor: '#ffffff', // Light background for the form itself
   padding: '20px',
   borderRadius: '8px',
   boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',

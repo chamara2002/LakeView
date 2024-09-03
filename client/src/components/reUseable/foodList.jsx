@@ -1,15 +1,15 @@
 import React from 'react';
-import FoodCard from './foodCard';
-import styles from '../../pages/foodManagement/styles/food.module.css'
+import FoodCard from './FoodCard';
+import styles from '../../pages/foodManagement/styles/food.module.css';
 
 const FoodList = ({ foods }) => {
   return (
     <div className={styles.foodList}>
-      {foods.map((food, index) => (
-        <FoodCard key={index} food={food} />
+      {foods.map((food) => (
+        <FoodCard key={food.id} food={food} />
       ))}
     </div>
   );
-}
+};
 
 export default FoodList;

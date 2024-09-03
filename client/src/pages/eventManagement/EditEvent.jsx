@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import Footer from '../../components/core/Footer';
+import NavBar from '../../components/core/NavBar';
 
 const EditEvent = () => {
   const { id } = useParams();
@@ -59,7 +61,9 @@ const EditEvent = () => {
   };
 
   return (
-    <div>
+   <div>
+    <NavBar></NavBar>
+     <div className="edit-event-container">
       <h1>Edit Event</h1>
       <form onSubmit={handleSubmit}>
         <label>
@@ -119,32 +123,52 @@ const EditEvent = () => {
 
       {/* Inline CSS */}
       <style jsx>{`
+        .edit-event-container {
+          background-color: #161E38; /* Adding the background color */
+          color: #fff;
+          padding: 20px;
+          min-height: 100vh;
+        }
+
         form {
           display: flex;
           flex-direction: column;
           max-width: 600px;
           margin: auto;
+          padding: 20px;
+          background-color: #222B45; /* Darker background for the form */
+          border-radius: 8px;
+          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow */
         }
 
         label {
-          margin: 10px 0;
+          margin: 15px 0;
+          font-weight: bold;
         }
 
         input, textarea, select {
           margin-top: 5px;
-          padding: 8px;
-          border: 1px solid #ddd;
+          padding: 12px;
+          border: 1px solid #555;
           border-radius: 4px;
+          background-color: #1E2A38; /* Darker input background */
+          color: #fff; /* White text */
+        }
+
+        input::placeholder, textarea::placeholder {
+          color: #999; /* Placeholder text color */
         }
 
         button {
           margin-top: 20px;
-          padding: 10px 20px;
+          padding: 12px;
           border: none;
           border-radius: 4px;
           background-color: #4CAF50;
           color: white;
           cursor: pointer;
+          font-size: 16px;
+          font-weight: bold;
         }
 
         button:hover {
@@ -159,6 +183,8 @@ const EditEvent = () => {
         }
       `}</style>
     </div>
+    <Footer></Footer>
+   </div>
   );
 };
 

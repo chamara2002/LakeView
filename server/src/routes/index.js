@@ -17,6 +17,8 @@ const staffRoutes = require('./staff.route.js');
 const paymentRoutes = require('./payment.route.js');
 const leaveRoutes = require('./leaves.route.js');
 const attendanceRoutes = require('./attendence.route.js');
+const movieBookingRoutes = require('./movieBooking.route.js');
+const gameBookingRoutes = require('./gameBooking.route.js');
 
 const router = express.Router();
 
@@ -41,5 +43,7 @@ router.use('/staff', staffRoutes);
 router.use('/payment',paymentRoutes)
 router.use('/leaves',leaveRoutes)
 router.use('/attendance',attendanceRoutes)
+router.use('/bkm',movieBookingRoutes)
+router.use('/bkg', gameBookingRoutes)
 
 module.exports = router;

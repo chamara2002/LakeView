@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 
 const FoundItemsTable = () => {
   const [foundItems, setFoundItems] = useState([]);
+  const [emailSearch, setEmailSearch] = useState(""); // Search term for email
+  const [itemSearch, setItemSearch] = useState(""); // Search term for found item
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -36,16 +38,22 @@ const FoundItemsTable = () => {
     fetchFoundItems();
   }, []);
 
-///delete-lost-and-found/:id
   const handleDelete = async(id) => {
-    try{
+    try {
       await axios.delete(`http://localhost:3000/api/lostNFound/delete-lost-and-found/${id}`);
       alert("Deleted successfully");
       console.log("Delete item with id:", id);
-      fetchFoundItems(); 
-    }catch (error) {}
-    
+      const updatedItems = foundItems.filter(item => item._id !== id);
+      setFoundItems(updatedItems);
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
   };
+
+  const filteredFoundItems = foundItems.filter(item =>
+    item.email.toLowerCase().includes(emailSearch.toLowerCase()) &&
+    item.foundItem.toLowerCase().includes(itemSearch.toLowerCase())
+  );
 
   return (
     <div>
@@ -57,6 +65,22 @@ const FoundItemsTable = () => {
 
         <div style={styles.tableContainer}>
           <h2 style={styles.title}>Found Items</h2>
+          <div style={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder="Search by email..."
+              value={emailSearch}
+              onChange={(e) => setEmailSearch(e.target.value)}
+              style={styles.searchBar}
+            />
+            <input
+              type="text"
+              placeholder="Search by found item..."
+              value={itemSearch}
+              onChange={(e) => setItemSearch(e.target.value)}
+              style={styles.searchBar}
+            />
+          </div>
           <table style={styles.table}>
             <thead>
               <tr>
@@ -66,11 +90,11 @@ const FoundItemsTable = () => {
                 <th style={styles.th}>Found Items Category</th>
                 <th style={styles.th}>Found Item</th>
                 <th style={styles.th}>Found Item Place</th>
-                {user.user.role ? <th style={styles.th}>Actions</th> : <></>}
+                {user.user.role ? <th style={styles.th}>Actions</th> : null}
               </tr>
             </thead>
             <tbody>
-              {foundItems.map((item) => (
+              {filteredFoundItems.map((item) => (
                 <tr key={item._id}>
                   <td style={styles.td}>{item.userName}</td>
                   <td style={styles.td}>{item.email}</td>
@@ -87,9 +111,7 @@ const FoundItemsTable = () => {
                         Delete
                       </button>
                     </td>
-                  ) : (
-                    <></>
-                  )}
+                  ) : null}
                 </tr>
               ))}
             </tbody>
@@ -131,6 +153,19 @@ const styles = {
     color: "#000000",
     marginBottom: "20px",
   },
+  searchContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '20px',
+  },
+  searchBar: {
+    width: '48%',
+    padding: '10px',
+    borderRadius: '5px',
+    border: '1px solid #ccc',
+    fontSize: '16px',
+    boxSizing: 'border-box',
+  },
   table: {
     width: "100%",
     borderCollapse: "collapse",
@@ -148,7 +183,7 @@ const styles = {
   },
   actionsTd: {
     display: "flex",
-    justifyContent: "space-around",
+    justifyContent: "center",
     borderBottom: "1px solid #ddd",
     padding: "10px",
     textAlign: "left",

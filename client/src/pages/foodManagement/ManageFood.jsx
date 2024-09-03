@@ -40,7 +40,21 @@ const FoodPage = () => {
       <NavBar name="foods" />
       <div className={styles.manageItems}>
         <h2>Manage All Menu Items</h2>
-        <span><button onClick={()=>navigate("/addFoods")}>Add Food</button></span>
+        <span>
+  <button 
+    onClick={() => navigate("/addFoods")} 
+    style={{ backgroundColor: "#4CAF50", color: "white", padding: "10px 20px", margin: "5px", border: "none", borderRadius: "5px", cursor: "pointer" }}
+  >
+    Add Food
+  </button>
+  <button 
+    onClick={() => navigate('/manage/foodOrder')} 
+    style={{ backgroundColor: "#008CBA", color: "white", padding: "10px 20px", margin: "5px", border: "none", borderRadius: "5px", cursor: "pointer" }}
+  >
+    Manage orders
+  </button>
+</span>
+
         <div className={styles.tableWrapper}>
           <table className={styles.foodTable}>
             <thead>

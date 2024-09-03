@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Footer from "../../components/core/Footer";
 import NavBar from "../../components/core/NavBar";
+import { useNavigate } from "react-router-dom";
 
 const StaffTable = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [staffData, setStaffData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchStaffData = async () => {
     try {
@@ -26,7 +28,7 @@ const StaffTable = () => {
   const containerStyle = {
     padding: "20px",
     backgroundColor: "#161E38",
-    color: "#234151",
+    color: "#ffffff",
     height: "60vh",
     overflow: "hidden",
   };
@@ -45,7 +47,7 @@ const StaffTable = () => {
   const thStyle = {
     padding: "10px",
     border: "1px solid #ccc",
-    backgroundColor: "#f4f4f4",
+    backgroundColor: "#000000",
     fontWeight: "bold",
     textAlign: "left",
     position: "sticky",
@@ -57,6 +59,7 @@ const StaffTable = () => {
     padding: "10px",
     border: "1px solid #ccc",
     textAlign: "left",
+    
   };
 
   const buttonStyle = {
@@ -158,7 +161,7 @@ const StaffTable = () => {
                       <td style={tdStyle}>{staff.role}</td>
                       <td style={tdStyle}>{staff.salary}</td>
                       <td style={tdStyle}>
-                        <button style={updateButtonStyle}>Update</button>
+                        <button style={updateButtonStyle} onClick={()=>navigate(`/StaffManagmentUpdate/${staff._id}`)}>Update</button>
                         <button
                           style={deleteButtonStyle}
                           onClick={() => handleDelete(staff._id)}

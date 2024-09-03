@@ -177,10 +177,7 @@ const LostItemsForm = () => {
           </div>
         </form>
 
-        <div style={styles.buttonContainer}>
-          <button style={styles.editButton}>Edit</button>
-          <button style={styles.deleteButton}>Delete</button>
-        </div>
+        
       </div>
       <Footer />
     </div>

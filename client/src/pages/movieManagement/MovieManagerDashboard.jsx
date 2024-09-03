@@ -18,9 +18,9 @@ const MovieManagerDashboard = () => {
         </div>
 
         <div style={styles.buttonContainer}>
-          <button style={styles.button} onClick={() => navigate("")}>Update Movies</button>
-          <button style={styles.button} onClick={() => navigate('')}>Update Movie Countdown</button>
-          <button style={styles.button} onClick={() => navigate('')}>Update Movie ShowTime</button>
+          <button style={styles.button} onClick={() => navigate("/EditDeleteUpdateTable")}>Update Movies</button>
+          <button style={styles.button} onClick={() => navigate('/EditDeleteUpdateTable')}>Update Movie Countdown</button>
+          <button style={styles.button} onClick={() => navigate('/EditDeleteUpdateTable')}>Update Movie ShowTime</button>
         </div>
       </div>
       <Footer />

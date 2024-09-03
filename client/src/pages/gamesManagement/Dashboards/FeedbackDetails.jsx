@@ -82,8 +82,8 @@ const FeedbackDetails = () => {
           ))}
         </tbody>
       </table>
+      
     </div>
-    <Footer></Footer>
    </div>
   );
 };

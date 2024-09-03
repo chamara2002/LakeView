@@ -8,7 +8,9 @@ import { useAuth } from "../foodManagement/context/authContext";
 const LostItemsTable = () => {
   const [lostItems, setLostItems] = useState([]);
   const [showOptions, setShowOptions] = useState(false); // Control visibility of the options column
-  const {user} = useAuth();
+  const [emailSearch, setEmailSearch] = useState(""); // Search term for email
+  const [categorySearch, setCategorySearch] = useState(""); // Search term for lost items category
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,14 +24,12 @@ const LostItemsTable = () => {
   }
 
   useEffect(() => {
-    if (user.user.role){
+    if (user.user.role) {
       setShowOptions(true);
-    }
-    else{
+    } else {
       setShowOptions(false);
     }
-    }, [user]);
-
+  }, [user]);
 
   useEffect(() => {
     const fetchLostItems = async () => {
@@ -65,6 +65,11 @@ const LostItemsTable = () => {
     }
   };
 
+  const filteredLostItems = lostItems.filter(item =>
+    item.email.toLowerCase().includes(emailSearch.toLowerCase()) &&
+    item.foundItemsCategory.toLowerCase().includes(categorySearch.toLowerCase())
+  );
+
   return (
     <div>
       <NavBar />
@@ -75,6 +80,22 @@ const LostItemsTable = () => {
 
         <div style={styles.tableContainer}>
           <h2 style={styles.title}>Lost Items Form</h2>
+          <div style={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder="Search by email..."
+              value={emailSearch}
+              onChange={(e) => setEmailSearch(e.target.value)}
+              style={styles.searchBar}
+            />
+            <input
+              type="text"
+              placeholder="Search by category..."
+              value={categorySearch}
+              onChange={(e) => setCategorySearch(e.target.value)}
+              style={styles.searchBar}
+            />
+          </div>
           <div style={styles.tableWrapper}>
             <div style={styles.tableHeaderWrapper}>
               <table style={styles.table}>
@@ -87,8 +108,7 @@ const LostItemsTable = () => {
                     <th style={styles.th}>Lost Item</th>
                     <th style={styles.th}>Lost Item Place</th>
                     {showOptions && <th style={styles.th}>Options</th>}
-                    {/* Options Column */}
-                    <th style={styles.th}>Found</th> {/* New Found Column */}
+                    <th style={styles.th}>Found</th>
                   </tr>
                 </thead>
               </table>
@@ -96,7 +116,7 @@ const LostItemsTable = () => {
             <div style={styles.tableBodyWrapper}>
               <table style={styles.table}>
                 <tbody>
-                  {lostItems.map((item, index) => (
+                  {filteredLostItems.map((item, index) => (
                     <tr key={index}>
                       <td style={styles.td}>{item.userName}</td>
                       <td style={styles.td}>{item.email}</td>
@@ -141,9 +161,7 @@ const LostItemsTable = () => {
         </div>
 
         <div style={styles.buttonGroup}>
-          {/* <button style={styles.editButton}>Edit</button> */}
           <button style={styles.generateButton}>Generate Reports</button>
-          {/* <button style={styles.deleteButton}>Delete</button> */}
         </div>
       </div>
       <Footer />
@@ -180,6 +198,19 @@ const styles = {
   title: {
     color: "#000000",
     marginBottom: "20px",
+  },
+  searchContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '20px',
+  },
+  searchBar: {
+    width: '48%',
+    padding: '10px',
+    borderRadius: '5px',
+    border: '1px solid #ccc',
+    fontSize: '16px',
+    boxSizing: 'border-box',
   },
   tableWrapper: {
     maxHeight: "600px",
@@ -245,23 +276,7 @@ const styles = {
     justifyContent: "center",
     gap: "10px",
   },
-  editButton: {
-    backgroundColor: "#F4D35E",
-    color: "#000",
-    padding: "10px 20px",
-    borderRadius: "5px",
-    border: "none",
-    cursor: "pointer",
-  },
   generateButton: {
-    backgroundColor: "#F4D35E",
-    color: "#000",
-    padding: "10px 20px",
-    borderRadius: "5px",
-    border: "none",
-    cursor: "pointer",
-  },
-  deleteButton: {
     backgroundColor: "#F4D35E",
     color: "#000",
     padding: "10px 20px",

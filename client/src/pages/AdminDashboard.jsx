@@ -21,7 +21,7 @@ const AdminDashboard = () => {
       <div style={buttonContainerStyle}>
         <button
           style={buttonStyle}
-          onClick={() => navigate("/bookingManagement")}
+          onClick={() => navigate("/BookingNavigationPage")}
         >
           Booking Management
         </button>
@@ -89,6 +89,7 @@ const dashboardStyle = {
 const headerStyle = {
   textAlign: "center",
   marginBottom: "20px",
+  color: "#ffffff",
 };
 
 const buttonContainerStyle = {

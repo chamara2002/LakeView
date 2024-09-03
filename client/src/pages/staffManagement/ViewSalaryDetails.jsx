@@ -75,7 +75,7 @@ const SalaryTable = () => {
   const containerStyle = {
     padding: "20px",
     backgroundColor: "#161E38",
-    color: "#234151",
+    color: "#ffffff",
   };
 
   const tableStyle = {
@@ -87,7 +87,7 @@ const SalaryTable = () => {
   const thStyle = {
     padding: "10px",
     border: "1px solid #ccc",
-    backgroundColor: "#f4f4f4",
+    backgroundColor: "#000000",
     fontWeight: "bold",
     textAlign: "left",
   };

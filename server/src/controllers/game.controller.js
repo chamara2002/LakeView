@@ -8,7 +8,7 @@ const Customer = require("../models/customer.model.js");
  */
 exports.getGames = async (req, res) => {
   try {
-    const games = await Game.find();
+    const games = await Game.find().populate("ratings.customerId", "name");
     res.json(games);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -143,8 +143,11 @@ exports.addFeedbackRating = async (req, res) => {
     const { customerId, score, feedback } = req.body;
     const game = await Game.findById(gameId);
 
-    game.ratings.push({ customerId, score, feedback });
+    if (!game) {
+      return res.status(404).json({ error: "Game not found" });
+    }
 
+    game.ratings.push({ customerId, score, feedback });
     await game.save();
 
     res.json(game);
@@ -174,7 +177,7 @@ exports.getAllFeedbacks = async (req, res) => {
         acc.push({
           gameId: game._id,
           gameName: game.name,
-          user: rating.customerId.name,
+          user: rating.customerId ? rating.customerId.name : "Unknown", // Handle missing customerId
           feedback: rating.feedback,
           score: rating.score,
           feedbackId: rating._id,

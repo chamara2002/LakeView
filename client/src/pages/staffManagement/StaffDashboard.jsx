@@ -12,7 +12,7 @@ const StaffDashboard = () => {
     justifyContent: "center",
     height: "70vh",
     backgroundColor: "#1b1f38",
-    color: "white",
+    color: "white", 
     fontFamily: "Arial, sans-serif",
     padding: "20px",
     boxSizing: "border-box",

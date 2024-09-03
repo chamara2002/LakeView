@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../../components/core/NavBar";
+import Footer from "../../components/core/Footer";
 
 const EditDeleteUpdateTable = () => {
   const [movies, setMovies] = useState([]);
@@ -35,6 +37,10 @@ const EditDeleteUpdateTable = () => {
   };
 
   return (
+   <div>
+    
+    <div style={styles.container}>
+    <NavBar></NavBar>
     <div style={styles.tableContainer}>
       <table style={styles.table}>
         <thead>
@@ -70,10 +76,20 @@ const EditDeleteUpdateTable = () => {
         </tbody>
       </table>
     </div>
+    </div>
+    <Footer></Footer>
+   </div>
   );
 };
 
 const styles = {
+  container:{
+    
+    height: "100vh",
+    backgroundColor: "#0c1024",
+  },
+
+
   tableContainer: {
     margin: "20px",
     padding: "20px",
