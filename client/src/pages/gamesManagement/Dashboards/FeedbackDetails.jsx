@@ -38,53 +38,50 @@ const FeedbackDetails = () => {
   };
 
   return (
-   <div>
-    <NavBar></NavBar>
-     <div style={styles.pageContainer}>
-      <table style={styles.table}>
-        <thead>
-          <tr style={styles.tableHeader}>
-            <th style={styles.tableHeaderCell}>ID</th>
-            <th style={styles.tableHeaderCell}>Game Name</th>
-            <th style={styles.tableHeaderCell}>User</th>
-            <th style={styles.tableHeaderCell}>Feedback</th>
-            {user.user.role ? <th style={styles.tableHeaderCell}>Action</th> : null}
-          </tr>
-        </thead>
-        <tbody>
-          {feedbacks.map((feedback) => (
-            <tr key={feedback.feedbackId} style={styles.tableRow}>
-              <td style={styles.tableCell}>{feedback.gameId}</td>
-              <td style={styles.tableCell}>{feedback.gameName}</td>
-              <td style={styles.tableCell}>{feedback.user}</td>
-              <td style={styles.tableCell}>{feedback.feedback}</td>
+    <div>
+      <NavBar />
+
+      <div style={styles.pageContainer}>
+        <h2 style={styles.heading}>Feedback Details</h2> {/* Added heading */}
+        <table style={styles.table}>
+          <thead>
+            <tr style={styles.tableHeader}>
+              <th style={styles.tableHeaderCell}>ID</th>
+              <th style={styles.tableHeaderCell}>Game Name</th>
+              <th style={styles.tableHeaderCell}>User</th>
+              <th style={styles.tableHeaderCell}>Feedback</th>
+              <th style={styles.tableHeaderCell}>Rating (stars)</th>
               {user.user.role ? (
-                <td style={styles.tableCell}>
-                  <button
-                    style={styles.deleteButton}
-                    onClick={() =>
-                      handleDelete(feedback.gameId, feedback.feedbackId)
-                    }
-                  >
-                    Delete
-                  </button>
-                  <button
-                    style={styles.editButton}
-                    onClick={() => {
-                      // Handle edit button click
-                    }}
-                  >
-                    Edit
-                  </button>
-                </td>
+                <th style={styles.tableHeaderCell}>Action</th>
               ) : null}
             </tr>
-          ))}
-        </tbody>
-      </table>
-      
+          </thead>
+          <tbody>
+            {feedbacks.map((feedback) => (
+              <tr key={feedback.feedbackId} style={styles.tableRow}>
+                <td style={styles.tableCell}>{feedback.gameId}</td>
+                <td style={styles.tableCell}>{feedback.gameName}</td>
+                <td style={styles.tableCell}>{feedback.user}</td>
+                <td style={styles.tableCell}>{feedback.feedback}</td>
+                <td style={styles.tableCell}>{feedback.score}</td>
+                {user.user.role ? (
+                  <td style={styles.tableCell}>
+                    <button
+                      style={styles.deleteButton}
+                      onClick={() =>
+                        handleDelete(feedback.gameId, feedback.feedbackId)
+                      }
+                    >
+                      Delete
+                    </button>
+                  </td>
+                ) : null}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
-   </div>
   );
 };
 
@@ -95,8 +92,16 @@ const styles = {
     minHeight: "100vh",
     padding: "20px",
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+  },
+  heading: {
+    fontSize: "24px",
+    fontWeight: "bold",
+    color: "#ffffff",
+    marginBottom: "60px",
+    textAlign: "center",
   },
   table: {
     width: "100%",
@@ -126,14 +131,6 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     marginRight: "5px",
-  },
-  editButton: {
-    padding: "6px 12px",
-    backgroundColor: "#FFD700",
-    color: "#000",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
   },
 };
 

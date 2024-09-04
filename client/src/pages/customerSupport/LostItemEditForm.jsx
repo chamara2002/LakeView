@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams,useNavigate } from "react-router-dom"; 
+import { useParams, useNavigate } from "react-router-dom";
 
-const LostItemEditForm = ({ initialData }) => {
+const LostItemEditForm = () => {
   const { id } = useParams(); 
   const [formData, setFormData] = useState({
     userName: "",
@@ -16,23 +16,17 @@ const LostItemEditForm = ({ initialData }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (initialData) {
-      setFormData(initialData); 
-    } else {
-      
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(`http://localhost:3000/api/lostNFound/one-lost-and-found/${id}`);
-          setFormData(response.data);
-        } catch (error) {
-          console.error("Error fetching item data:", error);
-        }
-      };
-      fetchData();
-    }
-  }, [id, initialData]);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/lostNFound/one-lost-and-found/${id}`);
+        setFormData(response.data);
+      } catch (error) {
+        console.error("Error fetching item data:", error);
+      }
+    };
 
-  console.log(formData);
+    fetchData();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,7 +40,6 @@ const LostItemEditForm = ({ initialData }) => {
     e.preventDefault();
     try {
       await axios.put(`http://localhost:3000/api/lostNFound/update-lost-and-found/${id}`, formData);
-      console.log("Item updated successfully:", formData);
       alert("Item updated successfully!");
       navigate(-1); 
     } catch (error) {
@@ -72,7 +65,7 @@ const LostItemEditForm = ({ initialData }) => {
             Lost item Category:
             <input
               type="text"
-              name="Category"
+              name="foundItemsCategory"
               value={formData.foundItemsCategory}
               onChange={handleChange}
               style={styles.input}
@@ -94,7 +87,7 @@ const LostItemEditForm = ({ initialData }) => {
             Lost item:
             <input
               type="text"
-              name="Item"
+              name="foundItem"
               value={formData.foundItem}
               onChange={handleChange}
               style={styles.input}
@@ -157,7 +150,7 @@ const styles = {
     borderRadius: "5px",
     border: "1px solid #ccc",
     marginTop: "5px",
-    backgroundColor: "#d3d3d3", // Matches the greyish background in the image
+    backgroundColor: "#d3d3d3", 
   },
   submitButton: {
     display: "block",

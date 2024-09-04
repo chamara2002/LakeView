@@ -18,9 +18,9 @@ const FoodCard = ({ food }) => {
         <h3>{food.name}</h3>
         <p>{food.description}</p>
         <p>Rs.{food.price.toFixed(2)}</p>
-        <div style={styles.foodRating}>
+        {/* <div style={styles.foodRating}>
           <span>⭐ {Math.floor(Math.random() * 5) + 1}</span>
-        </div>
+        </div> */}
       </div>
       <div style={styles.favoriteIcon}>💛</div>
       <button style={styles.addToCartBtn} onClick={addToCart}>

@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 const LeaveRequestForm = () => {
   const { user } = useAuth(); // Assuming user object contains employeeId
-  const [employeeId, setemployeeId] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [reason, setReason] = useState("");
@@ -17,13 +16,18 @@ const LeaveRequestForm = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/api/leaves/leaves", {
-        startDate,
-        endDate,
-        leaveReason: reason,
-        employeeId: user.user._id, // Assuming user._id is the employeeId
-      });
+      console.log("Submit");
+      const response = await axios.post(
+        "http://localhost:3000/api/leaves/leaves",
+        {
+          startDate,
+          endDate,
+          leaveReason: reason,
+          employeeId: user.user._id, // Assuming user._id is the employeeId
+        }
+      );
       console.log("Leave request submitted successfully:", response.data);
+      navigate("/myleaves"); // Navigate after successful submission
     } catch (error) {
       console.error("Error submitting leave request:", error);
     }
@@ -86,7 +90,6 @@ const LeaveRequestForm = () => {
         <div style={formStyle}>
           <h3>Leave Request Form</h3>
           <form onSubmit={handleSubmit}>
-          
             <input
               style={inputStyle}
               type="date"
@@ -109,19 +112,16 @@ const LeaveRequestForm = () => {
               onChange={(e) => setReason(e.target.value)}
             ></textarea>
             <div>
-              <button type="submit" style={submitButtonStyle} onClick={()=>navigate("/myleaves")}>
+              <button type="submit" style={submitButtonStyle}>
                 Submit
               </button>
               <button
                 type="button"
                 style={clearButtonStyle}
                 onClick={() => {
-                  setemployeeId("");
                   setStartDate("");
                   setEndDate("");
                   setReason("");
-                  
-                  
                 }}
               >
                 Clear

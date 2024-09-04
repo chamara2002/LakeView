@@ -132,9 +132,7 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
       </button>
       <button
         onClick={() =>
-          bookingDetails.type === "movie"
-            ? navigate("/movieBillInfo")
-            : navigate("/gameBillInfo")
+          navigate("/booking-summary")
         }
         style={{
           marginTop: "20px",

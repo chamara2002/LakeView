@@ -9,7 +9,7 @@ const GameUpdate = () => {
     const [activePage, setActivePage] = useState('AddGames');
 
     const renderActivePage = () => {
-        switch (activePage) {
+        switch (activePage) {   
             case 'GamesDetails':
                 return <GameDetails />;
             case 'AvailableTimes':
@@ -33,7 +33,7 @@ const GameUpdate = () => {
 
     const sidebarStyle = {
         width: '250px',
-        backgroundColor: '#00796b', // Teal background
+        backgroundColor: '#1d284c', // Teal background
         color: '#fff',
         display: 'flex',
         flexDirection: 'column',
@@ -65,7 +65,7 @@ const GameUpdate = () => {
                 <button style={buttonStyle} onClick={() => setActivePage('AddGames')}>Add Games</button>
                 <button style={buttonStyle} onClick={() => setActivePage('GamesDetails')}>Games Details</button>
                 <button style={buttonStyle} onClick={() => setActivePage('AvailableTimes')}>Available Times</button>
-                <button style={buttonStyle} onClick={() => setActivePage('ChangeAvailableTimes')}>Change Available Times</button>
+                
                 <button style={buttonStyle} onClick={() => setActivePage('FeedbackDetails')}>Feedback Details</button>
             </div>
             <div style={contentStyle}>

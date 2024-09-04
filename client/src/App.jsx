@@ -87,6 +87,8 @@ import CardPayF from "./pages/foodManagement/CardPayF.jsx";
 import FoodOrderManagement from "./pages/foodManagement/FoodOrderManagement.jsx";
 import BookingNavigationPage from "./pages/bookingmanager/BookingNavigationPage.jsx";
 import StaffManagmentUpdate from "./pages/staffManagement/StaffManagmentUpdate.jsx";
+import BookingSummary from "./pages/bookingmanager/BookingSummary.jsx";
+import EditInquiryForm from "./pages/customerSupport/EditInquiryForm.jsx";
 
 function App() {
   return (
@@ -188,7 +190,7 @@ function App() {
               {/*done*/}
               {/*linked*/}
               <Route path="/event/edit/:id" element={<EditEvent />} />
-              <Route path="/event/add" element={<AddFood />} />
+              <Route path="/event/add" element={<AddEvent />} />
               {/*done*/}
               {/* Games Management */}
               <Route path="/games" element={<GameMainPage />} />
@@ -307,6 +309,7 @@ function App() {
               <Route path="/gameBillInfo" element={<GameBillInfo />} />
               <Route path="/movieBillinfo" element={<MovieBillInfo />} />
               <Route path="/foodPurchase" element={<FoodPurchase />} />
+              <Route path="/booking-summary" element={<BookingSummary/>}/>
 
 
           {/* Games Management */}
@@ -368,6 +371,7 @@ function App() {
           <Route path="/manage/foodOrder" element={<FoodOrderManagement/>}/>
           <Route path="/BookingNavigationPage" element={<BookingNavigationPage />} />
           <Route path ="/StaffManagmentUpdate/:id" element ={<StaffManagmentUpdate/>}/>
+          <Route path ="/inquiry/edit-inquiry/:id" element ={<EditInquiryForm/>}/>
 
 
         </Routes>

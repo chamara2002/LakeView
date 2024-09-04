@@ -25,7 +25,7 @@ function BookingNavigationPage() {
           Game Bookings
         </button>
         <button
-          onClick={() => navigate("/eventManagement")}
+          onClick={() => navigate("/bookingManagement")}
           style={buttonStyle}
         >
           Event Bookings

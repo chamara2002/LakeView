@@ -14,68 +14,68 @@ const AdminDashboard = () => {
   }
 
   return (
-   <div>
-    <NavBar></NavBar>
-     <div style={dashboardStyle}>
-      <h1 style={headerStyle}>Admin Dashboard</h1>
-      <div style={buttonContainerStyle}>
-        <button
-          style={buttonStyle}
-          onClick={() => navigate("/BookingNavigationPage")}
-        >
-          Booking Management
-        </button>
-        <button
-          style={buttonStyle}
-          onClick={() => navigate("/customerSupportManagerDashboard")}
-        >
-          Customer Support Management
-        </button>
-        <button
-          style={buttonStyle}
-          onClick={() => navigate("/eventManagement")}
-        >
-          Event Management
-        </button>
-        <button style={buttonStyle} onClick={() => navigate("/manageFoods")}>
-          Food Management
-        </button>
-        <button style={buttonStyle} onClick={() => navigate("/gameManagement")}>
-          Games Management
-        </button>
-        <button
-          style={buttonStyle}
-          onClick={() => navigate("/movieManagerDashboard")}
-        >
-          Movies Management
-        </button>
-        <button
-          style={buttonStyle}
-          onClick={() => navigate("/resourceManagerDashboard")}
-        >
-          Resource Management
-        </button>
-        {user.user.role === "Manager" ? (
+    <div>
+      <NavBar></NavBar>
+      <div style={dashboardStyle}>
+        <h1 style={headerStyle}>Admin Dashboard</h1>
+        <div style={buttonContainerStyle}>
+          <button
+            style={buttonStyle}
+            onClick={() => navigate("/BookingNavigationPage")}
+          >
+            Booking Management
+          </button>
+          <button
+            style={buttonStyle}
+            onClick={() => navigate("/customerSupportManagerDashboard")}
+          >
+            Customer Support Management
+          </button>
+          <button
+            style={buttonStyle}
+            onClick={() => navigate("/eventManagement")}
+          >
+            Event Management
+          </button>
+          <button style={buttonStyle} onClick={() => navigate("/manageFoods")}>
+            Food Management
+          </button>
+          <button
+            style={buttonStyle}
+            onClick={() => navigate("/gameManagement")}
+          >
+            Games Management
+          </button>
+          <button
+            style={buttonStyle}
+            onClick={() => navigate("/movieManagerDashboard")}
+          >
+            Movies Management
+          </button>
+          <button
+            style={buttonStyle}
+            onClick={() => navigate("/resourceManagerDashboard")}
+          >
+            Resource Management
+          </button>
+
           <button
             style={buttonStyle}
             onClick={() => navigate("/staffdashboard")}
           >
             Staff Management
           </button>
-        ) : (
-          <></>
-        )}
 
-        <button
-          style={buttonStyle}
-          onClick={() => navigate("/staffmemberdash")}
-        >
-          My dashboard
-        </button>
+          <button
+            style={buttonStyle}
+            onClick={() => navigate("/staffmemberdash")}
+          >
+            My dashboard
+          </button>
+        </div>
       </div>
+      <Footer></Footer>
     </div>
-    <Footer></Footer>
-   </div>
   );
 };
 

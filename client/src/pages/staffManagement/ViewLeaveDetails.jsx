@@ -5,7 +5,8 @@ import NavBar from "../../components/core/NavBar";
 
 const LeaveDetails = () => {
   const [leaves, setLeaves] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTermByDate, setSearchTermByDate] = useState("");
+  const [searchTermById, setSearchTermById] = useState("");
 
   useEffect(() => {
     const fetchLeaves = async () => {
@@ -42,13 +43,20 @@ const LeaveDetails = () => {
     }
   };
 
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
+  const handleSearchByDate = (event) => {
+    setSearchTermByDate(event.target.value);
+  };
+
+  const handleSearchById = (event) => {
+    setSearchTermById(event.target.value);
   };
 
   const filteredLeaves = leaves.filter((leave) => {
     const leaveDate = new Date(leave.start).toLocaleDateString();
-    return leaveDate.includes(searchTerm);
+    return (
+      leaveDate.includes(searchTermByDate) &&
+      leave._id.includes(searchTermById)
+    );
   });
 
   return (
@@ -59,8 +67,15 @@ const LeaveDetails = () => {
           <input
             type="text"
             placeholder="Search by Date (MM/DD/YYYY)"
-            value={searchTerm}
-            onChange={handleSearch}
+            value={searchTermByDate}
+            onChange={handleSearchByDate}
+            style={searchBarStyle}
+          />
+          <input
+            type="text"
+            placeholder="Search by ID"
+            value={searchTermById}
+            onChange={handleSearchById}
             style={searchBarStyle}
           />
 
@@ -116,7 +131,8 @@ const containerStyle = {
   padding: "20px",
   backgroundColor: "#161E38",
   color: "#ffffff",
-  height: "100vh",
+  height: "auto",
+  minHeight: "100vh",
 };
 
 const searchBarStyle = {
@@ -132,6 +148,7 @@ const tableStyle = {
   width: "100%",
   borderCollapse: "collapse",
   marginTop: "20px",
+  borderRadius: "5px",
 };
 
 const thStyle = {
@@ -163,4 +180,3 @@ const deleteButtonStyle = {
 };
 
 export default LeaveDetails;
-  

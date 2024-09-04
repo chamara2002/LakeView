@@ -20,6 +20,7 @@ const StaffRegistrationForm = () => {
     name: '',
     position: '',
     phone: '',
+    nic: '',
   });
 
   const validateName = (value) => {
@@ -49,6 +50,15 @@ const StaffRegistrationForm = () => {
     }
   };
 
+  const validateNic = (value) => {
+    const nicPattern = /^\d{12}V$/i;  // Accepts 12 digits followed by 'V' (case insensitive)
+    if (!nicPattern.test(value)) {
+      setErrors((prevErrors) => ({ ...prevErrors, nic: 'NIC must be 10 or 12 digits followed by "V".' }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, nic: '' }));
+    }
+  };
+
   const handleChange = (e) => {
     const { id, value } = e.target;
     switch (id) {
@@ -64,13 +74,16 @@ const StaffRegistrationForm = () => {
         setPhone(value);
         validatePhone(value);
         break;
+      case 'nic':
+        setNic(value);
+        validateNic(value);
+        break;
       case 'salary':
         setSalary(value);
         break;
       default:
         if (id === 'email') setEmail(value);
         if (id === 'password') setPassword(value);
-        if (id === 'nic') setNic(value);
         if (id === 'address') setAddress(value);
         break;
     }
@@ -80,8 +93,8 @@ const StaffRegistrationForm = () => {
     e.preventDefault();
     try {
       const newUser = {
-        username:name,
-        role:position,
+        username: name,
+        role: position,
         email,
         password,
         nic,
@@ -101,7 +114,7 @@ const StaffRegistrationForm = () => {
       setPhone('');
       setSalary('');
       alert("Staff member registered successfully!");
-      navigate('/stafftable')
+      navigate('/stafftable');
     } catch (error) {
       console.error("There was an error registering the staff member!", error);
       alert("Failed to register staff member. Please try again.");
@@ -170,6 +183,7 @@ const StaffRegistrationForm = () => {
               value={nic}
               onChange={handleChange}
             />
+            {errors.nic && <p style={{ color: 'red' }}>{errors.nic}</p>}
           </div>
 
           <div style={inputContainerStyle}>

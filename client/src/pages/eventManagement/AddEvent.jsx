@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../../components/core/Footer';
+import NavBar from '../../components/core/NavBar';
 
 const AddEvent = () => {
   const [event, setEvent] = useState({
@@ -11,7 +13,7 @@ const AddEvent = () => {
     end_time: '',
     category: '',
     capacity: '',
-    location: '',
+    location: '', 
     price: '',
     status: 'active',
   });
@@ -51,107 +53,135 @@ const AddEvent = () => {
   };
 
   return (
-    <div>
-      <h1>Add Event</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
+   <div style={containerStyle}>
+    <NavBar />
+     <div style={contentStyle}>
+      <h1 style={headerStyle}>Add Event</h1>
+      <form onSubmit={handleSubmit} style={formStyle}>
+        <label style={labelStyle}>
           Name:
-          <input type="text" name="name" value={event.name} onChange={handleChange} />
-          {errors.name && <span>{errors.name}</span>}
+          <input type="text" name="name" value={event.name} onChange={handleChange} style={inputStyle} />
+          {errors.name && <span style={errorStyle}>{errors.name}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Description:
-          <textarea name="description" value={event.description} onChange={handleChange}></textarea>
-          {errors.description && <span>{errors.description}</span>}
+          <textarea name="description" value={event.description} onChange={handleChange} style={textareaStyle}></textarea>
+          {errors.description && <span style={errorStyle}>{errors.description}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Date:
-          <input type="date" name="date" value={event.date} onChange={handleChange} />
-          {errors.date && <span>{errors.date}</span>}
+          <input type="date" name="date" value={event.date} onChange={handleChange} style={inputStyle} />
+          {errors.date && <span style={errorStyle}>{errors.date}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Start Date:
-          <input type="date" name="start_date" value={event.start_date} onChange={handleChange} />
-          {errors.start_date && <span>{errors.start_date}</span>}
+          <input type="date" name="start_date" value={event.start_date} onChange={handleChange} style={inputStyle} />
+          {errors.start_date && <span style={errorStyle}>{errors.start_date}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           End Time:
-          <input type="datetime-local" name="end_time" value={event.end_time} onChange={handleChange} />
-          {errors.end_time && <span>{errors.end_time}</span>}
+          <input type="datetime-local" name="end_time" value={event.end_time} onChange={handleChange} style={inputStyle} />
+          {errors.end_time && <span style={errorStyle}>{errors.end_time}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Category:
-          <input type="text" name="category" value={event.category} onChange={handleChange} />
-          {errors.category && <span>{errors.category}</span>}
+          <input type="text" name="category" value={event.category} onChange={handleChange} style={inputStyle} />
+          {errors.category && <span style={errorStyle}>{errors.category}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Capacity:
-          <input type="number" name="capacity" value={event.capacity} onChange={handleChange} />
-          {errors.capacity && <span>{errors.capacity}</span>}
+          <input type="number" name="capacity" value={event.capacity} onChange={handleChange} style={inputStyle} />
+          {errors.capacity && <span style={errorStyle}>{errors.capacity}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Location:
-          <input type="text" name="location" value={event.location} onChange={handleChange} />
-          {errors.location && <span>{errors.location}</span>}
+          <input type="text" name="location" value={event.location} onChange={handleChange} style={inputStyle} />
+          {errors.location && <span style={errorStyle}>{errors.location}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Price:
-          <input type="number" name="price" value={event.price} onChange={handleChange} />
-          {errors.price && <span>{errors.price}</span>}
+          <input type="number" name="price" value={event.price} onChange={handleChange} style={inputStyle} />
+          {errors.price && <span style={errorStyle}>{errors.price}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Status:
-          <select name="status" value={event.status} onChange={handleChange}>
+          <select name="status" value={event.status} onChange={handleChange} style={inputStyle}>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </select>
         </label>
-        <button type="submit">Add Event</button>
+        <button type="submit" style={buttonStyle}>Add Event</button>
       </form>
-
-      {/* Inline CSS */}
-      <style jsx>{`
-        form {
-          display: flex;
-          flex-direction: column;
-          max-width: 600px;
-          margin: auto;
-        }
-
-        label {
-          margin: 10px 0;
-        }
-
-        input, textarea, select {
-          margin-top: 5px;
-          padding: 8px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-        }
-
-        button {
-          margin-top: 20px;
-          padding: 10px 20px;
-          border: none;
-          border-radius: 4px;
-          background-color: #4CAF50;
-          color: white;
-          cursor: pointer;
-        }
-
-        button:hover {
-          background-color: #45a049;
-        }
-
-        span {
-          color: red;
-          font-size: 0.9em;
-          display: block;
-          margin-top: 5px;
-        }
-      `}</style>
     </div>
+    <Footer />
+   </div>
   );
+};
+
+const containerStyle = {
+  backgroundColor: '#1B1F38',
+  color: '#FFFFFF',
+  padding: '20px',
+  borderRadius: '8px',
+  minHeight: '100vh',  // Full viewport height
+};
+
+const contentStyle = {
+  maxWidth: '800px',
+  margin: 'auto',
+  backgroundColor: '#2A2E4A',
+  padding: '20px',
+  borderRadius: '8px',
+};
+
+const headerStyle = {
+  textAlign: 'center',
+  marginBottom: '20px',
+};
+
+const formStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+};
+
+const labelStyle = {
+  margin: '10px 0',
+};
+
+const inputStyle = {
+  padding: '10px',
+  marginTop: '5px',
+  borderRadius: '4px',
+  border: '1px solid #ddd',
+  backgroundColor: '#2A2E4A',
+  color: '#FFF',
+};
+
+const textareaStyle = {
+  padding: '10px',
+  marginTop: '5px',
+  borderRadius: '4px',
+  border: '1px solid #ddd',
+  backgroundColor: '#2A2E4A',
+  color: '#FFF',
+  minHeight: '100px',
+};
+
+const buttonStyle = {
+  padding: '10px 20px',
+  marginTop: '20px',
+  border: 'none',
+  borderRadius: '4px',
+  backgroundColor: '#4CAF50',
+  color: 'white',
+  cursor: 'pointer',
+  alignSelf: 'center',
+};
+
+const errorStyle = {
+  color: 'red',
+  fontSize: '0.9em',
+  marginTop: '5px',
 };
 
 export default AddEvent;

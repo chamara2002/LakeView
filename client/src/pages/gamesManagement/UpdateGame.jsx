@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useParams,useNavigate } from "react-router-dom"; // To get the game ID from the URL
+import { useParams, useNavigate } from "react-router-dom";
 import NavBar from "../../components/core/NavBar";
 import Footer from "../../components/core/Footer";
 
@@ -13,9 +13,10 @@ const UpdateGame = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [availableTimes, setAvailableTimes] = useState([]);
-  const [image, setImage] = useState(""); // Change to text field
+  const [image, setImage] = useState("");
 
   const navigate = useNavigate();
+
   // Validation states
   const [nameError, setNameError] = useState("");
   const [priceError, setPriceError] = useState("");
@@ -28,7 +29,6 @@ const UpdateGame = () => {
           `http://localhost:3000/api/games/games/${id}`
         );
         const game = response.data;
-        console.log(game);
         setGameName(game.name);
         setCategory(game.category);
         setDescription(game.description);
@@ -43,7 +43,7 @@ const UpdateGame = () => {
     fetchGameData();
   }, [id]);
 
-  // Real-time validation
+  // Real-time validation for game name
   useEffect(() => {
     const namePattern = /^[A-Za-z\s]+$/;
     if (gameName && !namePattern.test(gameName)) {
@@ -53,9 +53,13 @@ const UpdateGame = () => {
     }
   }, [gameName]);
 
+  // Real-time validation for price
   useEffect(() => {
+    const pricePattern = /^\d+$/;
     if (price < 0) {
       setPriceError("Price cannot be negative.");
+    } else if (!pricePattern.test(price.toString())) {
+      setPriceError("Price can only contain numbers.");
     } else {
       setPriceError("");
     }
@@ -76,7 +80,7 @@ const UpdateGame = () => {
       description,
       availableTimes,
       price,
-      image, // Image URL
+      image,
     };
 
     try {
@@ -84,9 +88,8 @@ const UpdateGame = () => {
         `http://localhost:3000/api/games/games/${id}`,
         updatedGameData
       );
-      //console.log("Game updated successfully:", response.data);
       alert("Game updated successfully!");
-      navigate('/GameDetails');
+      navigate("/GameDetails");
     } catch (error) {
       console.error("There was an error updating the game:", error);
       console.error("Error details:", error.response?.data || error.message);
@@ -160,7 +163,7 @@ const UpdateGame = () => {
           <div style={styles.formGroup}>
             <label style={styles.label}>Available Times:</label>
             <DatePicker
-              selected={null} // This keeps the picker empty after selection
+              selected={null}
               onChange={handleDateChange}
               showTimeSelect
               dateFormat="Pp"
@@ -176,7 +179,7 @@ const UpdateGame = () => {
               placeholder="Image URL"
               style={styles.input}
               value={image}
-              onChange={(e) => setImage(e.target.value)} // Set image state to the text value
+              onChange={(e) => setImage(e.target.value)}
             />
           </div>
 
@@ -302,6 +305,7 @@ const styles = {
   errorText: {
     color: "#FF6347",
     fontSize: "12px",
+    marginTop: "5px",
   },
 };
 

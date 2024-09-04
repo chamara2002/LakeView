@@ -99,7 +99,6 @@ const GameDetails = () => {
           </tbody>
         </table>
       </div>
-      <Footer />
     </div>
   );
 };

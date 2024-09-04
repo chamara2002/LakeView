@@ -85,16 +85,18 @@ const formTitleStyle = {
 };
 
 const inputStyle = {
-  padding: '8px',
+  padding: '10px',
   marginTop: '5px',
   marginBottom: '10px',
   width: '100%',
+  borderRadius: '5px',
 };
 
 const textareaStyle = {
   padding: '8px',
   width: '100%',
   marginBottom: '10px',
+  borderRadius: '5px',
 };
 
 const buttonStyle = {

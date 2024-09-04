@@ -78,7 +78,7 @@ const NavBar = ({ name }) => {
         >
           Support
         </Link>
-        {currentPage === "foods" ? (
+        { authState.isAuthenticated && currentPage === "foods" ? (
           <Link to="/cart">🛒 Cart ({cart.length})</Link>
         ) : (
           <></>
@@ -106,11 +106,16 @@ const NavBar = ({ name }) => {
         )}
 
         {user && user.user.role ? (
-          <Link to="/admin-dash" className={styles.link}>
+
+          user.user.role === 'Manager' ? (<Link to="/admin-dash" className={styles.link}>
             <button type="button" className={styles.register}>
               Admin portal
             </button>
-          </Link>
+          </Link>) : (<Link to="/staffmemberdash" className={styles.link}>
+            <button type="button" className={styles.register}>
+              My Dashboard
+            </button>
+          </Link>)
         ) : (
           <></>
         )}

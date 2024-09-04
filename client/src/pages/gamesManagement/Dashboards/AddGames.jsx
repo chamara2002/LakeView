@@ -89,7 +89,9 @@ const AddGames = () => {
   return (
     <div style={styles.pageContainer}>
       <NavBar />
+      <h1><center>ADD GAMES</center></h1>
       <div style={styles.addGamesContainer}>
+        
         <form style={styles.form} onSubmit={handleAddGame}>
           <div style={styles.formGroup}>
             <label style={styles.label}>Category:</label>
@@ -187,7 +189,6 @@ const AddGames = () => {
           </button>
         </form>
       </div>
-      <Footer />
     </div>
   );
 };

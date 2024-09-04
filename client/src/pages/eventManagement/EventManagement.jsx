@@ -27,6 +27,8 @@ const EventManagement = () => {
     navigate(`/event/edit/${id}`);
   };
 
+  console.log(events);
+
   return (
     <div style={containerStyle}>
       <h1 style={headerStyle}>Event Management</h1>

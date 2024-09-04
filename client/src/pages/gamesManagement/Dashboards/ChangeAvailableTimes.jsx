@@ -84,7 +84,6 @@ const ChangeAvailableTimes = () => {
         </form>
       </div>
     </div>
-          <Footer></Footer>
     </div>
   );
 };

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Footer from '../../components/core/Footer';
+import NavBar from '../../components/core/NavBar';
 
 const LeaveRequests = () => {
   const [leaveRequests, setLeaveRequests] = useState([]);
@@ -31,10 +33,12 @@ const LeaveRequests = () => {
   const containerStyle = {
     width: '80%',
     margin: '0 auto',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#ffffff',
     padding: '20px',
     borderRadius: '8px',
     textAlign: 'center',
+    minheight: '100vh',
+    height: 'auto',
   };
 
   const tableStyle = {
@@ -73,7 +77,9 @@ const LeaveRequests = () => {
   };
 
   return (
-    <div style={containerStyle}>
+    <div style={{backgroundColor: '#161E38'}}>
+      <NavBar></NavBar>
+      <div style={containerStyle}>
       <h2>LEAVE REQUESTS</h2>
       <table style={tableStyle}>
         <thead>
@@ -110,6 +116,8 @@ const LeaveRequests = () => {
           ))}
         </tbody>
       </table>
+    </div>
+    <Footer></Footer>
     </div>
   );
 };
