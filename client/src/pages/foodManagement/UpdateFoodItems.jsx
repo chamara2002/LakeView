@@ -40,6 +40,16 @@ const UpdateFoodItems = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    // Validation to prevent symbols in the name field
+    if (name === 'name') {
+      const regex = /^[a-zA-Z\s]*$/; // Regular expression to allow only letters and spaces
+      if (!regex.test(value)) {
+        alert('Item name can only contain letters and spaces.');
+        return;
+      }
+    }
+
     setFormData(prevData => ({
       ...prevData,
       [name]: type === 'checkbox' ? checked : value
@@ -77,7 +87,7 @@ const UpdateFoodItems = () => {
   };
 
   return (
-    <div>
+    <div style={styles.container}>
       <NavBar />
       <div style={styles.updateFoodItem}>
         <h2 style={styles.heading}>Update Food Item</h2>
@@ -101,7 +111,6 @@ const UpdateFoodItems = () => {
               onChange={handleChange}
               style={styles.input}
             />
-            <small style={styles.small}>Enter ingredients separated by commas</small>
           </div>
           <div style={styles.formGroup}>
             <label style={styles.label}>Category:</label>
@@ -157,11 +166,14 @@ const UpdateFoodItems = () => {
 };
 
 const styles = {
+  container: {
+    backgroundColor: '#161E38',
+  },
   updateFoodItem: {
     maxWidth: '600px',
     margin: 'auto',
     padding: '20px',
-    backgroundColor: '#fffff', // Changed background color
+    backgroundColor: '#c9cbd0',
     borderRadius: '10px',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
   },
@@ -175,13 +187,16 @@ const styles = {
   },
   formGroup: {
     marginBottom: '15px',
+    width: '60%',
+    padding: '5px',
   },
   label: {
     marginBottom: '5px',
     fontWeight: 'bold',
+    padding: '5px',
   },
   input: {
-    width: '100%',
+    width: '80%',
     padding: '10px',
     borderRadius: '5px',
     border: '1px solid #ccc',
@@ -206,10 +221,6 @@ const styles = {
     alignSelf: 'center',
     marginTop: '10px',
   },
-  small: {
-    fontSize: '0.9em',
-    color: '#666',
-  }
 };
 
 export default UpdateFoodItems;

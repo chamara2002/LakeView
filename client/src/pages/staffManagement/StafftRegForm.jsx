@@ -246,7 +246,7 @@ const formContainerStyle = {
 };
 
 const formStyle = {
-  backgroundColor: '#ffffff', // Light background for the form itself
+  backgroundColor: '#9b9fab', // Light background for the form itself
   padding: '20px',
   borderRadius: '8px',
   boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',

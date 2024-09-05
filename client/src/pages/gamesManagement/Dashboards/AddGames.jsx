@@ -11,7 +11,10 @@ const AddGames = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [availableTimes, setAvailableTimes] = useState([]);
-  const [image, setImage] = useState(""); 
+  const [image, setImage] = useState("");
+
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
 
   // Validation states
   const [nameError, setNameError] = useState("");
@@ -50,7 +53,7 @@ const AddGames = () => {
       description,
       availableTimes,
       price,
-      image, // Include image data
+      image,
     };
 
     try {
@@ -65,7 +68,7 @@ const AddGames = () => {
       setDescription("");
       setPrice(0);
       setAvailableTimes([]);
-      setImage(""); // Reset image
+      setImage("");
     } catch (error) {
       console.error("There was an error adding the game:", error);
       console.error("Error details:", error.response?.data || error.message);
@@ -73,8 +76,23 @@ const AddGames = () => {
   };
 
   const handleDateChange = (date) => {
-    if (date) {
-      setAvailableTimes([...availableTimes, date]);
+    setSelectedDate(date);
+  };
+
+  const handleTimeChange = (time) => {
+    setSelectedTime(time);
+  };
+
+  const addDateTime = () => {
+    if (selectedDate && selectedTime) {
+      const combinedDateTime = new Date(selectedDate);
+      combinedDateTime.setHours(selectedTime.getHours());
+      combinedDateTime.setMinutes(selectedTime.getMinutes());
+      setAvailableTimes([...availableTimes, combinedDateTime]);
+      setSelectedDate(null);
+      setSelectedTime(null);
+    } else {
+      alert("Please select both date and time.");
     }
   };
 
@@ -89,9 +107,10 @@ const AddGames = () => {
   return (
     <div style={styles.pageContainer}>
       <NavBar />
-      <h1><center>ADD GAMES</center></h1>
+      <h1>
+        <center>ADD GAMES</center>
+      </h1>
       <div style={styles.addGamesContainer}>
-        
         <form style={styles.form} onSubmit={handleAddGame}>
           <div style={styles.formGroup}>
             <label style={styles.label}>Category:</label>
@@ -143,15 +162,31 @@ const AddGames = () => {
           </div>
 
           <div style={styles.formGroup}>
-            <label style={styles.label}>Available Times:</label>
+            <label style={styles.label}>Available Dates:</label>
             <DatePicker
-              selected={null} // This keeps the picker empty after selection
+              selected={selectedDate}
               onChange={handleDateChange}
-              showTimeSelect
-              dateFormat="Pp"
-              placeholderText="Select a date and time"
+              dateFormat="yyyy/MM/dd"
+              placeholderText="Select a date"
               style={styles.input}
             />
+            <br></br>
+            <label style={styles.label}>Available Times:</label>  
+            <DatePicker
+              selected={selectedTime}
+              onChange={handleTimeChange}
+              showTimeSelect
+              showTimeSelectOnly
+              timeIntervals={15}
+              timeCaption="Time"
+              dateFormat="h:mm aa"
+              placeholderText="Select a time"
+              style={styles.input}
+            />
+            <br></br>
+            <button type="button" onClick={addDateTime} style={styles.addButton}>
+              Add Date and Time
+            </button>
           </div>
 
           <div style={styles.formGroup}>
@@ -161,7 +196,9 @@ const AddGames = () => {
               onChange={handleImageChange}
               style={styles.fileInput}
             />
-            {image && <img src={image} alt="Preview" style={styles.imagePreview} />}
+            {image && (
+              <img src={image} alt="Preview" style={styles.imagePreview} />
+            )}
           </div>
 
           {availableTimes.length > 0 && (
@@ -262,42 +299,42 @@ const styles = {
   },
   timesTitle: {
     marginBottom: "10px",
-    fontSize: "16px",
+    fontSize: "18px",
     color: "#FFD700",
   },
   timesList: {
     listStyleType: "none",
-    paddingLeft: "0",
+    padding: "0",
   },
   timeItem: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "5px 0",
-    borderBottom: "1px solid #FFD700",
+    marginBottom: "10px",
+    padding: "10px",
+    backgroundColor: "#3A3F64",
+    borderRadius: "5px",
+    color: "#fff",
   },
   removeButton: {
-    padding: "5px 10px",
-    backgroundColor: "#FF6347",
-    color: "#fff",
+    backgroundColor: "#FF4136",
     border: "none",
+    color: "white",
+    padding: "5px 10px",
     borderRadius: "5px",
     cursor: "pointer",
-    fontSize: "12px",
   },
   addButton: {
-    padding: "10px 20px",
-    backgroundColor: "#FFD700",
-    color: "#000",
+    backgroundColor: "#007BFF",
     border: "none",
+    color: "white",
+    padding: "10px",
     borderRadius: "5px",
     cursor: "pointer",
-    fontSize: "16px",
-    fontWeight: "bold",
-    marginTop: "20px",
+    width: "100%",
   },
   errorText: {
-    color: "#FF6347",
+    color: "red",
     fontSize: "14px",
     marginTop: "5px",
   },

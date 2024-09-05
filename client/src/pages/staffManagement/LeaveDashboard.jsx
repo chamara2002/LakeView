@@ -33,7 +33,7 @@ const LeaveRequests = () => {
   const containerStyle = {
     width: '80%',
     margin: '0 auto',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#9b9fab',
     padding: '20px',
     borderRadius: '8px',
     textAlign: 'center',

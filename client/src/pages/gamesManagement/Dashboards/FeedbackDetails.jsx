@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAuth } from "../../foodManagement/context/authContext";
 import NavBar from "../../../components/core/NavBar";
 import Footer from "../../../components/core/Footer";
+import ReportButton from "../../../components/reUseable/ReportButton";
 
 const FeedbackDetails = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -42,7 +43,7 @@ const FeedbackDetails = () => {
       <NavBar />
 
       <div style={styles.pageContainer}>
-        <h2 style={styles.heading}>Feedback Details</h2> {/* Added heading */}
+        <h2 style={styles.heading}>Feedback And Rating Details</h2> {/* Added heading */}
         <table style={styles.table}>
           <thead>
             <tr style={styles.tableHeader}>
@@ -80,6 +81,8 @@ const FeedbackDetails = () => {
             ))}
           </tbody>
         </table>
+        <br></br>
+        <ReportButton></ReportButton>
       </div>
     </div>
   );
@@ -99,7 +102,7 @@ const styles = {
   heading: {
     fontSize: "24px",
     fontWeight: "bold",
-    color: "#ffffff",
+    color: "yellow",
     marginBottom: "60px",
     textAlign: "center",
   },

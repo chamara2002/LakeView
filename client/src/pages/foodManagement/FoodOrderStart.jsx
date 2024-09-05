@@ -38,7 +38,7 @@ const navigate = useNavigate();
             <br />
             <br />
             <div onClick={()=>navigate('/food')}>
-              <CustomButton color="yellow" buttonText="Order"  />
+              <CustomButton color="#FFBB00" buttonText="Order"  />
             </div>
           </div>
         </div>

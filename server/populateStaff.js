@@ -20,6 +20,18 @@ const staffMembers = [
     leaves: [],
   },
   {
+    username: "jdoe",
+    email: "raveesha@example.com",
+    nic: "123456789",
+    address: "123 Elm St",
+    phone: "123-456-7890",
+    password: "password123", // Plain text password; will be hashed by schema pre-save hook
+    profilePic: "",
+    role: "Manager",
+    salary: 55000,
+    leaves: [],
+  },
+  {
     username: "asmith",
     email: "asmith@example.com",
     nic: "987654321",

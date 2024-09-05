@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import NavBar from "../../components/core/NavBar";
 import Footer from "../../components/core/Footer";
 import { useAuth } from "../foodManagement/context/authContext";
+import { useCart } from "./context/CartContext";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { BookingContext } from "../foodManagement/context/BookingContext";
@@ -10,6 +11,7 @@ const CardPayF = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [cart, setCart] = useState([]);
+  const {dispatch} = useCart();
 
   const handlePayment = async (e) => {
     e.preventDefault();
@@ -51,6 +53,7 @@ const CardPayF = () => {
       localStorage.removeItem("cart");
       localStorage.removeItem("total");
       navigate("/food/start");
+      dispatch({ type: "CLEAR_CART" }); // Clear cart in the context
     } catch (error) {
       console.error("Error during checkout:", error);
     }
@@ -58,12 +61,9 @@ const CardPayF = () => {
 
   return (
     <>
-      <NavBar name="events" />
+      <NavBar name="foods" />
       <div style={styles.container}>
-        <div style={styles.header}>
-          <h1 style={styles.mainTitle}>Victory Arena</h1>
-          <h2 style={styles.subTitle}>Booking Form</h2>
-        </div>
+       
         <div style={styles.body}>
           <div style={styles.paymentSection}>
             <h3 style={styles.sectionTitle}>Card Payment</h3>

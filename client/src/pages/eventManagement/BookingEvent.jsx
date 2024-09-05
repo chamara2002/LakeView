@@ -27,9 +27,17 @@ const BookingEvent = () => {
     customer: user.user._id,
   });
 
+  const [isDateValid, setIsDateValid] = useState(true); // State for date validation
+
   // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === 'eventDate') {
+      const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+      setIsDateValid(value >= today); // Check if the selected date is not in the past
+    }
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -99,8 +107,11 @@ const BookingEvent = () => {
               style={styles.input}
               required
             />
+            {!isDateValid && (
+              <p style={styles.error}>Please select a valid date.</p>
+            )}
           </div>
-          <button type="submit" style={styles.submitButton}>
+          <button type="submit" style={styles.submitButton} disabled={!isDateValid}>
             Save Details and Next
           </button>
         </form>
@@ -159,6 +170,10 @@ const styles = {
     fontSize: '18px',
     cursor: 'pointer',
     textAlign: 'center',
+  },
+  error: {
+    color: 'red',
+    marginTop: '10px',
   },
 };
 

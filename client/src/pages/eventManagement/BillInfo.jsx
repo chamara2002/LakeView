@@ -51,6 +51,7 @@ const BillInfo = () => {
         <div style={styles.body}>
           <div style={styles.billInformation}>
             <h3>Bill Information</h3>
+
             <p>{`${event.name} booking fee = ${event.price}`}</p>
             <p>{`Total amount = ${event.price}`}</p>
           </div>
@@ -76,6 +77,7 @@ const styles = {
   },
   header: {
     marginBottom: '20px',
+    padding: '20px',
   },
   mainTitle: {
     fontSize: '36px',

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Footer from "../../components/core/Footer";
 import NavBar from "../../components/core/NavBar";
+import ReportButton from "../../components/reUseable/ReportButton";
 
 const LeaveDetails = () => {
   const [leaves, setLeaves] = useState([]);
@@ -120,6 +121,8 @@ const LeaveDetails = () => {
               ))}
             </tbody>
           </table>
+          <br></br>
+          <center><ReportButton></ReportButton></center>
         </div>
       </div>
       <Footer />

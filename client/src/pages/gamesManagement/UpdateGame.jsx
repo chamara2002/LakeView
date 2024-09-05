@@ -13,6 +13,8 @@ const UpdateGame = () => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [availableTimes, setAvailableTimes] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
   const [image, setImage] = useState("");
 
   const navigate = useNavigate();
@@ -29,12 +31,18 @@ const UpdateGame = () => {
           `http://localhost:3000/api/games/games/${id}`
         );
         const game = response.data;
+
         setGameName(game.name);
         setCategory(game.category);
         setDescription(game.description);
         setPrice(game.price);
-        setAvailableTimes(game.availableTimes);
         setImage(game.image);
+
+        // Convert each available time string to a Date object
+        const convertedTimes = game.availableTimes.map(
+          (time) => new Date(time)
+        );
+        setAvailableTimes(convertedTimes);
       } catch (error) {
         console.error("There was an error fetching the game data:", error);
       }
@@ -97,8 +105,27 @@ const UpdateGame = () => {
   };
 
   const handleDateChange = (date) => {
-    if (date) {
-      setAvailableTimes([...availableTimes, date]);
+    setSelectedDate(date);
+  };
+
+  const handleTimeChange = (time) => {
+    setSelectedTime(time);
+  };
+
+  const addDateTime = () => {
+    if (selectedDate && selectedTime) {
+      const combinedDateTime = new Date(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate(),
+        selectedTime.getHours(),
+        selectedTime.getMinutes()
+      );
+      setAvailableTimes([...availableTimes, combinedDateTime]);
+      setSelectedDate(null); // Reset the date picker
+      setSelectedTime(null); // Reset the time picker
+    } else {
+      alert("Please select both date and time before adding.");
     }
   };
 
@@ -161,27 +188,34 @@ const UpdateGame = () => {
           </div>
 
           <div style={styles.formGroup}>
-            <label style={styles.label}>Available Times:</label>
+            <label style={styles.label}>Available Date:</label>
             <DatePicker
-              selected={null}
+              selected={selectedDate}
               onChange={handleDateChange}
-              showTimeSelect
-              dateFormat="Pp"
-              placeholderText="Select a date and time"
+              dateFormat="yyyy/MM/dd"
+              placeholderText="Select a date"
               style={styles.input}
             />
           </div>
 
           <div style={styles.formGroup}>
-            <label style={styles.label}>Game Image URL:</label>
-            <input
-              type="text"
-              placeholder="Image URL"
+            <label style={styles.label}>Available Time:</label>
+            <DatePicker
+              selected={selectedTime}
+              onChange={handleTimeChange}
+              showTimeSelect
+              showTimeSelectOnly
+              timeIntervals={15}
+              timeCaption="Time"
+              dateFormat="h:mm aa"
+              placeholderText="Select a time"
               style={styles.input}
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
             />
           </div>
+
+          <button type="button" onClick={addDateTime} style={styles.addButton}>
+            Add Date & Time
+          </button>
 
           {availableTimes.length > 0 && (
             <div style={styles.timesContainer}>
@@ -189,7 +223,7 @@ const UpdateGame = () => {
               <ul style={styles.timesList}>
                 {availableTimes.map((time, index) => (
                   <li key={index} style={styles.timeItem}>
-                    {time.toLocaleString()}{" "}
+                    {time.toLocaleString()} {/* Display the date and time */}
                     <button
                       type="button"
                       onClick={() => removeTime(index)}
@@ -202,6 +236,17 @@ const UpdateGame = () => {
               </ul>
             </div>
           )}
+
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Game Image URL:</label>
+            <input
+              type="text"
+              placeholder="Image URL"
+              style={styles.input}
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+            />
+          </div>
 
           <button type="submit" style={styles.addButton}>
             Update Game
@@ -261,51 +306,46 @@ const styles = {
     backgroundColor: "#fff",
     color: "#000",
   },
+  addButton: {
+    padding: "10px 20px",
+    backgroundColor: "#FFD700",
+    borderRadius: "5px",
+    border: "none",
+    cursor: "pointer",
+    color: "#1E2749",
+    fontSize: "16px",
+    fontWeight: "bold",
+    width: "100%",
+  },
   timesContainer: {
     marginTop: "20px",
-    padding: "10px",
-    backgroundColor: "#2E3553",
-    borderRadius: "5px",
   },
   timesTitle: {
+    fontSize: "18px",
     marginBottom: "10px",
-    fontSize: "16px",
     color: "#FFD700",
   },
   timesList: {
     listStyleType: "none",
-    paddingLeft: "0",
+    padding: "0",
   },
   timeItem: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "5px 0",
-    borderBottom: "1px solid #FFD700",
+    marginBottom: "10px",
   },
   removeButton: {
     padding: "5px 10px",
-    backgroundColor: "#FF6347",
+    backgroundColor: "#FF4C4C",
+    borderRadius: "5px",
+    border: "none",
+    cursor: "pointer",
     color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontSize: "12px",
-  },
-  addButton: {
-    padding: "10px 20px",
-    backgroundColor: "#FFD700",
-    color: "#000",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontSize: "16px",
-    width: "100%",
   },
   errorText: {
-    color: "#FF6347",
-    fontSize: "12px",
-    marginTop: "5px",
+    color: "red",
+    fontSize: "14px",
   },
 };
 

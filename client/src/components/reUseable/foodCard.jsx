@@ -8,7 +8,9 @@ const FoodCard = ({ food }) => {
     dispatch({
       type: 'ADD_TO_CART',
       payload: { ...food, quantity: 1 }
+      
     });
+    alert('Item added to cart!');
   };
 
   return (

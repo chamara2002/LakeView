@@ -71,48 +71,65 @@ const MovieBookingManagement = () => {
           }}
         />
         
-        <div style={cardGridStyle}>
-          {filteredBookings.map((booking) => (
-            <div key={booking._id} style={cardStyle}>
-              <h3 style={cardTitleStyle}>
-                {booking.movie?.name || "Unknown Movie"}
-              </h3>
-              <p style={cardDetailStyle}>
-                <strong>Customer Email:</strong> {booking.customer?.email || "Unknown Customer"}
-              </p>
-              <p style={cardDetailStyle}>
-                <strong>Seats:</strong> {booking.seatNumbers ? booking.seatNumbers.length : 0}
-              </p>
-              <p style={cardDetailStyle}>
-                <strong>Price:</strong> ${booking.totalPrice.toFixed(2)}
-              </p>
-              <p style={cardDetailStyle}>
-                <strong>Booking Status:</strong> {booking.confirmed ? "Paid" : "Not paid"}
-              </p>
-              <div style={cardButtonContainerStyle}>
-                <button
-                  onClick={() => handleConfirm(booking._id)}
-                  disabled={booking.confirmed}
-                  style={{
-                    ...cardButtonStyle,
-                    backgroundColor: booking.confirmed ? "#28a745" : "#007bff",
-                    cursor: booking.confirmed ? "default" : "pointer",
-                  }}
-                >
-                  {booking.confirmed ? "Payment confirmed" : "Confirm Payment"}
-                </button>
-                <button
-                  onClick={() => handleDelete(booking._id)}
-                  style={{
-                    ...cardButtonStyle,
-                    backgroundColor: "#dc3545",
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
+        <div style={tableGridStyle}>
+          <table style={tableStyle}>
+            <thead>
+              <tr>
+                <th style={thStyle}>Movie Name</th>
+                <th style={thStyle}>Customer Email</th>
+                <th style={thStyle}>Seats</th>
+                <th style={thStyle}>Price</th>
+                <th style={thStyle}>Booking Status</th>
+                <th style={thStyle}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredBookings.map((booking) => (
+                <tr key={booking._id} style={trStyle}>
+                  <td style={tdStyle}>
+                    {booking.movie?.name || "Unknown Movie"}
+                  </td>
+                  <td style={tdStyle}>
+                    {booking.customer?.email || "Unknown Customer"}
+                  </td>
+                  <td style={tdStyle}>
+                    {booking.seatNumbers ? booking.seatNumbers.length : 0}
+                  </td>
+                  <td style={tdStyle}>${booking.totalPrice.toFixed(2)}</td>
+                  <td style={tdStyle}>
+                    {booking.confirmed ? "Paid" : "Not paid"}
+                  </td>
+                  <td style={tdStyle}>
+                    <button
+                      onClick={() => handleConfirm(booking._id)}
+                      disabled={booking.confirmed}
+                      style={{
+                        ...cardButtonStyle,
+                        backgroundColor: booking.confirmed
+                          ? "#28a745"
+                          : "#007bff",
+                        cursor: booking.confirmed ? "default" : "pointer",
+                        marginRight: "10px",
+                      }}
+                    >
+                      {booking.confirmed
+                        ? "Payment confirmed"
+                        : "Confirm Payment"}
+                    </button>
+                    <button
+                      onClick={() => handleDelete(booking._id)}
+                      style={{
+                        ...cardButtonStyle,
+                        backgroundColor: "#dc3545",
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
       <Footer />
@@ -121,35 +138,35 @@ const MovieBookingManagement = () => {
 };
 
 // Styles
-const cardGridStyle = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-  gap: "20px",
+const tableGridStyle = {
+  display: "block",
+  width: "100%",
+  overflowX: "auto",
+  whiteSpace: "nowrap",
 };
 
-const cardStyle = {
+const tableStyle = {
+  width: "100%",
+  borderCollapse: "collapse",
   backgroundColor: "#1b1f38",
-  borderRadius: "8px",
-  padding: "20px",
-  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
   color: "#fff",
 };
 
-const cardTitleStyle = {
-  marginBottom: "15px",
-  fontSize: "20px",
-  color: "#f0f0f0",
-};
-
-const cardDetailStyle = {
-  marginBottom: "10px",
+const thStyle = {
+  padding: "12px",
+  backgroundColor: "#2a2f55",
+  textAlign: "left",
   fontSize: "16px",
+  borderBottom: "2px solid #444",
 };
 
-const cardButtonContainerStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  marginTop: "20px",
+const trStyle = {
+  borderBottom: "1px solid #444",
+};
+
+const tdStyle = {
+  padding: "12px",
+  fontSize: "16px",
 };
 
 const cardButtonStyle = {

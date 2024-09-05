@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Footer from '../../components/core/Footer';
 import NavBar from '../../components/core/NavBar';
+import FoodSidebar from './FoodSideBar';
 
 const AddFood = () => {
   const [formData, setFormData] = useState({
@@ -15,15 +16,13 @@ const AddFood = () => {
 
   const [errors, setErrors] = useState({});
 
-  // Set the background color of the page
   useEffect(() => {
     document.body.style.backgroundColor = '#161E38';
     return () => {
-      document.body.style.backgroundColor = ''; // Reset the background color when the component unmounts
+      document.body.style.backgroundColor = '';
     };
   }, []);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -32,17 +31,42 @@ const AddFood = () => {
     }));
   };
 
-  // Validate the form data
   const validate = () => {
     const errors = {};
-    if (!formData.name) errors.name = 'Name is required.';
-    if (!formData.ingredients) errors.ingredients = 'Ingredients are required.';
-    if (!formData.category) errors.category = 'Category is required.';
-    if (!formData.price || formData.price <= 0) errors.price = 'Valid price is required.';
+
+    const nameRegex = /^[A-Za-z\s]+$/;
+    if (!formData.name) {
+      errors.name = 'Name is required.';
+    } else if (!nameRegex.test(formData.name)) {
+      errors.name = 'Name can only contain letters and spaces.';
+    }
+
+    if (!formData.ingredients) {
+      errors.ingredients = 'Ingredients are required.';
+    }
+
+    const categories = ['Soups', 'Chinese food', 'Pizza', 'Dessert', 'Drinks'];
+    if (!formData.category) {
+      errors.category = 'Category is required.';
+    } else if (!categories.includes(formData.category)) {
+      errors.category = 'Please select a valid category.';
+    }
+
+    const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
+    if (!formData.price) {
+      errors.price = 'Price is required.';
+    } else if (!priceRegex.test(formData.price) || parseFloat(formData.price) <= 0) {
+      errors.price = 'Price must be a positive number.';
+    }
+
+    const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+    if (formData.imageUrl && !urlRegex.test(formData.imageUrl)) {
+      errors.imageUrl = 'Please enter a valid URL.';
+    }
+
     return errors;
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
@@ -54,13 +78,12 @@ const AddFood = () => {
     try {
       const dataToSend = {
         ...formData,
-        ingredients: formData.ingredients.split(',').map((item) => item.trim()), // Convert ingredients string to array
+        ingredients: formData.ingredients.split(',').map((item) => item.trim()),
       };
 
       await axios.post('http://localhost:3000/api/food/add-food', dataToSend);
       alert('Food item added successfully!');
-      
-      // Reset the form after successful submission
+
       setFormData({
         name: '',
         ingredients: '',
@@ -79,6 +102,8 @@ const AddFood = () => {
   return (
     <div>
       <NavBar />
+      <br></br>
+      
       <div style={styles.container}>
         <h2 style={styles.heading}>Add Food Item</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
@@ -164,6 +189,7 @@ const AddFood = () => {
               style={styles.input}
               placeholder="Enter image URL"
             />
+            {errors.imageUrl && <span style={styles.error}>{errors.imageUrl}</span>}
           </div>
 
           <button type="submit" style={styles.submitButton}>

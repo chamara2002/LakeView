@@ -49,12 +49,9 @@ const CardPayV = () => {
 
   return (
     <>
-      <NavBar name="events" />
+      <NavBar name="" />
       <div style={styles.container}>
-        <div style={styles.header}>
-          <h1 style={styles.mainTitle}>Victory Arena</h1>
-          <h2 style={styles.subTitle}>Booking Form</h2>
-        </div>
+       
         <div style={styles.body}>
           <div style={styles.paymentSection}>
             <h3 style={styles.sectionTitle}>Card Payment</h3>

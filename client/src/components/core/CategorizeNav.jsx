@@ -6,6 +6,7 @@ const CategorizeNav = ({
   onIndoorClick,
   onOutdoorClick,
   onWaterClick,
+  onTodayClick,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -19,7 +20,7 @@ const CategorizeNav = ({
     padding: isOpen ? "20px" : "10px",
     borderRadius: "10px",
     width: isOpen ? "300px" : "60px",
-    height: "calc(100vh - 40px)",
+    height: "30vh",
     fontFamily: "Arial, sans-serif",
     textAlign: "center",
     transition: "width 0.3s ease",
@@ -83,6 +84,7 @@ const CategorizeNav = ({
           <li style={listItemStyle} onClick={onWaterClick}>
             Water Games
           </li>
+
         </ul>
       </div>
       <div style={toggleButtonStyle} onClick={toggleSidebar}>

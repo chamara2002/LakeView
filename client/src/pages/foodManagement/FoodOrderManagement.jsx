@@ -6,6 +6,7 @@ import NavBar from "../../components/core/NavBar";
 const FoodOrderManagement = () => {
   const [orders, setOrders] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchIdQuery, setSearchIdQuery] = useState(""); // New state for searching by order ID
 
   useEffect(() => {
     axios
@@ -46,7 +47,8 @@ const FoodOrderManagement = () => {
   const filteredOrders = orders.filter((order) =>
     order.meals?.some((meal) =>
       meal.food?.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    ) &&
+    order._id.toLowerCase().includes(searchIdQuery.toLowerCase()) // Filter by Order ID
   );
 
   console.log("Filtered Orders:", filteredOrders); // Log filtered orders
@@ -61,22 +63,36 @@ const FoodOrderManagement = () => {
           padding: "20px",
         }}
       >
-        <input
-          type="text"
-          placeholder="Search by food name"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginBottom: "20px",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-            color: "#000",
-          }}
-        />
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
+          <input
+            type="text"
+            placeholder="Search by food name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: "35%",
+              padding: "10px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+              color: "#000",
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Search by order ID"
+            value={searchIdQuery}
+            onChange={(e) => setSearchIdQuery(e.target.value)}
+            style={{
+              width: "35%",
+              padding: "10px",
+              borderRadius: "4px",
+              border: "1px solid #ccc",
+              color: "#000",
+            }}
+          />
+        </div>
         <table
-          style={{ width: "100%", borderCollapse: "collapse", color: "#fff" }}
+          style={{ width: "100%", borderCollapse: "collapse", color: "#fff" ,marginTop:"80px"}}
         >
           <thead>
             <tr>
@@ -110,7 +126,7 @@ const FoodOrderManagement = () => {
                   </td>
                   <td style={tdStyle}>${order.totalPrice.toFixed(2)}</td>
                   <td style={tdStyle}>
-                    {order.isCompleted ? "Completed" : "Pending"}
+                    {order.isCompleted ? "Completed" : "Not Completed"}
                   </td>
                   <td style={tdStyle}>
                     <button

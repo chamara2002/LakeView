@@ -1,60 +1,63 @@
-import React, { useEffect, useContext, useState } from 'react'; // Add useContext import
-import NavBar from '../../components/core/NavBar';
-import Footer from '../../components/core/Footer';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../foodManagement/context/authContext';
-import { BookingContext } from '../foodManagement/context/BookingContext';
-import CartSummary from './CartSummery';
+import React, { useEffect, useContext, useState } from "react"; // Add useContext import
+import NavBar from "../../components/core/NavBar";
+import Footer from "../../components/core/Footer";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../foodManagement/context/authContext";
+import CartSummary from "./CartSummery";
+import { useCart } from "./context/CartContext";
 
 const FoodPurchase = () => {
-  const [movie, setMovie] = React.useState('');
+  const [movie, setMovie] = React.useState("");
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [cart ,setCart] = useState([]);
+  const { dispatch } = useCart();
+  const [cart, setCart] = useState([]);
 
   const handleCashPay = async () => {
     // Retrieve the cart items and total from localStorage
-    const savedCart = JSON.parse(localStorage.getItem('cart'));
-    const total = localStorage.getItem('total') ? localStorage.getItem('total') : 0;
-    
+    const savedCart = JSON.parse(localStorage.getItem("cart"));
+    const total = localStorage.getItem("total")
+      ? localStorage.getItem("total")
+      : 0;
+
     if (!savedCart || savedCart.length === 0) {
       alert("Your cart is empty!");
       return;
     }
-  
-    setCart(savedCart);  // Update the cart state
-  
+
+    setCart(savedCart); // Update the cart state
+
     // Calculate the meals and total price based on the saved cart
-    const meals = savedCart.map(item => ({
+    const meals = savedCart.map((item) => ({
       food: item._id,
       quantity: item.quantity,
     }));
-  
+
     const totalPrice = savedCart.reduce(
       (total, item) => total + item.price * item.quantity,
       0
     );
-  
+
     try {
       // Post request to the backend
-      await axios.post('http://localhost:3000/api/order/add-order', {
+      await axios.post("http://localhost:3000/api/order/add-order", {
         userId: user.user._id,
         meals,
         totalPrice: total,
         isCompleted: false,
       });
-  
+
       // Redirect or show a success message
-      alert('Order placed successfully!');
-      localStorage.removeItem('cart');
-      localStorage.removeItem('total');
-      navigate('/food/start');
+      dispatch({ type: "CLEAR_CART" });
+      alert("Order placed successfully!");
+      localStorage.removeItem("cart");
+      localStorage.removeItem("total");
+      navigate("/food/start");
     } catch (error) {
-      console.error('Error during checkout:', error);
+      console.error("Error during checkout:", error);
     }
   };
-  
 
   return (
     <>
@@ -71,9 +74,18 @@ const FoodPurchase = () => {
           </div>
           <div style={styles.paymentMethod}>
             <h3>Payment Method</h3>
-            <button style={styles.button} onClick={() => navigate(`/PayOnlineFood`)}>Card Payment &rarr;</button>
-            <button style={styles.button} onClick={handleCashPay}>Cash on Arrival &rarr;</button>
-            <button style={styles.button} onClick={()=>navigate('/cart')}>Cancel</button>
+            <button
+              style={styles.button}
+              onClick={() => navigate(`/PayOnlineFood`)}
+            >
+              Card Payment &rarr;
+            </button>
+            <button style={styles.button} onClick={handleCashPay}>
+              Cash on Arrival &rarr;
+            </button>
+            <button style={styles.button} onClick={() => navigate("/cart")}>
+              Cancel
+            </button>
           </div>
         </div>
       </div>
@@ -84,54 +96,54 @@ const FoodPurchase = () => {
 
 const styles = {
   container: {
-    padding: '20px',
-    textAlign: 'center',
-    backgroundColor: '#1E1E1E',
-    color: '#FFFFFF',
-    minHeight: '70vh',
+    padding: "20px",
+    textAlign: "center",
+    backgroundColor: "#1E1E1E",
+    color: "#FFFFFF",
+    minHeight: "70vh",
   },
   header: {
-    marginBottom: '20px',
+    marginBottom: "20px",
   },
   mainTitle: {
-    fontSize: '36px',
-    margin: '0',
+    fontSize: "36px",
+    margin: "0",
   },
   subTitle: {
-    fontSize: '24px',
-    margin: '0',
+    fontSize: "24px",
+    margin: "0",
   },
   body: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    marginTop: '40px',
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    marginTop: "40px",
   },
   billInformation: {
-    backgroundColor: '#F0F0F0',
-    color: '#000000',
-    padding: '20px',
-    borderRadius: '8px',
-    width: '40%',
+    backgroundColor: "#F0F0F0",
+    color: "#000000",
+    padding: "20px",
+    borderRadius: "8px",
+    width: "40%",
   },
   paymentMethod: {
-    backgroundColor: '#F0F0F0',
-    color: '#000000',
-    padding: '20px',
-    borderRadius: '8px',
-    width: '40%',
+    backgroundColor: "#F0F0F0",
+    color: "#000000",
+    padding: "20px",
+    borderRadius: "8px",
+    width: "40%",
   },
   button: {
-    display: 'block',
-    width: '100%',
-    padding: '10px 20px',
-    margin: '10px 0',
-    fontSize: '16px',
-    backgroundColor: '#333333',
-    color: '#FFFFFF',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
+    display: "block",
+    width: "100%",
+    padding: "10px 20px",
+    margin: "10px 0",
+    fontSize: "16px",
+    backgroundColor: "#333333",
+    color: "#FFFFFF",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
   },
 };
 

@@ -38,7 +38,7 @@ const Cart = () => {
   };
 
   return (
-    <div>
+    <div style={pageStyle}>
       <NavBar />
       <div style={cartStyle}>
         <h2>Your Cart</h2>
@@ -105,13 +105,21 @@ const Cart = () => {
 };
 
 // Inline CSS styles
+
+
+const pageStyle = {
+  backgroundColor: "#161E38",
+  padding: "20px",
+  minHeight: "100vh",
+};
 const cartStyle = {
   maxWidth: "1200px",
   margin: "20px auto",
   padding: "20px",
-  backgroundColor: "#f9f9f9",
+  backgroundColor: "#bcbbb6",
   borderRadius: "8px",
   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+  
 };
 
 const searchInputStyle = {
@@ -119,14 +127,14 @@ const searchInputStyle = {
   marginBottom: "20px",
   borderRadius: "4px",
   border: "1px solid #ccc",
-  width: "100%",
+  width: "30%",
 };
 
 const cartItemStyle = {
   display: "flex",
   alignItems: "center",
   padding: "15px",
-  backgroundColor: "#fff",
+  backgroundColor: "#74736e",
   borderRadius: "8px",
   marginBottom: "20px",
   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",

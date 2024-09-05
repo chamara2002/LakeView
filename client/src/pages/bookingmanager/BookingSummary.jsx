@@ -5,10 +5,12 @@ import Footer from "../../components/core/Footer";
 import axios from "axios";
 import { useAuth } from "../foodManagement/context/authContext";
 import { BookingContext } from "../foodManagement/context/BookingContext";
+import { FaAlignCenter } from "react-icons/fa";
 
 const BookingSummary = () => {
   const [selectedDate, setSelectedDate] = useState("");
-  const [item, setItem] = useState({}); // Unified state for movie or game
+  const [item, setItem] = useState({});
+  const [isDateValid, setIsDateValid] = useState(true); // State for date validation
   const navigate = useNavigate();
   const { user } = useAuth();
   const { bookingDetails } = useContext(BookingContext);
@@ -36,14 +38,16 @@ const BookingSummary = () => {
   }, [bookingDetails.itemId, bookingDetails.type]);
 
   const handleDateChange = (e) => {
-    setSelectedDate(e.target.value);
+    const selected = e.target.value;
+    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+    setSelectedDate(selected);
+    setIsDateValid(selected >= today); // Check if the selected date is not in the past
   };
 
   const handleConfirm = () => {
     if (selectedDate) {
-      // Save the selected date or perform any necessary action
       alert(`Booking confirmed for ${selectedDate}`);
-      bookingDetails.type === "movie" ? navigate('/movieBillinfo') : navigate('/gameBillInfo')
+      bookingDetails.type === "movie" ? navigate('/movieBillinfo') : navigate('/gameBillInfo');
     }
   };
 
@@ -52,31 +56,37 @@ const BookingSummary = () => {
       <NavBar name="Booking" />
       <div style={styles.container}>
         <h2 style={styles.title}>Booking Summary</h2>
-        <h3>Bill Information</h3>
-        <p>{`${item.name} booking fee = R.S.${item.price} X ${bookingDetails.seatNumbers.length} seats `}</p>
-        <p>{`Total amount = R.S.${bookingDetails.total}`}</p>
-        <h3>User information</h3>
-        <p>{`Name: ${user.user.name}`}</p>
-        <p>{`Email: ${user.user.email}`}</p>
-        <div style={styles.formGroup}>
-          <label style={styles.label} htmlFor="date">
-            Select a Date:
-          </label>
-          <input
-            type="date"
-            id="date"
-            value={selectedDate}
-            onChange={handleDateChange}
-            style={styles.input}
-          />
+
+        <div style={styles.content}>
+          <h3>Bill Information</h3> 
+          <p>{`${item.name} booking fee = R.S.${item.price} X ${bookingDetails.seatNumbers.length} seats`}</p>
+          <p>{`Total amount = R.S.${bookingDetails.total}`}</p>
+          <h3>User information</h3>
+          <p>{`Name: ${user.user.name}`}</p>
+          <p>{`Email: ${user.user.email}`}</p>
+          <div style={styles.formGroup}>
+            <label style={styles.label} htmlFor="date">
+              Select a Date:
+            </label>
+            <input
+              type="date"
+              id="date"
+              value={selectedDate}
+              onChange={handleDateChange}
+              style={styles.input}
+            />
+            {!isDateValid && (
+              <p style={styles.error}>Please select a valid date.</p>
+            )}
+          </div>
+          <button
+            style={styles.button}
+            onClick={handleConfirm}
+            disabled={!selectedDate || !isDateValid}
+          >
+            OK
+          </button>
         </div>
-        <button
-          style={styles.button}
-          onClick={handleConfirm}
-          disabled={!selectedDate}
-        >
-          OK
-        </button>
       </div>
       <Footer />
     </>
@@ -84,11 +94,19 @@ const BookingSummary = () => {
 };
 
 const styles = {
+  content: {
+    marginTop: "100px", 
+    backgroundColor: "#c9cbd0",
+    padding: "20px",
+    width: "50%",
+    margin: "0 auto",
+    borderRadius: "10px",
+  },
   container: {
     padding: "20px",
     textAlign: "center",
-    backgroundColor: "#1E1E1E",
-    color: "#FFFFFF",
+    backgroundColor: "#161E38",
+    color: "#000000",
     minHeight: "70vh",
   },
   title: {
@@ -105,6 +123,7 @@ const styles = {
   input: {
     padding: "8px",
     fontSize: "16px",
+    borderRadius: "5px",
   },
   button: {
     padding: "10px 20px",
@@ -117,6 +136,10 @@ const styles = {
     marginTop: "20px",
     width: "100%",
     maxWidth: "200px",
+  },
+  error: {
+    color: "red",
+    marginTop: "10px",
   },
 };
 

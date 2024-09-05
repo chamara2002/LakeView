@@ -18,7 +18,7 @@
     max-width: 800px; /* Optional: Limit the width for better readability */
     width: 100%;
     text-align: center; /* Center text inside */
-    background-color: #1E2A47; /* Optional: Different background for mainContainer */
+    background-color: #d2d0c7; /* Optional: Different background for mainContainer */
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -30,7 +30,7 @@
   
   .mainContainerTitle h3 {
     font-size: 2rem;
-    color: #FFD700; /* Example title color */
+    color: #ddbd2d; /* Example title color */
     margin: 0;
   }
   
