@@ -72,6 +72,7 @@ const LeaveDetails = () => {
             onChange={handleSearchByDate}
             style={searchBarStyle}
           />
+          <br></br>
           <input
             type="text"
             placeholder="Search by ID"
@@ -141,7 +142,7 @@ const containerStyle = {
 const searchBarStyle = {
   margin: "20px 0",
   padding: "10px",
-  width: "50%",
+  width: "20%",
   fontSize: "16px",
   borderRadius: "5px",
   border: "1px solid #ccc",

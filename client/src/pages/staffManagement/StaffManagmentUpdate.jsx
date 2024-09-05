@@ -108,10 +108,11 @@ const StaffUpdatePage = () => {
   }
 
   return (
-    <div>
+    <div style={styles.background}>
       <NavBar />
+      <h1 style={styles.title}>Update Staff</h1>
       <div style={styles.container}>
-        <h1 style={styles.title}>Update Staff</h1>
+        
         <form style={styles.form} onSubmit={handleSubmit}>
           <div style={styles.inputGroup}>
             <label htmlFor="username" style={styles.label}>Name</label>
@@ -197,6 +198,10 @@ const StaffUpdatePage = () => {
 };
 
 const styles = {
+
+  background: {
+    backgroundColor: "#161E38",
+  },
   container: {
     padding: "20px",
     backgroundColor: "#161E38",
@@ -211,6 +216,7 @@ const styles = {
     color: "#FFFFFF",
     fontSize: "2rem",
     fontWeight: "bold",
+    
   },
   form: {
     maxWidth: "600px",

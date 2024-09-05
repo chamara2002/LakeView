@@ -86,7 +86,7 @@ const GamesDetails = () => {
         {game.availableTimes && game.availableTimes.length > 0 ? (
   <ul>
     {game.availableTimes.map((time, index) => (
-      <li key={index} style={{ marginBottom: '10px' }}>
+      <li key={index} style={{ marginBottom: '10px', color: 'yellow' }}>
         {formatDateTime(time)}
       </li>
     ))}

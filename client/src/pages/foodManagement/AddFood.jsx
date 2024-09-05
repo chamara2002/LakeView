@@ -3,6 +3,7 @@ import axios from 'axios';
 import Footer from '../../components/core/Footer';
 import NavBar from '../../components/core/NavBar';
 import FoodSidebar from './FoodSideBar';
+import DropdownNavBar from '../../components/core/DropDownbar';
 
 const AddFood = () => {
   const [formData, setFormData] = useState({
@@ -103,6 +104,7 @@ const AddFood = () => {
     <div>
       <NavBar />
       <br></br>
+      <DropdownNavBar></DropdownNavBar>
       
       <div style={styles.container}>
         <h2 style={styles.heading}>Add Food Item</h2>

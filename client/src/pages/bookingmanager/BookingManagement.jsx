@@ -3,6 +3,7 @@ import axios from "axios";
 import Footer from "../../components/core/Footer";
 import NavBar from "../../components/core/NavBar";
 import { useNavigate } from "react-router-dom";
+import ReportButton from "../../components/reUseable/ReportButton";
 
 const BookingManagement = () => {
   const [payments, setPayments] = useState([]);
@@ -120,6 +121,8 @@ const BookingManagement = () => {
             )}
           </tbody>
         </table>
+        <br></br>
+       <center> <ReportButton></ReportButton></center>
       </div>
       <Footer />
     </div>
