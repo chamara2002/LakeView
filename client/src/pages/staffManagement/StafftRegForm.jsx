@@ -59,7 +59,6 @@ const StaffRegistrationForm = () => {
     }
 };
 
-
   const handleChange = (e) => {
     const { id, value } = e.target;
     switch (id) {
