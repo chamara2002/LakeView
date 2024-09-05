@@ -47,7 +47,7 @@ const FeedbackDetails = () => {
         <table style={styles.table}>
           <thead>
             <tr style={styles.tableHeader}>
-              <th style={styles.tableHeaderCell}>ID</th>
+              <th style={styles.tableHeaderCell}>Game ID</th>
               <th style={styles.tableHeaderCell}>Game Name</th>
               <th style={styles.tableHeaderCell}>User</th>
               <th style={styles.tableHeaderCell}>Feedback</th>
