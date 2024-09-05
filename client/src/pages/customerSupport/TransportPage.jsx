@@ -14,7 +14,7 @@ const TransportPage = () => {
 
         <div style={styles.imageContainer}>
           {/* Image replacing the Map component */}
-          <a href='https://www.google.com/maps/dir/SLIIT+Main+Building,+Malabe/Lake+View+Restaurant+%26+Bar,+Piliyandala+Bypass+Rd,+Piliyandala/@6.8541782,79.8786464,12z/data=!3m1!4b1!4m13!4m12!1m5!1m1!1s0x3ae256db1043cc37:0x5f43c37d11c72aa!2m2!1d79.9731674!2d6.9148818!1m5!1m1!1s0x3ae24feaf652ca1b:0x87297a387eea35ce!2m2!1d79.9397643!2d6.7968439?entry=ttu&g_ep=EgoyMDI0MDgyOC4wIKXMDSoASAFQAw%3D%3D'><img
+          <a href='https://www.google.com/maps/dir/New+Faculty+Building+SLIIT/7.0827855,79.9966061/@6.9989113,79.9120864,12z/data=!3m1!4b1!4m9!4m8!1m5!1m1!1s0x3ae2573621fad1ad:0x54a15134a9f5f1c8!2m2!1d79.9738557!2d6.9154633!1m1!4e1?entry=ttu&g_ep=EgoyMDI0MDkwMi4xIKXMDSoASAFQAw%3D%3D'><img
             src={Map}
             alt="Transport Map"
             style={styles.image}
