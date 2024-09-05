@@ -53,7 +53,7 @@ const StaffRegistrationForm = () => {
   const validateNic = (value) => {
     const nicPattern = /^\d{12}V$/i;  // Accepts 12 digits followed by 'V' (case insensitive)
     if (!nicPattern.test(value)) {
-      setErrors((prevErrors) => ({ ...prevErrors, nic: 'NIC must be 10 or 12 digits followed by "V".' }));
+      setErrors((prevErrors) => ({ ...prevErrors, nic: 'NIC must be 12 or 10 digits followed by "V" or "v" ' }));
     } else {
       setErrors((prevErrors) => ({ ...prevErrors, nic: '' }));
     }
