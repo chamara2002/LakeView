@@ -45,7 +45,7 @@ const FeedbackDetails = () => {
     const doc = new jsPDF();
 
     // Add title to the PDF
-    doc.text("Feedback and Rating Report", 14, 20);
+    doc.text("Feedback and Rating Details Report", 14, 20);
 
     // Filter feedbacks based on search query
     const filteredFeedbacks = feedbacks.filter(feedback =>
@@ -201,8 +201,8 @@ const styles = {
   },
   exportButton: {
     padding: "10px 20px",
-    backgroundColor: "#007bff",
-    color: "#fff",
+    backgroundColor: '#FFD700',
+    color: "#000000",
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
