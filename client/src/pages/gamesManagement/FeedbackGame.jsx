@@ -1,13 +1,15 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
- import { useAuth } from '../foodManagement/context/authContext';
+import { useAuth } from '../foodManagement/context/authContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const FeedbackGame = ({ onFeedbackSubmit }) => {
   const { id } = useParams(); // Get the game ID from the URL
   const [score, setScore] = useState(1); // Default score
   const [feedback, setFeedback] = useState('');
-  const { user } = useAuth() // Assuming user is available in context
+  const { user } = useAuth(); // Assuming user is available in context
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -25,45 +27,53 @@ const FeedbackGame = ({ onFeedbackSubmit }) => {
       .then((response) => {
         // Notify parent component of successful submission
         onFeedbackSubmit();
+        // Show success notification
+        toast.success('Feedback submitted successfully!');
       })
       .catch((error) => {
         console.error('There was an error submitting the feedback!', error);
+        // Show error notification
+        toast.error('Failed to submit feedback. Please try again.');
       });
   };
 
   return (
-    <form onSubmit={handleSubmit} style={formStyle}>
-      <h3 style={formTitleStyle}>Submit Feedback</h3>
-      <label>
-        <strong>Rating:</strong>
-        <select
-          value={score}
-          onChange={(e) => setScore(Number(e.target.value))}
-          style={inputStyle}
-        >
-          {[1, 2, 3, 4, 5].map((val) => (
-            <option key={val} value={val}>
-              {val}
-            </option>
-          ))}
-        </select>
-      </label>
-      <br />
-      <label>
-        <strong>Feedback:</strong>
-        <textarea
-          value={feedback}
-          onChange={(e) => setFeedback(e.target.value)}
-          rows="4"
-          cols="50"
-          style={textareaStyle}
-        />
-      </label>
-      <br />
-      <button type="submit" style={buttonStyle}>
-        Submit
-      </button>
-    </form>
+    <>
+      <form onSubmit={handleSubmit} style={formStyle}>
+        <h3 style={formTitleStyle}>Submit Feedback</h3>
+        <label>
+          <strong>Rating:</strong>
+          <select
+            value={score}
+            onChange={(e) => setScore(Number(e.target.value))}
+            style={inputStyle}
+          >
+            {[1, 2, 3, 4, 5].map((val) => (
+              <option key={val} value={val}>
+                {val}
+              </option>
+            ))}
+          </select>
+        </label>
+        <br />
+        <label>
+          <strong>Feedback:</strong>
+          <textarea
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+            rows="4"
+            cols="50"
+            style={textareaStyle}
+          />
+        </label>
+        <br />
+        <button type="submit" style={buttonStyle}>
+          Submit
+        </button>
+      </form>
+      {/* Toast container for notifications */}
+      <ToastContainer />
+    </>
   );
 };
 
