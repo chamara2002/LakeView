@@ -4,6 +4,8 @@ import { useAuth } from "../../foodManagement/context/authContext";
 import NavBar from "../../../components/core/NavBar";
 import Footer from "../../../components/core/Footer";
 import ReportButton from "../../../components/reUseable/ReportButton";
+import { jsPDF } from "jspdf"; // Import jsPDF
+import "jspdf-autotable"; // Import autoTable plugin for jsPDF
 
 const FeedbackDetails = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -38,12 +40,41 @@ const FeedbackDetails = () => {
     }
   };
 
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+
+    // Add title to the PDF
+    doc.text("Feedback and Rating Report", 14, 20);
+
+    // Format data for autoTable
+    const tableData = feedbacks.map(feedback => [
+      feedback.gameId,
+      feedback.gameName,
+      feedback.user,
+      feedback.feedback,
+      feedback.score
+    ]);
+
+    // Add autoTable with feedback data
+    doc.autoTable({
+      head: [['Game ID', 'Game Name', 'User', 'Feedback', 'Rating']],
+      body: tableData,
+      startY: 30,
+      theme: 'grid',
+      headStyles: { fillColor: [22, 30, 56] },  // Table header style
+      styles: { cellPadding: 3, fontSize: 10 }
+    });
+
+    // Save the PDF
+    doc.save('feedback_report.pdf');
+  };
+
   return (
     <div>
       <NavBar />
 
       <div style={styles.pageContainer}>
-        <h2 style={styles.heading}>Feedback And Rating Details</h2> {/* Added heading */}
+        <h2 style={styles.heading}>Feedback And Rating Details</h2>
         <table style={styles.table}>
           <thead>
             <tr style={styles.tableHeader}>
@@ -81,8 +112,11 @@ const FeedbackDetails = () => {
             ))}
           </tbody>
         </table>
-        <br></br>
-        <ReportButton></ReportButton>
+        <br/><br></br><br></br>
+        <button style={styles.exportButton} onClick={handleExportPDF}>
+          Export Report as PDF
+        </button>
+        <br /><br></br><br></br>
       </div>
     </div>
   );
@@ -134,6 +168,14 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     marginRight: "5px",
+  },
+  exportButton: {
+    padding: "10px 20px",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
   },
 };
 
