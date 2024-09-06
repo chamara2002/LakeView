@@ -7,17 +7,25 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const FeedbackGame = ({ onFeedbackSubmit }) => {
   const { id } = useParams(); // Get the game ID from the URL
-  const [score, setScore] = useState(1); // Default score
+  const [score, setScore] = useState(0); // Default score as 0 to indicate no rating
   const [feedback, setFeedback] = useState('');
   const { user } = useAuth(); // Assuming user is available in context
+  const [hoveredStar, setHoveredStar] = useState(0); // Track hovered star
+  const [submissionFailed, setSubmissionFailed] = useState(false); // Track submission status
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    if (feedback.trim() === '') {
+      // If feedback is empty, notify the user
+      toast.error('Feedback cannot be empty.');
+      return;
+    }
+
     // Prepare feedback data
     const feedbackData = {
       customerId: user.user._id, // User ID from context
-      score,
+      score: score > 0 ? score : undefined, // Include score only if it's greater than 0
       feedback,
     };
 
@@ -27,11 +35,13 @@ const FeedbackGame = ({ onFeedbackSubmit }) => {
       .then((response) => {
         // Notify parent component of successful submission
         onFeedbackSubmit();
+        setSubmissionFailed(false);
         // Show success notification
         toast.success('Feedback submitted successfully!');
       })
       .catch((error) => {
         console.error('There was an error submitting the feedback!', error);
+        setSubmissionFailed(true);
         // Show error notification
         toast.error('Failed to submit feedback. Please try again.');
       });
@@ -43,17 +53,22 @@ const FeedbackGame = ({ onFeedbackSubmit }) => {
         <h3 style={formTitleStyle}>Submit Feedback</h3>
         <label>
           <strong>Rating:</strong>
-          <select
-            value={score}
-            onChange={(e) => setScore(Number(e.target.value))}
-            style={inputStyle}
-          >
-            {[1, 2, 3, 4, 5].map((val) => (
-              <option key={val} value={val}>
-                {val}
-              </option>
+          <div style={starContainerStyle}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <span
+                key={star}
+                onMouseEnter={() => setHoveredStar(star)}
+                onMouseLeave={() => setHoveredStar(0)}
+                onClick={() => setScore(star)}
+                style={{
+                  ...starStyle,
+                  color: star <= (hoveredStar || score) ? '#ffcc00' : '#ccc',
+                }}
+              >
+                ★
+              </span>
             ))}
-          </select>
+          </div>
         </label>
         <br />
         <label>
@@ -94,12 +109,14 @@ const formTitleStyle = {
   marginBottom: '10px',
 };
 
-const inputStyle = {
-  padding: '10px',
-  marginTop: '5px',
-  marginBottom: '10px',
-  width: '100%',
-  borderRadius: '5px',
+const starContainerStyle = {
+  display: 'flex',
+  cursor: 'pointer',
+};
+
+const starStyle = {
+  fontSize: '24px',
+  margin: '0 2px',
 };
 
 const textareaStyle = {
