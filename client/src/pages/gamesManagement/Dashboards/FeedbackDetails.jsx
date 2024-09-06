@@ -45,7 +45,7 @@ const FeedbackDetails = () => {
     const doc = new jsPDF();
 
     // Add title to the PDF
-    doc.text("Feedback and Rating Details Report", 14, 20);
+    doc.text("Feedback and Ratings Details Report", 14, 20);
 
     // Filter feedbacks based on search query
     const filteredFeedbacks = feedbacks.filter(feedback =>
@@ -63,7 +63,7 @@ const FeedbackDetails = () => {
 
     // Add autoTable with filtered feedback data
     doc.autoTable({
-      head: [['Game ID', 'Game Name', 'User', 'Feedback', 'Rating']],
+      head: [['Game ID', 'Game Name', 'User', 'Feedback', 'Ratings']],
       body: tableData,
       startY: 30,
       theme: 'grid',
@@ -72,7 +72,7 @@ const FeedbackDetails = () => {
     });
 
     // Save the PDF
-    doc.save('feedback_and_rating_details_report.pdf');
+    doc.save('feedback_and_ratings_details_report.pdf');
   };
 
   // Filter feedbacks based on the search query
@@ -85,7 +85,7 @@ const FeedbackDetails = () => {
       <NavBar />
 
       <div style={styles.pageContainer}>
-        <h2 style={styles.heading}>Feedback And Rating Details</h2>
+        <h2 style={styles.heading}>Feedback and Ratings Details</h2>
 
         {/* Search Bar */}
         <input
