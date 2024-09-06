@@ -63,7 +63,7 @@ const FeedbackDetails = () => {
 
     // Add autoTable with filtered feedback data
     doc.autoTable({
-      head: [['Game ID', 'Game Name', 'User', 'Feedback', 'Ratings']],
+      head: [['Game ID', 'Game Name', 'User', 'Feedback', 'Rating']],
       body: tableData,
       startY: 30,
       theme: 'grid',
