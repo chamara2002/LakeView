@@ -72,7 +72,7 @@ const FeedbackDetails = () => {
     });
 
     // Save the PDF
-    doc.save('feedback_report.pdf');
+    doc.save('feedback_and_rating_details_report.pdf');
   };
 
   // Filter feedbacks based on the search query
