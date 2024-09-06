@@ -9,6 +9,7 @@ import "jspdf-autotable"; // Import autoTable plugin for jsPDF
 
 const FeedbackDetails = () => {
   const [feedbacks, setFeedbacks] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const { user } = useAuth();
 
   const fetchFeedbacks = async () => {
@@ -46,8 +47,13 @@ const FeedbackDetails = () => {
     // Add title to the PDF
     doc.text("Feedback and Rating Report", 14, 20);
 
-    // Format data for autoTable
-    const tableData = feedbacks.map(feedback => [
+    // Filter feedbacks based on search query
+    const filteredFeedbacks = feedbacks.filter(feedback =>
+      feedback.gameName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Format data for autoTable based on filtered feedbacks
+    const tableData = filteredFeedbacks.map(feedback => [
       feedback.gameId,
       feedback.gameName,
       feedback.user,
@@ -55,7 +61,7 @@ const FeedbackDetails = () => {
       feedback.score
     ]);
 
-    // Add autoTable with feedback data
+    // Add autoTable with filtered feedback data
     doc.autoTable({
       head: [['Game ID', 'Game Name', 'User', 'Feedback', 'Rating']],
       body: tableData,
@@ -69,12 +75,27 @@ const FeedbackDetails = () => {
     doc.save('feedback_report.pdf');
   };
 
+  // Filter feedbacks based on the search query
+  const filteredFeedbacks = feedbacks.filter(feedback =>
+    feedback.gameName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div>
       <NavBar />
 
       <div style={styles.pageContainer}>
         <h2 style={styles.heading}>Feedback And Rating Details</h2>
+
+        {/* Search Bar */}
+        <input
+          type="text"
+          placeholder="Search by Game Name"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={styles.searchBar}
+        />
+
         <table style={styles.table}>
           <thead>
             <tr style={styles.tableHeader}>
@@ -89,7 +110,7 @@ const FeedbackDetails = () => {
             </tr>
           </thead>
           <tbody>
-            {feedbacks.map((feedback) => (
+            {filteredFeedbacks.map((feedback) => (
               <tr key={feedback.feedbackId} style={styles.tableRow}>
                 <td style={styles.tableCell}>{feedback.gameId}</td>
                 <td style={styles.tableCell}>{feedback.gameName}</td>
@@ -112,6 +133,7 @@ const FeedbackDetails = () => {
             ))}
           </tbody>
         </table>
+
         <br/><br></br><br></br>
         <button style={styles.exportButton} onClick={handleExportPDF}>
           Export Report as PDF
@@ -139,6 +161,14 @@ const styles = {
     color: "yellow",
     marginBottom: "60px",
     textAlign: "center",
+  },
+  searchBar: {
+    padding: "10px",
+    marginBottom: "20px",
+    width: "100%",
+    maxWidth: "300px",
+    borderRadius: "5px",
+    border: "1px solid #ddd",
   },
   table: {
     width: "100%",
