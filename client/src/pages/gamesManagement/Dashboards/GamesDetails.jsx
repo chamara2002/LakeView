@@ -3,25 +3,23 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import NavBar from "../../../components/core/NavBar";
 import Footer from "../../../components/core/Footer";
-import FeedbackGame from "../FeedbackGame"; // Import the FeedbackForm component
+import FeedbackGame from "../FeedbackGame"; 
 import { BookingContext } from "../../foodManagement/context/BookingContext";
 import { useAuth } from "../../foodManagement/context/authContext";
 
 const GamesDetails = () => {
-  const { id } = useParams(); // Get the game ID from the URL
+  const { id } = useParams(); 
   const [game, setGame] = useState(null);
   const [feedbacks, setFeedbacks] = useState([]);
   const { setBookingItem } = useContext(BookingContext);
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
   useEffect(() => {
-    // Fetch game details
     axios
       .get(`http://localhost:3000/api/games/games/${id}`)
       .then((response) => {
         setGame(response.data);
-        // Set feedbacks from the game details if available
         setFeedbacks(response.data.ratings || []);
       })
       .catch((error) => {
@@ -30,30 +28,28 @@ const GamesDetails = () => {
   }, [id]);
 
   const handleBookNow = () => {
-    // Implement booking logic here
     setBookingItem("game", game._id, game.price);
     user ? navigate("/selectSeats") : navigate("/login");
   };
 
   const handleFeedbackSubmit = () => {
-    // Refresh feedbacks after submitting a new one
     axios
       .get(`http://localhost:3000/api/games/games/${id}`)
       .then((response) => {
         setFeedbacks(response.data.ratings || []);
       })
       .catch((error) => {
-        console.error(
-          "There was an error fetching the updated feedbacks!",
-          error
-        );
+        console.error("There was an error fetching the updated feedbacks!", error);
       });
   };
 
-  // Utility function to format date and time
+  const handleGoBack = () => {
+    navigate(-1); 
+  };
+
   const formatDateTime = (dateTime) => {
     const date = new Date(dateTime);
-    return date.toLocaleString(); // Format to locale-specific date and time
+    return date.toLocaleString(); 
   };
 
   if (!game) {
@@ -64,50 +60,58 @@ const GamesDetails = () => {
     <div>
       <NavBar />
       <div style={containerStyle}>
-        <img src={game.image} style={{ width: "600px",borderRadius: "40px" }} alt="Game" />
-        <div style={cardStyle}>
-          <h2 style={cardTitleStyle}>{game.name}</h2>
-          <p>
-            <strong>Category:</strong> {game.category}
-          </p>
-          <p>
-            <strong>Description:</strong> {game.description}
-          </p>
-          <p>
-            <strong>Price:</strong> RS.{game.price}
-          </p>
-          <button style={buttonStyle} onClick={handleBookNow}>
-            Book Now
-          </button>
-          <br />
+        <div style={gameStyle}>
+          <img 
+            src={game.image} 
+            style={{ maxWidth: '300px',minWidth: '400px', maxHeight: '400px', minHeight: '300px', borderRadius: '10px' }} 
+            alt="Game" 
+          />
+          <div>
+            <h2 style={cardTitleStyle}>{game.name}</h2><br></br><br></br>
+            <p style={{ marginLeft: "250px",fontSize: '18px', color: 'white' }}>
+              <strong>Category:</strong> {game.category}
+            </p><br></br>
+            <p style={{ marginLeft: "250px",fontSize: '18px', color: 'white' }}> 
+              <strong>Description:</strong> {game.description}
+            </p><br></br>
+            <p style={{ marginBottom: "180px",marginLeft: "250px",fontSize: '18px', color: 'white' }}>
+              <strong>Price:</strong> RS. {game.price}
+            </p>
+          </div>
+        </div>
+  
+        <div style={atime}>
+          <center><h3>Available Times</h3></center>
+          {game.availableTimes && game.availableTimes.length > 0 ? (
+            <ul>
+              {game.availableTimes.map((time, index) => (
+                <li key={index} style={{ fontSize: '18px', color: 'white', lineHeight: '2' }}>
+                  {formatDateTime(time)}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No available times.</p>
+          )}
         </div>
 
-        <h3>Available Times</h3>
-        {game.availableTimes && game.availableTimes.length > 0 ? (
-  <ul>
-    {game.availableTimes.map((time, index) => (
-      <li key={index} style={{ marginBottom: '10px', color: 'yellow' }}>
-        {formatDateTime(time)}
-      </li>
-    ))}
-  </ul>
-) : (
-  <p>No available times.</p>
-)}
-
-
-<FeedbackGame onFeedbackSubmit={handleFeedbackSubmit} />
-
+        <div style={buttonContainerStyle}>
+        <button style={goBackButtonStyle} onClick={handleGoBack}>
+          Go Back
+        </button>
+        <button style={buttonStyle} onClick={handleBookNow}>
+          Book Now
+        </button>
+        </div>
+  
+        <FeedbackGame onFeedbackSubmit={handleFeedbackSubmit} />
         <div style={feedbackContainerStyle}>
-          <h3 style={feedbackTitleStyle}>Feedbacks :</h3>
+          <h3 style={feedbackTitleStyle}>Feedbacks:</h3>
           {feedbacks.length > 0 ? (
             feedbacks.map((feedback) => (
               <div key={feedback._id} style={feedbackStyle}>
                 <p>
-                  <strong>Reviewer:</strong>{" "}
-                  {feedback.customerId
-                    ? `Customer : ${feedback.customerId}`
-                    : feedback.customerId.name}
+                  <strong>Reviewer:</strong> {feedback.customerId}
                 </p>
                 <p>
                   <strong>Rating:</strong> {feedback.score}
@@ -124,75 +128,108 @@ const GamesDetails = () => {
       </div>
       <Footer />
     </div>
-  );
+  );  
 };
 
-// Inline CSS Styles
 const containerStyle = {
   backgroundColor: "#161E38",
   minHeight: "100vh",
   display: "flex",
-  flexDirection: "column", // Change to column for a more natural flow
-  justifyContent: "flex-start", // Align content to the top
+  flexDirection: "column", 
+  justifyContent: "flex-start", 
   alignItems: "center",
   padding: "20px",
   color: "#fff",
 };
 
-const cardStyle = {
-  backgroundColor: "#222",
-  padding: "25px", // Increase padding for more space
+const gameStyle = {
+  display: 'flex', 
+  alignItems: 'center',
+  gap: '20px', 
+  marginBottom: '20px',
+  backgroundColor: "#1d284c",
+  minHeight: "50vh",
+  minWidth: "160vh",
+  padding: "25px", 
   borderRadius: "10px",
-  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)", // Enhanced shadow for better depth
-  maxWidth: "450px", // Slightly increased width for more content space
-  width: "100%",
+  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)", 
+  maxWidth: "530px", 
+  maxHeight: "530px",
+};
+
+const atime = {
+  backgroundColor: "#1d284c",
+  padding: "25px", 
+  borderRadius: "10px",
+  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)", 
+  width: "500px",
   textAlign: "left",
-  marginTop: "20px",
+  marginTop: "10px",
 };
 
 const cardTitleStyle = {
-  marginTop: "10px",
-  fontSize: "26px", // Slightly larger font for the title
-  marginBottom: "20px", // Increased margin for better spacing
+  fontSize: "30px", 
   color: "#ffcc00",
+  marginLeft: "250px",
+};
+
+const buttonContainerStyle = {
+  display: "flex",
+  justifyContent: "flex-start", 
+  width: "100%", 
+  paddingLeft: "870px", 
+  marginTop: "50px",
+  gap: '10px', 
 };
 
 const buttonStyle = {
-  padding: "12px 25px", // Increased padding for a more comfortable button
+  width:"300px",
+  padding: "12px 25px", 
   backgroundColor: "#ffcc00",
   color: "#000",
   border: "none",
-  borderRadius: "8px", // Increased border-radius for a softer look
+  borderRadius: "8px", 
   cursor: "pointer",
-  transition: "background-color 0.3s ease", // Added smooth hover transition
+  transition: "background-color 0.3s ease", 
+};
+
+const goBackButtonStyle = {
+  color:"white",
+  width:"300px",
+  padding: "12px 25px", 
+  backgroundColor: "Black",
+  border: "none",
+  borderRadius: "8px", 
+  cursor: "pointer",
+  transition: "background-color 0.3s ease", 
 };
 
 const loadingStyle = {
   color: "#fff",
   textAlign: "center",
-  fontSize: "18px", // Slightly larger font for better readability
+  fontSize: "18px", 
 };
 
 const feedbackContainerStyle = {
-  marginTop: "30px", // Increased margin for better spacing from the card
+  marginTop: "30px",
   backgroundColor: "#333",
-  padding: "20px", // Increased padding for more space
+  padding: "20px", 
   borderRadius: "10px",
   width: "80%",
   marginLeft: "10px",
 };
 
 const feedbackTitleStyle = {
-  fontSize: "22px", // Slightly larger title font
+  fontSize: "22px",
   color: "#ffcc00",
-  marginBottom: "15px", // Increased margin for better spacing
+  marginBottom: "15px",
 };
 
 const feedbackStyle = {
   backgroundColor: "#444",
-  padding: "15px", // Increased padding for more space
-  marginBottom: "15px", // Increased margin for better spacing
-  borderRadius: "8px", // Increased border-radius for a softer look
+  padding: "15px", 
+  marginBottom: "15px", 
+  borderRadius: "8px", 
 };
 
 export default GamesDetails;

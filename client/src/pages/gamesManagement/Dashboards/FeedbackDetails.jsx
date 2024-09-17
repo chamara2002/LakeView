@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../foodManagement/context/authContext";
-import NavBar from "../../../components/core/NavBar";
-import Footer from "../../../components/core/Footer";
-import ReportButton from "../../../components/reUseable/ReportButton";
 import { jsPDF } from "jspdf"; // Import jsPDF
 import "jspdf-autotable"; // Import autoTable plugin for jsPDF
 
@@ -82,28 +79,27 @@ const FeedbackDetails = () => {
 
   return (
     <div>
-      <NavBar />
-
       <div style={styles.pageContainer}>
         <h2 style={styles.heading}>Feedback and Ratings Details</h2>
 
         {/* Search Bar */}
         <input
           type="text"
-          placeholder="Search by Game Name"
+          placeholder="Search by game name"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           style={styles.searchBar}
-        />
+        /><br></br>
 
+        <div style={styles.tableContainer}>
         <table style={styles.table}>
           <thead>
             <tr style={styles.tableHeader}>
               <th style={styles.tableHeaderCell}>Game ID</th>
               <th style={styles.tableHeaderCell}>Game Name</th>
-              <th style={styles.tableHeaderCell}>User</th>
+              <th style={styles.tableHeaderCell}>User Name</th>
               <th style={styles.tableHeaderCell}>Feedback</th>
-              <th style={styles.tableHeaderCell}>Rating (stars)</th>
+              <th style={styles.tableHeaderCell}>Rating(Stars)</th>
               {user.user.role ? (
                 <th style={styles.tableHeaderCell}>Action</th>
               ) : null}
@@ -133,6 +129,7 @@ const FeedbackDetails = () => {
             ))}
           </tbody>
         </table>
+        </div>
 
         <br/><br></br><br></br>
         <button style={styles.exportButton} onClick={handleExportPDF}>
@@ -156,19 +153,24 @@ const styles = {
     alignItems: "center",
   },
   heading: {
-    fontSize: "24px",
-    fontWeight: "bold",
-    color: "yellow",
-    marginBottom: "60px",
-    textAlign: "center",
+    color: "#fff",
+    padding: "10px",
   },
   searchBar: {
+    marginBottom: "10px",
     padding: "10px",
-    marginBottom: "20px",
-    width: "100%",
-    maxWidth: "300px",
+    width: "40%",
     borderRadius: "5px",
-    border: "1px solid #ddd",
+    border: "1px solid #2C3354",
+    backgroundColor: "#243055",
+    color: "#fff",
+  },
+  tableContainer: {
+    backgroundColor: "#1E2749",
+    padding: "20px",
+    borderRadius: "10px",
+    boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",
+    width:"1025px"
   },
   table: {
     width: "100%",
@@ -192,7 +194,7 @@ const styles = {
   },
   deleteButton: {
     padding: "6px 12px",
-    backgroundColor: "#FF6347",
+    backgroundColor: "#FF4C4C",
     color: "#fff",
     border: "none",
     borderRadius: "4px",

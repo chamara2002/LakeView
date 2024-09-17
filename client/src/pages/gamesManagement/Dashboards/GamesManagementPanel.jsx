@@ -8,12 +8,12 @@ import ChangeAvailableTimes from './ChangeAvailableTimes';
 import FeedbackDetails from './FeedbackDetails';
 
 const GameUpdate = () => {
-    const [activePage, setActivePage] = useState('AddGames');
+    const [activePage, setActivePage] = useState('GamesDetails');
 
     const renderActivePage = () => {
         switch (activePage) {
-            case 'GamesDetails':
-                return <GameDetails />;
+            case 'AddGames':
+                return <AddGames />;
             case 'AvailableTimes':
                 return <AvailableTimes />;
             case 'ChangeAvailableTimes':
@@ -21,7 +21,7 @@ const GameUpdate = () => {
             case 'FeedbackDetails':
                 return <FeedbackDetails />;
             default:
-                return <AddGames />;
+                return <GameDetails />;
         }
     };
 
@@ -30,19 +30,22 @@ const GameUpdate = () => {
             <NavBar name="game-update" />
             <div style={styles.container}>
                 <div style={styles.sidebar}>
-                    <h2 style={styles.sidebarTitle}>Pages</h2>
+                    <center>
+                    <h2 style={styles.sidebarTitle}>Games</h2>
+                    <h2 style={styles.sidebarTitle2}>Management Panel</h2>
+                    </center>
                     <div style={styles.buttonList}>
-                        <button
-                            style={activePage === 'AddGames' ? { ...styles.button, ...styles.activeButton } : styles.button}
-                            onClick={() => setActivePage('AddGames')}
-                        >
-                            Add Games
-                        </button>
                         <button
                             style={activePage === 'GamesDetails' ? { ...styles.button, ...styles.activeButton } : styles.button}
                             onClick={() => setActivePage('GamesDetails')}
                         >
                             Games Details
+                        </button>
+                        <button
+                            style={activePage === 'AddGames' ? { ...styles.button, ...styles.activeButton } : styles.button}
+                            onClick={() => setActivePage('AddGames')}
+                        >
+                            Add Games
                         </button>
                         <button
                             style={activePage === 'AvailableTimes' ? { ...styles.button, ...styles.activeButton } : styles.button}
@@ -67,11 +70,10 @@ const GameUpdate = () => {
     );
 };
 
-// Styles adapted from EventDashboard
 const styles = {
     container: {
         display: 'flex',
-        height: 'calc(100vh - 60px)', // Adjusted for NavBar height
+        height: 'calc(100vh - 60px)',
         backgroundColor: '#0a1e42',
         color: '#fff',
         padding: '10px',
@@ -83,8 +85,15 @@ const styles = {
         borderRadius: '8px',
     },
     sidebarTitle: {
-        marginBottom: '20px',
-        fontSize: '18px',
+        marginTop: '45px',
+        marginBottom: '-10px',
+        fontSize: '22px',
+        fontWeight: 'bold',
+        lineHeight: 1.2,
+    },
+    sidebarTitle2: {
+        marginBottom: '80px',
+        fontSize: '22px',
         fontWeight: 'bold',
     },
     buttonList: {

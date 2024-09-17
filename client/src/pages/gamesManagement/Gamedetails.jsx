@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import NavBar from "../../components/core/NavBar";
-import Footer from "../../components/core/Footer";
 import { useNavigate } from "react-router-dom";
 
 const GameDetails = () => {
@@ -41,9 +39,8 @@ const GameDetails = () => {
 
   return (
     <div>
-      <NavBar />
       <div style={styles.container}>
-        <h2 style={styles.title}>Games Details</h2>
+      <h2 style={styles.title}><center>Games Details</center> </h2>
         
         <input
           type="text"
@@ -51,14 +48,15 @@ const GameDetails = () => {
           value={searchTerm}
           onChange={handleSearch}
           style={styles.searchBar}
-        />
+        /><br></br><br></br>
 
+        <div style={styles.tableContainer}>
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.headerCell}>GID</th>
+              <th style={styles.headerCell}>Game ID</th>
               <th style={styles.headerCell}>Category</th>
-              <th style={styles.headerCell}>Name</th>
+              <th style={styles.headerCell}>Game Name</th>
               <th style={styles.headerCell}>Description</th>
               <th style={styles.headerCell}>Price Per Hour</th>
               <th style={styles.headerCell}>Option</th>
@@ -74,6 +72,7 @@ const GameDetails = () => {
                   <td style={styles.cell}>{game.description}</td>
                   <td style={styles.cell}>Rs. {game.price}</td>
                   <td style={styles.cell}>
+                  <div style={styles.buttonContainer}>
                     <button
                       style={styles.deleteButton}
                       onClick={() => handleDelete(game._id)}
@@ -86,6 +85,7 @@ const GameDetails = () => {
                     >
                       Edit
                     </button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -98,6 +98,7 @@ const GameDetails = () => {
             )}
           </tbody>
         </table>
+       </div>
       </div>
     </div>
   );
@@ -108,54 +109,71 @@ const styles = {
     textAlign: "center",
     backgroundColor: "#161E38",
     padding: "20px",
-    height: "100vh",
+    minHeight: "100vh",
   },
   title: {
     color: "#fff",
-    backgroundColor: "#000",
     padding: "10px",
   },
   searchBar: {
-    margin: "20px 0",
+    marginBottom: "10px",
     padding: "10px",
-    width: "80%",
-    fontSize: "16px",
+    width: "40%",
+    borderRadius: "5px",
+    border: "1px solid #2C3354",
+    backgroundColor: "#243055",
+    color: "#fff",
   },
   table: {
     width: "100%",
+    maxWidth: "1200px", 
     borderCollapse: "collapse",
     marginTop: "20px",
-    color: "#333",
-    backgroundColor: "#fff",
+    color: "#fff", 
+  },
+  tableContainer: {
+    backgroundColor: "#1E2749",
+    padding: "20px",
+    borderRadius: "10px",
+    boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.2)",
   },
   headerCell: {
-    border: "1px solid #ddd",
-    padding: "10px",
-    backgroundColor: "#333",
+    padding: "12px",
+    borderBottom: "1px solid #444",
+    backgroundColor: "#2E3A59",
     color: "#fff",
+    textAlign: "left", 
   },
   row: {
-    backgroundColor: "#f2f2f2",
+    borderBottom: "1px solid #444",
   },
   cell: {
-    border: "1px solid #ddd",
-    padding: "10px",
-    textAlign: "center",
+    padding: "12px",
+    textAlign: "left", 
+    borderBottom: "1px solid #444",  
   },
   editButton: {
-    backgroundColor: "yellow",
+    backgroundColor: "#FFD700", 
     border: "none",
-    padding: "5px 10px",
-    marginRight: "5px",
+    padding: "6px 12px",  
     cursor: "pointer",
+    color: "#000", 
+    borderRadius: "4px", 
   },
   deleteButton: {
-    backgroundColor: "black",
-    color: "white",
+    backgroundColor: "#FF4C4C",
+    color: "#fff",
     border: "none",
-    padding: "5px 10px",
+    padding: "6px 12px",
     cursor: "pointer",
+    borderRadius: "4px", 
+  },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '10px', 
   },
 };
+
 
 export default GameDetails;
