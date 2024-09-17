@@ -36,6 +36,11 @@ const FeedbackGame = ({ onFeedbackSubmit }) => {
         // Notify parent component of successful submission
         onFeedbackSubmit();
         setSubmissionFailed(false);
+        
+        // Clear the fields
+        setScore(0);
+        setFeedback('');
+
         // Show success notification
         toast.success('Feedback submitted successfully!');
       })
@@ -51,7 +56,10 @@ const FeedbackGame = ({ onFeedbackSubmit }) => {
     <>
       <form onSubmit={handleSubmit} style={formStyle}>
         <center>
-        <h3 style={formTitleStyle}>Share your expectations before the game and let us know how we did after.<br />Your feedback helps us level up!</h3>
+          <h3 style={formTitleStyle}>
+            Share your expectations before the game and let us know how we did after.<br />
+            Your feedback helps us level up!
+          </h3>
         </center>
         <div style={flexContainerStyle}>
           {/* Rating section */}

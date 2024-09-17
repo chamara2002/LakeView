@@ -54,7 +54,7 @@ const CategorizeNav = ({
   const headingStyle = {
     display: isOpen ? 'block' : 'none',
     cursor: 'pointer',
-    fontSize: '22px',
+    fontSize: '20px',
     marginBottom: '30px',
   };
 
@@ -69,7 +69,7 @@ const CategorizeNav = ({
   };
 
   const listItemStyle = (category) => ({
-    fontSize: '14px',
+    fontSize: '13px',
     width: '150px',
     height: '10px',
     backgroundColor: activeCategory === category ? '#FFD700' : '#fff',
