@@ -89,24 +89,26 @@ const GameMainPage = () => {
             onOutdoorClick={handleOutdoorClick}
             onWaterClick={handleWaterClick}
             onCategoryClick={handleCategoryClick} // For "Show All Games"
+            onTodayClick={handleTodayClick} // Added function for "Today Available"
           />
-          <h3 onClick={handleTodayClick} style={{ cursor: "pointer" ,color: "yellow", marginLeft: "11vh"}}>Today available</h3>
         </div>
 
         <div style={{ width: "80%", display: "flex", flexFlow: "column wrap" }}>
           <div style={{ marginBottom: "20px" }}>
             <input
               type="text"
-              placeholder="Search games by name..."
+              placeholder="Search games by name"
               value={searchQuery}
               onChange={handleSearch}
               style={{
-                marginTop: "20px",
-                marginLeft : "45vh",
-                width: "60%",
+                marginTop: "50px",
+                marginLeft: "350px",
                 padding: "10px",
+                width: "40%",
                 borderRadius: "5px",
-                border: "1px solid #ccc",
+                border: "1px solid #2C3354",
+                backgroundColor: "#243055",
+                color: "#fff",
               }}
             />
           </div>

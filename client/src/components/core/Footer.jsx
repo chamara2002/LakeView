@@ -41,7 +41,7 @@ const Footer = () => {
             <p>Gampaha, Sri Lanka</p>
             <p>Telephone: +9478-5347037</p>
             <p>Telephone: +9471-0786801</p>
-            <p>lakeview01@gmail.com</p>
+            <p>lakeviewgaming01@gmail.com</p>
             
         </div> 
 

@@ -60,6 +60,7 @@ const GamesDetails = () => {
     <div>
       <NavBar />
       <div style={containerStyle}>
+      <br></br>
         <div style={gameStyle}>
           <img 
             src={game.image} 
@@ -71,11 +72,11 @@ const GamesDetails = () => {
             <p style={{ marginLeft: "250px",fontSize: '18px', color: 'white' }}>
               <strong>Category:</strong> {game.category}
             </p><br></br>
-            <p style={{ marginLeft: "250px",fontSize: '18px', color: 'white' }}> 
+            <p style={{ marginLeft: "250px",fontSize: '18px', color: 'white' ,lineHeight: '1.5'}}> 
               <strong>Description:</strong> {game.description}
             </p><br></br>
-            <p style={{ marginBottom: "180px",marginLeft: "250px",fontSize: '18px', color: 'white' }}>
-              <strong>Price:</strong> RS. {game.price}
+            <p style={{ marginBottom: "50px",marginLeft: "250px",fontSize: '18px', color: 'white' }}>
+              <strong>Price Per Hour:</strong> RS. {game.price}
             </p>
           </div>
         </div>
@@ -146,6 +147,7 @@ const gameStyle = {
   display: 'flex', 
   alignItems: 'center',
   gap: '20px', 
+  marginHeight: '20px',
   marginBottom: '20px',
   backgroundColor: "#1d284c",
   minHeight: "50vh",
@@ -212,24 +214,25 @@ const loadingStyle = {
 
 const feedbackContainerStyle = {
   marginTop: "30px",
-  backgroundColor: "#333",
+  backgroundColor: "#1d284c",
   padding: "20px", 
-  borderRadius: "10px",
+  borderRadius: "5px",
   width: "80%",
   marginLeft: "10px",
 };
 
 const feedbackTitleStyle = {
   fontSize: "22px",
-  color: "#ffcc00",
-  marginBottom: "15px",
+  color: "white",
+  marginBottom: "30px",
 };
 
 const feedbackStyle = {
-  backgroundColor: "#444",
+  backgroundColor: "white",
   padding: "15px", 
   marginBottom: "15px", 
   borderRadius: "8px", 
+  color: "black"
 };
 
 export default GamesDetails;
