@@ -106,7 +106,6 @@ const AddGames = () => {
 
   return (
     <div style={styles.pageContainer}>
-      <NavBar />
       <h1>
         <center>ADD GAMES</center>
       </h1>
