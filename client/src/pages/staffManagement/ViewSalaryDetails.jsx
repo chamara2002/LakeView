@@ -44,7 +44,7 @@ const SalaryTable = () => {
   const calculateTotalHours = (start, end) => {
     const startTime = new Date(start);
     const endTime = new Date(end);
-    const diffInMs = endTime - startTime;
+    const diffInMs = (endTime - startTime);
     return diffInMs / (1000 * 60 * 60); // Convert milliseconds to hours
   };
 
@@ -89,10 +89,11 @@ const SalaryTable = () => {
       Object.keys(groupedData[employeeId].months).forEach((monthYear) => {
         const employeeMonthData = groupedData[employeeId].months[monthYear];
         employeeMonthData.otSalary =
-          employeeMonthData.otHours *
-          ((employeeMonthData.normalSalary / 160) * 2); // Assuming OT rate is four times the normal rate
+          (employeeMonthData.otHours-8) *
+          ((employeeMonthData.normalSalary / 160) * 2);; // Assuming OT rate is four times the normal rate
         employeeMonthData.finalSalary =
           employeeMonthData.normalSalary + employeeMonthData.otSalary;
+          employeeMonthData.otHours=employeeMonthData.otHours-8;
       });
     });
 

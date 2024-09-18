@@ -8,6 +8,7 @@ import ReportButton from "../../components/reUseable/ReportButton";
 
 const LeaveDetails = () => {
   const [leaves, setLeaves] = useState([]);
+  const [ll,setLl] = useState([]);
   const [searchTermByDate, setSearchTermByDate] = useState("");
   const [searchTermById, setSearchTermById] = useState("");
 
@@ -17,7 +18,8 @@ const LeaveDetails = () => {
         const response = await axios.get(
           "http://localhost:3000/api/attendance/attendance"
         );
-        setLeaves(response.data);
+        const filteredData = response.data.filter(leave => leave.userId !== null);
+        setLeaves(filteredData);
       } catch (error) {
         console.error("Error fetching leave data:", error);
       }
@@ -53,11 +55,14 @@ const LeaveDetails = () => {
     setSearchTermById(event.target.value);
   };
 
-  const filteredLeaves = leaves.filter((leave) => {
+  const filteredLeaves = leaves.filter(leave => {
     const leaveDate = new Date(leave.start).toLocaleDateString();
+    const userIdStr = leave.userId._id.slice || ''; // Access userId._id for filtering
+    const usernameStr = leave.userId.username || ''; // Access userId.username if needed
+  
     return (
-      leaveDate.includes(searchTermByDate) &&
-      leave.userId.includes(searchTermById)
+      (searchTermByDate ? leaveDate.includes(searchTermByDate) : true) &&
+      (searchTermById ? userIdStr.includes(searchTermById) || usernameStr.includes(searchTermById) : true)
     );
   });
 
@@ -87,6 +92,8 @@ const LeaveDetails = () => {
 
     doc.save("attendance_details_report.pdf");
   };
+
+  console.log(filteredLeaves);
 
   return (
     <div>
@@ -124,8 +131,8 @@ const LeaveDetails = () => {
           <tbody>
             {filteredLeaves.map((leave) => (
               <tr key={leave._id} style={styles.tableRow}>
-                <td style={styles.tableCell}>{leave._id}</td>
-                <td style={styles.tableCell}>{leave.userId}</td>
+                <td style={styles.tableCell}>ATT {leave._id.slice(20,23)}</td>
+                <td style={styles.tableCell}>EMP {leave.userId._id.slice(20,23)}</td>
                 <td style={styles.tableCell}>
                   {new Date(leave.start).toLocaleDateString()}
                 </td>

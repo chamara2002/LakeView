@@ -17,12 +17,12 @@ const StaffmemberDash = () => {
       return;
     }
 
-    //Check network type
+    /*//Check network type
     const networkType = navigator.connection?.effectiveType;
     if (networkType !== "4g") {
       alert("Attendance can only be marked within the company's network.");
       return;
-    }
+    }*/
 
     if (attendanceMarked) {
       alert("Attendance already marked. Please end your current attendance before marking again.");
@@ -55,12 +55,12 @@ const StaffmemberDash = () => {
       return;
     }
 
-    //Check network type
+    /*//Check network type
     const networkType = navigator.connection?.effectiveType;
     if (networkType !== "4g") {
       alert("Attendance can only be marked within the company's network.");
       return;
-    }
+    }*/
 
     try {
       const endTime = new Date().toISOString();
@@ -130,10 +130,11 @@ const StaffmemberDash = () => {
       Object.keys(groupedData).forEach((employeeId) => {
         const employeeData = groupedData[employeeId];
         employeeData.otSalary =
-          employeeData.otHours *
+          (employeeData.otHours-8) *
           ((employeeData.normalSalary / 160) * 2); // Assuming OT rate is twice the normal rate
         employeeData.finalSalary =
           employeeData.normalSalary + employeeData.otSalary;
+          employeeData.OT=employeeData.otHours-8;
       });
 
       return groupedData;
@@ -306,7 +307,7 @@ const StaffmemberDash = () => {
             color: '#666',
             margin: '10px 0'
           }}>
-            Ot Hours : {salaryData ? salaryData.otHours : 'N/A'}
+            Ot Hours : {salaryData ? salaryData.OT : 'N/A'}
           </p>
           <p style={{
             fontSize: '16px',

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Attendance = require('./src/models/attendence.model'); // Adjust the path as needed
+const Attendance = require('./src/models/salary.model'); // Adjust the path as needed
 const StaffMember = require('./src/models/staffMember.model'); // Adjust the path as needed
 
 mongoose.connect('mongodb+srv://root:root@r3cluster.ikcec.mongodb.net/?retryWrites=true&w=majority&appName=R3Cluster', {
