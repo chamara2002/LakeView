@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const StaffTable = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [idSearchQuery, setIdSearchQuery] = useState(""); // New state for ID search
   const [staffData, setStaffData] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const StaffTable = () => {
   };
 
   const tableWrapperStyle = {
-    maxHeight: "50vh", // Adjust based on your needs
+    maxHeight: "50vh",
     overflowY: "auto",
   };
 
@@ -59,7 +60,6 @@ const StaffTable = () => {
     padding: "10px",
     border: "1px solid #ccc",
     textAlign: "left",
-    
   };
 
   const buttonStyle = {
@@ -86,7 +86,12 @@ const StaffTable = () => {
     setSearchQuery(e.target.value.toLowerCase());
   };
 
+  const handleIdSearchChange = (e) => {
+    setIdSearchQuery(e.target.value.toLowerCase());
+  };
+
   const filteredStaff = staffData.filter((staff) => {
+    const id = staff._id ? staff._id.toLowerCase() : "";
     const name = staff.name ? staff.name.toLowerCase() : "";
     const nic = staff.nic ? staff.nic.toLowerCase() : "";
     const email = staff.email ? staff.email.toLowerCase() : "";
@@ -95,6 +100,12 @@ const StaffTable = () => {
       ? staff.jobPosition.toLowerCase()
       : "";
 
+    // If ID search query exists, only filter by ID
+    if (idSearchQuery) {
+      return id.includes(idSearchQuery);
+    }
+
+    // Otherwise, filter by other fields based on search query
     return (
       name.includes(searchQuery) ||
       nic.includes(searchQuery) ||
@@ -124,9 +135,22 @@ const StaffTable = () => {
       <div style={containerStyle}>
         <input
           type="text"
-          placeholder="Search staff..."
+          placeholder="Search staff by name, NIC, email..."
           value={searchQuery}
           onChange={handleSearchChange}
+          style={{
+            marginBottom: "10px",
+            padding: "10px",
+            width: "100%",
+            maxWidth: "400px",
+          }}
+        />
+        <br></br>
+        <input
+          type="text"
+          placeholder="Search by ID..."
+          value={idSearchQuery} // Bind to the new state
+          onChange={handleIdSearchChange} // Handle ID search input
           style={{
             marginBottom: "20px",
             padding: "10px",
@@ -141,6 +165,7 @@ const StaffTable = () => {
             <table style={tableStyle}>
               <thead>
                 <tr>
+                  <th style={thStyle}>ID</th>
                   <th style={thStyle}>Name</th>
                   <th style={thStyle}>NIC</th>
                   <th style={thStyle}>Email</th>
@@ -154,6 +179,7 @@ const StaffTable = () => {
                 {filteredStaff.length > 0 ? (
                   filteredStaff.map((staff) => (
                     <tr key={staff.id}>
+                      <td style={tdStyle}>{staff._id}</td>
                       <td style={tdStyle}>{staff.username}</td>
                       <td style={tdStyle}>{staff.nic}</td>
                       <td style={tdStyle}>{staff.email}</td>
@@ -161,7 +187,12 @@ const StaffTable = () => {
                       <td style={tdStyle}>{staff.role}</td>
                       <td style={tdStyle}>{staff.salary}</td>
                       <td style={tdStyle}>
-                        <button style={updateButtonStyle} onClick={()=>navigate(`/StaffManagmentUpdate/${staff._id}`)}>Update</button>
+                        <button
+                          style={updateButtonStyle}
+                          onClick={() => navigate(`/StaffManagmentUpdate/${staff._id}`)}
+                        >
+                          Update
+                        </button>
                         <button
                           style={deleteButtonStyle}
                           onClick={() => handleDelete(staff._id)}
@@ -173,7 +204,7 @@ const StaffTable = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" style={tdStyle}>
+                    <td colSpan="8" style={tdStyle}>
                       No staff data available
                     </td>
                   </tr>

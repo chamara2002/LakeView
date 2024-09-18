@@ -57,7 +57,7 @@ const LeaveDetails = () => {
     const leaveDate = new Date(leave.start).toLocaleDateString();
     return (
       leaveDate.includes(searchTermByDate) &&
-      leave._id.includes(searchTermById)
+      leave.userId.includes(searchTermById)
     );
   });
 
@@ -68,6 +68,8 @@ const LeaveDetails = () => {
 
     const tableData = filteredLeaves.map((leave) => [
       leave._id,
+      leave.userId,
+      
       new Date(leave.start).toLocaleDateString(),
       new Date(leave.start).toLocaleTimeString(),
       leave.end ? new Date(leave.end).toLocaleTimeString() : "N/A",
@@ -75,7 +77,7 @@ const LeaveDetails = () => {
     ]);
 
     doc.autoTable({
-      head: [["ID", "Date", "Attendant Time", "Leave Time", "Hours"]],
+      head: [["Attendance ID","Staff ID", "Date", "Attendant Time", "Leave Time", "OT Hours"]],
       body: tableData,
       startY: 30,
       theme: "grid",
@@ -90,6 +92,8 @@ const LeaveDetails = () => {
     <div>
       <NavBar />
       <div style={styles.pageContainer}>
+        <br></br>
+        <br></br>
         <h2 style={styles.heading}>Attendance Details</h2>
         <input
           type="text"
@@ -100,7 +104,7 @@ const LeaveDetails = () => {
         />
         <input
           type="text"
-          placeholder="Search by ID"
+          placeholder="Search by Staff ID"
           value={searchTermById}
           onChange={handleSearchById}
           style={styles.searchBar}
@@ -108,11 +112,12 @@ const LeaveDetails = () => {
         <table style={styles.table}>
           <thead>
             <tr style={styles.tableHeader}>
-              <th style={styles.tableHeaderCell}>ID</th>
+              <th style={styles.tableHeaderCell}>Attendance ID</th>
+              <th style={styles.tableHeaderCell}>Staff ID</th>
               <th style={styles.tableHeaderCell}>Date</th>
               <th style={styles.tableHeaderCell}>Attendant Time</th>
               <th style={styles.tableHeaderCell}>Leave Time</th>
-              <th style={styles.tableHeaderCell}>Hours</th>
+              <th style={styles.tableHeaderCell}>OT Hours</th>
               <th style={styles.tableHeaderCell}>Options</th>
             </tr>
           </thead>
@@ -120,6 +125,7 @@ const LeaveDetails = () => {
             {filteredLeaves.map((leave) => (
               <tr key={leave._id} style={styles.tableRow}>
                 <td style={styles.tableCell}>{leave._id}</td>
+                <td style={styles.tableCell}>{leave.userId}</td>
                 <td style={styles.tableCell}>
                   {new Date(leave.start).toLocaleDateString()}
                 </td>
@@ -166,10 +172,10 @@ const styles = {
     alignItems: "center",
   },
   heading: {
-    fontSize: "24px",
+    fontSize: "30px",
     fontWeight: "bold",
     color: "yellow",
-    marginBottom: "60px",
+    marginBottom: "30px",
     textAlign: "center",
   },
   searchBar: {

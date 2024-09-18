@@ -82,7 +82,7 @@ const SalaryTable = () => {
       groupedData[staffMember._id].months[monthYear].totalHours += totalHours;
       groupedData[staffMember._id].months[monthYear].otHours +=
         attendance.ot || 0;
-    });
+    })
 
     // Calculate OT and final salaries for each employee for each month
     Object.keys(groupedData).forEach((employeeId) => {
@@ -90,7 +90,7 @@ const SalaryTable = () => {
         const employeeMonthData = groupedData[employeeId].months[monthYear];
         employeeMonthData.otSalary =
           employeeMonthData.otHours *
-          ((employeeMonthData.normalSalary / 160) * 4); // Assuming OT rate is four times the normal rate
+          ((employeeMonthData.normalSalary / 160) * 2); // Assuming OT rate is four times the normal rate
         employeeMonthData.finalSalary =
           employeeMonthData.normalSalary + employeeMonthData.otSalary;
       });
@@ -206,7 +206,7 @@ const SalaryTable = () => {
                 <thead>
                   <tr>
                     <th style={thStyle}>Month-Year</th>
-                    <th style={thStyle}>Total Hours</th>
+                  
                     <th style={thStyle}>OT Hours</th>
                     <th style={thStyle}>Normal Salary</th>
                     <th style={thStyle}>OT Salary</th>
@@ -218,11 +218,7 @@ const SalaryTable = () => {
                     (monthYear) => (
                       <tr key={monthYear}>
                         <td style={tdStyle}>{monthYear}</td>
-                        <td style={tdStyle}>
-                          {filteredSalaryDetails[employeeId].months[
-                            monthYear
-                          ].totalHours.toFixed(2)}
-                        </td>
+                        
                         <td style={tdStyle}>
                           {filteredSalaryDetails[employeeId].months[
                             monthYear

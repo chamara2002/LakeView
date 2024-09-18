@@ -108,7 +108,7 @@ const LeaveRequests = () => {
                     style={statusPendingStyle}
                     onClick={() => approveLeave(leave._id)}
                   >
-                    Accept?
+                    Accept
                   </span>
                 )}
               </td>

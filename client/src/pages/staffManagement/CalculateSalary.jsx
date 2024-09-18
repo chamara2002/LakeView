@@ -12,8 +12,8 @@ const SalaryCalculator = () => {
   const [finalSalary, setFinalSalary] = useState("");
 
   const calculateSalary = () => {
-    // Example calculation logic
-    const otPay = otHours * 15; // Assume OT pay rate is 15 per hour
+    // Example calculation logic normalSalary / 160) * 4
+    const otPay =(normalSalary / 160) * 2
     const finalPay = parseFloat(normalSalary) + otPay;
     setOtSalary(otPay);
     setFinalSalary(finalPay);

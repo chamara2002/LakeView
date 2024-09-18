@@ -9,10 +9,23 @@ const StaffmemberDash = () => {
   const navigate = useNavigate();
   const { user } = useAuth(); // Get user ID from Auth context
   const [salaryData, setSalaryData] = useState({}); // Initialize with an empty object
+  const [attendanceMarked, setAttendanceMarked] = useState(false); // Track attendance status
 
   const handleMarkAttendance = async () => {
     if (!user.user || !user.user._id) {
       console.error("User not authenticated");
+      return;
+    }
+
+    //Check network type
+    const networkType = navigator.connection?.effectiveType;
+    if (networkType !== "4g") {
+      alert("Attendance can only be marked within the company's network.");
+      return;
+    }
+
+    if (attendanceMarked) {
+      alert("Attendance already marked. Please end your current attendance before marking again.");
       return;
     }
 
@@ -21,12 +34,13 @@ const StaffmemberDash = () => {
       const response = await axios.post("http://localhost:3000/api/attendance/attendance", {
         userId: user.user._id,
         start: currentTime,
-        end: null, 
-        ot: 0 
+        end: null,
+        ot: 0
       });
-      alert("Attendance marked:");
+      alert("Attendance marked.");
       localStorage.setItem("attendance", response.data._id);
-      localStorage.setItem("start",currentTime);
+      localStorage.setItem("start", currentTime);
+      setAttendanceMarked(true); // Update status
     } catch (error) {
       console.error("Error marking attendance:", error);
     }
@@ -35,30 +49,38 @@ const StaffmemberDash = () => {
   const handleEndAttendance = async () => {
     const attendanceId = localStorage.getItem("attendance");
     const startTime = localStorage.getItem("start");
-  
+
     if (!user || !user.user._id || !attendanceId || !startTime) {
       console.error("User not authenticated or no attendance record found");
       return;
     }
-  
+
+    //Check network type
+    const networkType = navigator.connection?.effectiveType;
+    if (networkType !== "4g") {
+      alert("Attendance can only be marked within the company's network.");
+      return;
+    }
+
     try {
       const endTime = new Date().toISOString();
       const startTimeDate = new Date(startTime);
       const endTimeDate = new Date(endTime);
-  
-      const diffInMs = endTimeDate - startTimeDate; 
-      const diffInHours = diffInMs / (1000 * 60 * 60); 
+
+      const diffInMs = endTimeDate - startTimeDate;
+      const diffInHours = diffInMs / (1000 * 60 * 60);
       const roundedOT = Math.round(diffInHours); // Round off to the nearest whole number
-  
+
       // Update the attendance with end time and OT hours
       await axios.put(`http://localhost:3000/api/attendance/attendance/${attendanceId}`, {
         end: endTime,
         ot: roundedOT,
       });
-  
-      alert(`Attendance ended with OT  :  ${roundedOT} hrs`);
+
+      alert(`Attendance ended with OT: ${roundedOT} hrs`);
       localStorage.removeItem("attendance");
       localStorage.removeItem("start");
+      setAttendanceMarked(false); // Reset status
     } catch (error) {
       console.error("Error updating attendance:", error);
     }
@@ -70,24 +92,24 @@ const StaffmemberDash = () => {
         "http://localhost:3000/api/attendance/attendance"
       );
       const staffResponse = await axios.get("http://localhost:3000/api/staff/");
-  
+
       const attendanceData = attendanceResponse.data;
       const staffData = staffResponse.data;
-  
+
       const currentMonthYear = getCurrentMonthYear();
       const groupedData = {};
-  
+
       attendanceData.forEach((attendance) => {
         const staffMember = staffData.find(
           (staff) => staff._id === attendance?.userId?._id
         );
         if (!staffMember) return;
-  
+
         const date = new Date(attendance.start);
         const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`; // Format: MM-YYYY
-  
+
         if (monthYear !== currentMonthYear) return; // Filter by current month
-  
+
         if (!groupedData[staffMember._id]) {
           groupedData[staffMember._id] = {
             username: staffMember.username,
@@ -98,29 +120,29 @@ const StaffmemberDash = () => {
             finalSalary: 0,
           };
         }
-  
+
         groupedData[staffMember._id].otHours += attendance.ot || 0;
       });
 
       console.log(salaryData)
-  
+
       // Calculate OT and final salaries for each employee for the current month
       Object.keys(groupedData).forEach((employeeId) => {
         const employeeData = groupedData[employeeId];
         employeeData.otSalary =
           employeeData.otHours *
-          ((employeeData.normalSalary / 160) * 4); // Assuming OT rate is four times the normal rate
+          ((employeeData.normalSalary / 160) * 2); // Assuming OT rate is twice the normal rate
         employeeData.finalSalary =
           employeeData.normalSalary + employeeData.otSalary;
       });
-  
+
       return groupedData;
     } catch (error) {
       console.error("Error fetching data:", error);
       return null;
     }
   };
-  
+
   const getCurrentMonthYear = () => {
     const now = new Date();
     return `${now.getMonth() + 1}-${now.getFullYear()}`; // Format: MM-YYYY
@@ -129,11 +151,15 @@ const StaffmemberDash = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchCurrentMonthData();
-      setSalaryData(data ? data[user.user._id]  : {}); // Default to empty object if not authenticated
+      setSalaryData(data ? data[user.user._id] : {}); // Default to empty object if not authenticated
+
+      // Check if there's an ongoing attendance
+      const attendanceId = localStorage.getItem("attendance");
+      setAttendanceMarked(!!attendanceId); // Set status based on if there's an ongoing attendance
     };
 
     fetchData();
-  }, []);
+  }, [user.user._id]);
 
   return (
     <div>
@@ -160,6 +186,9 @@ const StaffmemberDash = () => {
           <h1 style={{ color: "white", marginBottom: "30px" }}>
             STAFF MEMBER DASHBOARD
           </h1>
+          <br></br>
+          <br></br>
+          <br></br>
 
           {/* Button Groups */}
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -177,8 +206,8 @@ const StaffmemberDash = () => {
               <button
                 onClick={handleMarkAttendance}
                 style={{
-                  backgroundColor: "#ffcc00",
-                  color: "white",
+                  backgroundColor: "#DAA520",
+                  color: "black",
                   border: "none",
                   padding: "15px 30px",
                   margin: "10px 0",
@@ -202,7 +231,7 @@ const StaffmemberDash = () => {
                 }}
                 onClick={handleEndAttendance}
               >
-                Leave
+                End Attendance
               </button>
             </div>
 
@@ -249,45 +278,52 @@ const StaffmemberDash = () => {
         </div>
         <br></br>
         <div style={{
-  border: '1px solid #ccc',
-  borderRadius: '5px',
-  padding: '20px',
-  maxWidth: '400px',
-  margin: '0 auto',
-  backgroundColor: '#f9f9f9'
-}}>
-  <p style={{
-    fontSize: '16px',
-    fontWeight: 'bold',
-    color: '#333',
-    margin: '10px 0'
-  }}>
-    Name : {user.user.username}
-  </p>
-  <p style={{
-    fontSize: '16px',
-    fontWeight: 'bold',
-    color: '#333',
-    margin: '10px 0'
-  }}>
-    Salary : {user.user.salary}
-  </p>
-  <p style={{
-    fontSize: '16px',
-    color: '#666',
-    margin: '10px 0'
-  }}>
-    Ot Hours : {salaryData ? salaryData.otHours : 'N/A'}
-  </p>
-  <p style={{
-    fontSize: '16px',
-    color: '#666',
-    margin: '10px 0'
-  }}>
-    Ot Salary : {salaryData ? salaryData.otSalary : 'N/A'}
-  </p>
-</div>
-
+          border: '1px solid #ccc',
+          borderRadius: '5px',
+          padding: '20px',
+          maxWidth: '400px',
+          margin: '0 auto',
+          backgroundColor: '#f9f9f9'
+        }}>
+          <p style={{
+            fontSize: '16px',
+            fontWeight: 'bold',
+            color: '#333',
+            margin: '10px 0'
+          }}>
+            Name : {user.user.username}
+          </p>
+          <p style={{
+            fontSize: '16px',
+            fontWeight: 'bold',
+            color: '#333',
+            margin: '10px 0'
+          }}>
+            Salary : {user.user.salary}
+          </p>
+          <p style={{
+            fontSize: '16px',
+            color: '#666',
+            margin: '10px 0'
+          }}>
+            Ot Hours : {salaryData ? salaryData.otHours : 'N/A'}
+          </p>
+          <p style={{
+            fontSize: '16px',
+            color: '#666',
+            margin: '10px 0'
+          }}>
+            OT Salary : {salaryData ? salaryData.otSalary : 'N/A'}
+          </p>
+          <p style={{
+            fontSize: '16px',
+            fontWeight: 'bold',
+            color: '#333',
+            margin: '10px 0'
+          }}>
+            Final Salary : {salaryData ? salaryData.finalSalary : 'N/A'}
+          </p>
+        </div>
       </div>
       <Footer />
     </div>

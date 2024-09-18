@@ -88,8 +88,10 @@ const LeaveRequestForm = () => {
       <NavBar />
       <div style={containerStyle}>
         <div style={formStyle}>
-          <h3>Leave Request Form</h3>
+          <h2>Leave Request Form</h2>
+          <br></br>
           <form onSubmit={handleSubmit}>
+          <h4>Leave Start Date</h4>
             <input
               style={inputStyle}
               type="date"
@@ -97,6 +99,8 @@ const LeaveRequestForm = () => {
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
+            
+            <h4>Leave Start Date</h4>
             <input
               style={inputStyle}
               type="date"
@@ -104,6 +108,8 @@ const LeaveRequestForm = () => {
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
+            
+            <h4>Reason</h4>
             <textarea
               style={inputStyle}
               rows="3"
