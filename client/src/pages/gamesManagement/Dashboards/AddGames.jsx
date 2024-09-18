@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Footer from "../../../components/core/Footer";
-import NavBar from "../../../components/core/NavBar";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddGames = () => {
   const [gameName, setGameName] = useState("");
@@ -22,13 +22,15 @@ const AddGames = () => {
 
   // Real-time validation
   useEffect(() => {
-    const namePattern = /^[A-Za-z\s]+$/;
-    if (gameName && !namePattern.test(gameName)) {
-      setNameError("Game name can only contain letters and spaces.");
+    const pricePattern = /^\d+$/;
+    if (price < 0) {
+      setPriceError("Price cannot be negative.");
+    } else if (!pricePattern.test(price.toString())) {
+      setPriceError("Price can only contain numbers.");
     } else {
-      setNameError("");
+      setPriceError("");
     }
-  }, [gameName]);
+  }, [price]);
 
   useEffect(() => {
     if (price < 0) {
@@ -41,9 +43,15 @@ const AddGames = () => {
   const handleAddGame = async (e) => {
     e.preventDefault();
 
+    // Check for empty fields
+    if (!gameName || !category || !description || price <= 0 || !image) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
     // Check for validation errors before submitting
     if (nameError || priceError) {
-      alert("Please fix validation errors before submitting.");
+      toast.error("Please fix validation errors before submitting.");
       return;
     }
 
@@ -62,16 +70,19 @@ const AddGames = () => {
         gameData
       );
       console.log("Game added successfully:", response.data);
-      alert("Game added successfully!");
+      toast.success("Game added successfully!");
       setGameName("");
       setCategory("");
       setDescription("");
       setPrice(0);
       setAvailableTimes([]);
       setImage("");
+      setSelectedDate(null);  
+      setSelectedTime(null);  
     } catch (error) {
       console.error("There was an error adding the game:", error);
       console.error("Error details:", error.response?.data || error.message);
+      toast.error("There was an error adding the game. Please try again.");
     }
   };
 
@@ -88,11 +99,18 @@ const AddGames = () => {
       const combinedDateTime = new Date(selectedDate);
       combinedDateTime.setHours(selectedTime.getHours());
       combinedDateTime.setMinutes(selectedTime.getMinutes());
+
+      // Check if the selected date and time is in the past
+      if (combinedDateTime < new Date()) {
+        toast.error("Cannot add a date and time in the past.");
+        return;
+      }
+
       setAvailableTimes([...availableTimes, combinedDateTime]);
       setSelectedDate(null);
       setSelectedTime(null);
     } else {
-      alert("Please select both date and time.");
+      toast.error("Please select both date and time.");
     }
   };
 
@@ -106,10 +124,10 @@ const AddGames = () => {
 
   return (
     <div style={styles.pageContainer}>
-      <NavBar />
-      <h1>
-        <center>ADD GAMES</center>
-      </h1>
+      <br />
+      <h2 style={styles.title}>
+        <center>Add Games</center>
+      </h2>
       <div style={styles.addGamesContainer}>
         <form style={styles.form} onSubmit={handleAddGame}>
           <div style={styles.formGroup}>
@@ -162,48 +180,35 @@ const AddGames = () => {
           </div>
 
           <div style={styles.formGroup}>
-            <label style={styles.label}>Available Dates:</label>
-            <DatePicker
-              selected={selectedDate}
-              onChange={handleDateChange}
-              dateFormat="yyyy/MM/dd"
-              placeholderText="Select a date"
-              style={styles.input}
-            />
-            <br></br>
-            <label style={styles.label}>Available Times:</label>  
-            <DatePicker
-              selected={selectedTime}
-              onChange={handleTimeChange}
-              showTimeSelect
-              showTimeSelectOnly
-              timeIntervals={15}
-              timeCaption="Time"
-              dateFormat="h:mm aa"
-              placeholderText="Select a time"
-              style={styles.input}
-            />
-            <br></br>
-            <button type="button" onClick={addDateTime} style={styles.addButton}>
-              Add Date and Time
-            </button>
-          </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Upload Image:</label>
-            <input
-              type="text"
-              onChange={handleImageChange}
-              style={styles.fileInput}
-            />
-            {image && (
-              <img src={image} alt="Preview" style={styles.imagePreview} />
-            )}
+            <label style={styles.label}>Available Date & Time:</label>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <DatePicker
+                selected={selectedDate}
+                onChange={handleDateChange}
+                dateFormat="yyyy/MM/dd"
+                placeholderText="Select a date"
+                style={styles.input}
+              />
+              <DatePicker
+                selected={selectedTime}
+                onChange={handleTimeChange}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                timeCaption="Time"
+                dateFormat="h:mm aa"
+                placeholderText="Select a time"
+                style={styles.input}
+              />
+              <button type="button" onClick={addDateTime} style={styles.addtButton}>
+                Add
+              </button>
+            </div>
           </div>
 
           {availableTimes.length > 0 && (
             <div style={styles.timesContainer}>
-              <h4 style={styles.timesTitle}>Picked Times:</h4>
+              <h1 style={styles.label}>Picked Times:</h1>
               <ul style={styles.timesList}>
                 {availableTimes.map((time, index) => (
                   <li key={index} style={styles.timeItem}>
@@ -220,17 +225,36 @@ const AddGames = () => {
               </ul>
             </div>
           )}
+          <br/>
+
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Upload Image:</label>
+            <input
+              type="text"
+              value={image}
+              onChange={handleImageChange}
+              style={styles.fileInput}
+            />
+            {image && (
+              <img src={image} alt="Preview" style={styles.imagePreview} />
+            )}
+          </div>
 
           <button type="submit" style={styles.addButton}>
-            Add
+            Add Game
           </button>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };
 
 const styles = {
+  title: {
+    color: "#fff",
+    padding: "10px",
+  },
   pageContainer: {
     backgroundColor: "#161E38",
     color: "#fff",
@@ -297,11 +321,6 @@ const styles = {
     backgroundColor: "#2E3553",
     borderRadius: "5px",
   },
-  timesTitle: {
-    marginBottom: "10px",
-    fontSize: "18px",
-    color: "#FFD700",
-  },
   timesList: {
     listStyleType: "none",
     padding: "0",
@@ -316,6 +335,17 @@ const styles = {
     borderRadius: "5px",
     color: "#fff",
   },
+  addtButton: {
+    backgroundColor: "#FFD700",
+    border: "none",
+    color: "black",
+    padding: "5px 10px",
+    borderRadius: "2px",
+    cursor: "pointer",
+    width: "20%",
+    height: "23px",
+    marginLeft: "40px",
+  },
   removeButton: {
     backgroundColor: "#FF4136",
     border: "none",
@@ -325,13 +355,14 @@ const styles = {
     cursor: "pointer",
   },
   addButton: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#FFD700",
     border: "none",
-    color: "white",
+    color: "black",
     padding: "10px",
     borderRadius: "5px",
     cursor: "pointer",
     width: "100%",
+    marginTop: "30px",
   },
   errorText: {
     color: "red",

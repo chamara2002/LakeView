@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../foodManagement/context/authContext";
-import NavBar from "../../../components/core/NavBar";
 
 const AvailableTimes = () => {
   const [games, setGames] = useState([]);
@@ -80,12 +79,11 @@ const AvailableTimes = () => {
 
   return (
    <div>
-    <NavBar></NavBar>
      <div style={styles.pageContainer}>
      
      <div style={styles.content}>
        <div style={styles.header}>
-         <h2>Available Times</h2>
+       <h2 style={styles.title}><center>Available Times</center> </h2>
          <input
            type="text"
            placeholder="Search by game name"
@@ -105,10 +103,10 @@ const AvailableTimes = () => {
          <table style={styles.table}>
            <thead>
              <tr>
-               <th style={styles.tableHeader}>ID</th>
+               <th style={styles.tableHeader}>Game ID</th>
                <th style={styles.tableHeader}>Game Name</th>
-               <th style={styles.tableHeader}>Available Times</th>
-               <th style={styles.tableHeader}>Date</th>
+               <th style={styles.tableHeader}>Available Time</th>
+               <th style={styles.tableHeader}>Available Date</th>
                {user.user.role ? (
                  <th style={styles.tableHeader}>Action</th>
                ) : (
@@ -164,6 +162,10 @@ const AvailableTimes = () => {
 };
 
 const styles = {
+  title: {
+    color: "#fff",
+    padding: "10px",
+  },
   pageContainer: {
     display: "flex",
     minHeight: "100vh",
@@ -197,11 +199,14 @@ const styles = {
   },
   header: {
     marginBottom: "20px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   searchInput: {
-    marginBottom: "20px",
+    marginBottom: "10px",
     padding: "10px",
-    width: "100%",
+    width: "40%",
     borderRadius: "5px",
     border: "1px solid #2C3354",
     backgroundColor: "#243055",
@@ -215,29 +220,34 @@ const styles = {
   },
   table: {
     width: "100%",
+    maxWidth: "1200px", 
     borderCollapse: "collapse",
   },
   tableHeader: {
-    padding: "10px",
-    backgroundColor: "#2C3354",
-    color: "#FFD700",
+    padding: "12px",  
+    backgroundColor: "#2E3A59",  
+    color: "#fff",
     textAlign: "left",
+    borderBottom: "1px solid #444",  
   },
   tableRow: {
-    backgroundColor: "#243055",
+    borderBottom: "1px solid #444",  
   },
   tableCell: {
-    padding: "10px",
-    borderBottom: "1px solid #2C3354",
+    padding: "12px",
+    textAlign: "left",  
+    borderBottom: "1px solid #444",  
   },
   deleteButton: {
-    backgroundColor: "#FF4C4C",
+    backgroundColor: "#FF6347",  
     color: "#fff",
     border: "none",
-    padding: "5px 10px",
-    borderRadius: "5px",
+    padding: "6px 12px",  
+    borderRadius: "4px",  
     cursor: "pointer",
   },
 };
+
+
 
 export default AvailableTimes;

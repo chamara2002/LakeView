@@ -36,6 +36,11 @@ const FeedbackGame = ({ onFeedbackSubmit }) => {
         // Notify parent component of successful submission
         onFeedbackSubmit();
         setSubmissionFailed(false);
+        
+        // Clear the fields
+        setScore(0);
+        setFeedback('');
+
         // Show success notification
         toast.success('Feedback submitted successfully!');
       })
@@ -50,37 +55,48 @@ const FeedbackGame = ({ onFeedbackSubmit }) => {
   return (
     <>
       <form onSubmit={handleSubmit} style={formStyle}>
-        <h3 style={formTitleStyle}>Submit Feedback</h3>
-        <label>
-          <strong>Rating:</strong>
-          <div style={starContainerStyle}>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <span
-                key={star}
-                onMouseEnter={() => setHoveredStar(star)}
-                onMouseLeave={() => setHoveredStar(0)}
-                onClick={() => setScore(star)}
-                style={{
-                  ...starStyle,
-                  color: star <= (hoveredStar || score) ? '#ffcc00' : '#ccc',
-                }}
-              >
-                ★
-              </span>
-            ))}
+        <center>
+          <h3 style={formTitleStyle}>
+            Share your expectations before the game and let us know how we did after.<br />
+            Your feedback helps us level up!
+          </h3>
+        </center>
+        <div style={flexContainerStyle}>
+          {/* Rating section */}
+          <div style={ratingContainerStyle}>
+            <label>
+              <strong>Rating:</strong>
+              <div style={starContainerStyle}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span
+                    key={star}
+                    onMouseEnter={() => setHoveredStar(star)}
+                    onMouseLeave={() => setHoveredStar(0)}
+                    onClick={() => setScore(star)}
+                    style={{
+                      ...starStyle,
+                      color: star <= (hoveredStar || score) ? '#ffcc00' : '#ccc',
+                    }}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+            </label>
           </div>
-        </label>
-        <br />
-        <label>
-          <strong>Feedback:</strong>
-          <textarea
-            value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
-            rows="4"
-            cols="50"
-            style={textareaStyle}
-          />
-        </label>
+          {/* Feedback section */}
+          <div style={feedbackContainerStyle}>
+            <label>
+              <strong>Feedback:</strong>
+              <input
+                type="text"
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                style={inputStyle}
+              />
+            </label>
+          </div>
+        </div>
         <br />
         <button type="submit" style={buttonStyle}>
           Submit
@@ -94,36 +110,64 @@ const FeedbackGame = ({ onFeedbackSubmit }) => {
 
 // Inline CSS Styles for the Feedback Form
 const formStyle = {
-  backgroundColor: '#222',
+  backgroundColor: '#1d284c',
   padding: '20px',
-  borderRadius: '10px',
+  borderRadius: '5px',
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-  maxWidth: '600px',
-  width: '100%',
-  marginTop: '20px',
+  width: '1000px',
+  marginTop: '80px',
 };
 
 const formTitleStyle = {
   fontSize: '20px',
-  color: '#ffcc00',
-  marginBottom: '10px',
+  color: 'white',
+  marginTop: '5px',
+  fontFamily: 'Roboto',
+  lineHeight: '1.5'
+};
+
+const flexContainerStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  flexWrap: 'wrap',
+};
+
+const ratingContainerStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  flex: '0 0 30%',
+  paddingRight: '10px',
+  color: 'white',
+  marginTop: '20px',
+  marginLeft: '20px',
 };
 
 const starContainerStyle = {
   display: 'flex',
   cursor: 'pointer',
+  marginTop: '20px',
 };
 
 const starStyle = {
-  fontSize: '24px',
+  fontSize: '50px',
   margin: '0 2px',
 };
 
-const textareaStyle = {
-  padding: '8px',
-  width: '100%',
+const feedbackContainerStyle = {
+  color: 'white',
+  flex: '0 0 65%',
+  display: 'flex',
+  flexDirection: 'column',
+  marginTop: '20px',
+};
+
+const inputStyle = {
+  height: '40px',
+  width: '95%',
   marginBottom: '10px',
   borderRadius: '5px',
+  marginTop: '20px',
 };
 
 const buttonStyle = {
@@ -133,6 +177,8 @@ const buttonStyle = {
   border: 'none',
   borderRadius: '5px',
   cursor: 'pointer',
+  width:'160px',
+  marginLeft: '420px',
 };
 
 export default FeedbackGame;

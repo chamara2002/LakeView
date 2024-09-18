@@ -5,6 +5,7 @@ import Footer from "../../components/core/Footer";
 const FeedbackForm = () => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
+  const [feedback, setFeedback] = useState(""); // State for feedback content
 
   // Updated styles for a more user-friendly UI
   const formContainerStyle = {
@@ -61,93 +62,115 @@ const FeedbackForm = () => {
     transition: "color 0.2s ease", // Smooth transition on hover
   });
 
-  return (
-   <div>
-    <NavBar></NavBar>
-    <div style={{backgroundColor:"#161E38", height:"100vh"}}>
-     <div style={formContainerStyle}>
-      {/* Feedback Form */}
-      <div style={formStyle}>
-        <form>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={labelStyle}>Game:</label>
-            <select style={inputStyle}>
-              <option>Select Game</option>
-              {/* Add game options here */}
-            </select>
-          </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={labelStyle}>Name:</label>
-            <input type="text" placeholder="Name" style={inputStyle} />
-          </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={labelStyle}>Email:</label>
-            <input type="email" placeholder="Email" style={inputStyle} />
-          </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={labelStyle}>Feedback:</label>
-            <textarea
-              placeholder="Feedback"
-              style={{ ...inputStyle, height: "100px", resize: "none" }} // Disable resize for consistent look
-            ></textarea>
-          </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={labelStyle}>Date:</label>
-            <input type="date" style={inputStyle} />
-          </div>
-          <button type="submit" style={buttonStyle}>
-            Submit
-          </button>
-        </form>
-      </div>
+  // Handler for form submission
+  const handleFeedbackSubmit = (e) => {
+    e.preventDefault();
+    // Process feedback submission logic (e.g., send to server)
 
-      {/* Rating Form */}
-      <div style={formStyle}>
-        <form>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={labelStyle}>Game:</label>
-            <select style={inputStyle}>
-              <option>Select Game</option>
-              {/* Add game options here */}
-            </select>
+    // Clear the feedback input and rating
+    setFeedback("");
+    setRating(0);
+    setHoverRating(0);
+  };
+
+  const handleRatingSubmit = (e) => {
+    e.preventDefault();
+    // Process rating submission logic (e.g., send to server)
+
+    // Clear the rating
+    setRating(0);
+    setHoverRating(0);
+  };
+
+  return (
+    <div>
+      <NavBar />
+      <div style={{ backgroundColor: "#161E38", height: "100vh" }}>
+        <div style={formContainerStyle}>
+          {/* Feedback Form */}
+          <div style={formStyle}>
+            <form onSubmit={handleFeedbackSubmit}>
+              <div style={{ marginBottom: "15px" }}>
+                <label style={labelStyle}>Game:</label>
+                <select style={inputStyle}>
+                  <option>Select Game</option>
+                  {/* Add game options here */}
+                </select>
+              </div>
+              <div style={{ marginBottom: "15px" }}>
+                <label style={labelStyle}>Name:</label>
+                <input type="text" placeholder="Name" style={inputStyle} />
+              </div>
+              <div style={{ marginBottom: "15px" }}>
+                <label style={labelStyle}>Email:</label>
+                <input type="email" placeholder="Email" style={inputStyle} />
+              </div>
+              <div style={{ marginBottom: "15px" }}>
+                <label style={labelStyle}>Feedback:</label>
+                <textarea
+                  value={feedback} // Bind state to textarea value
+                  onChange={(e) => setFeedback(e.target.value)} // Update feedback on input
+                  placeholder="Feedback"
+                  style={{ ...inputStyle, height: "100px", resize: "none" }} // Disable resize for consistent look
+                ></textarea>
+              </div>
+              <div style={{ marginBottom: "15px" }}>
+                <label style={labelStyle}>Date:</label>
+                <input type="date" style={inputStyle} />
+              </div>
+              <button type="submit" style={buttonStyle}>
+                Submit
+              </button>
+            </form>
           </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={labelStyle}>Name:</label>
-            <input type="text" placeholder="Name" style={inputStyle} />
+
+          {/* Rating Form */}
+          <div style={formStyle}>
+            <form onSubmit={handleRatingSubmit}>
+              <div style={{ marginBottom: "15px" }}>
+                <label style={labelStyle}>Game:</label>
+                <select style={inputStyle}>
+                  <option>Select Game</option>
+                  {/* Add game options here */}
+                </select>
+              </div>
+              <div style={{ marginBottom: "15px" }}>
+                <label style={labelStyle}>Name:</label>
+                <input type="text" placeholder="Name" style={inputStyle} />
+              </div>
+              <div style={{ marginBottom: "15px" }}>
+                <label style={labelStyle}>Email:</label>
+                <input type="email" placeholder="Email" style={inputStyle} />
+              </div>
+              <div style={{ marginBottom: "15px" }}>
+                <label style={labelStyle}>Rate:</label>
+                <div>
+                  {[1, 2, 3, 4, 5].map((index) => (
+                    <span
+                      key={index}
+                      style={starStyle(index)}
+                      onClick={() => setRating(index)}
+                      onMouseEnter={() => setHoverRating(index)}
+                      onMouseLeave={() => setHoverRating(0)}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div style={{ marginBottom: "15px" }}>
+                <label style={labelStyle}>Date:</label>
+                <input type="date" style={inputStyle} />
+              </div>
+              <button type="submit" style={buttonStyle}>
+                Submit
+              </button>
+            </form>
           </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={labelStyle}>Email:</label>
-            <input type="email" placeholder="Email" style={inputStyle} />
-          </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={labelStyle}>Rate:</label>
-            <div>
-              {[1, 2, 3, 4, 5].map((index) => (
-                <span
-                  key={index}
-                  style={starStyle(index)}
-                  onClick={() => setRating(index)}
-                  onMouseEnter={() => setHoverRating(index)}
-                  onMouseLeave={() => setHoverRating(0)}
-                >
-                  ★
-                </span>
-              ))}
-            </div>
-          </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={labelStyle}>Date:</label>
-            <input type="date" style={inputStyle} />
-          </div>
-          <button type="submit" style={buttonStyle}>
-            Submit
-          </button>
-        </form>
+        </div>
       </div>
+      <Footer />
     </div>
-   </div>
-   <Footer></Footer>
-   </div>
   );
 };
 

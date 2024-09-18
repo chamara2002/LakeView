@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import NavBar from "../../../components/core/NavBar";
+import Footer from "../../../components/core/Footer";
 import AddGames from './AddGames';
 import GameDetails from '../Gamedetails';
 import AvailableTimes from './AvailableTimes';
@@ -6,12 +8,12 @@ import ChangeAvailableTimes from './ChangeAvailableTimes';
 import FeedbackDetails from './FeedbackDetails';
 
 const GameUpdate = () => {
-    const [activePage, setActivePage] = useState('AddGames');
+    const [activePage, setActivePage] = useState('GamesDetails');
 
     const renderActivePage = () => {
-        switch (activePage) {   
-            case 'GamesDetails':
-                return <GameDetails />;
+        switch (activePage) {
+            case 'AddGames':
+                return <AddGames />;
             case 'AvailableTimes':
                 return <AvailableTimes />;
             case 'ChangeAvailableTimes':
@@ -19,60 +21,105 @@ const GameUpdate = () => {
             case 'FeedbackDetails':
                 return <FeedbackDetails />;
             default:
-                return <AddGames />;
+                return <GameDetails />;
         }
     };
 
-    // Inline styles
-    const containerStyle = {
+    return (
+        <>
+            <NavBar name="game-update" />
+            <div style={styles.container}>
+                <div style={styles.sidebar}>
+                    <center>
+                    <h2 style={styles.sidebarTitle}>Games</h2>
+                    <h2 style={styles.sidebarTitle2}>Management Panel</h2>
+                    </center>
+                    <div style={styles.buttonList}>
+                        <button
+                            style={activePage === 'GamesDetails' ? { ...styles.button, ...styles.activeButton } : styles.button}
+                            onClick={() => setActivePage('GamesDetails')}
+                        >
+                            Games Details
+                        </button>
+                        <button
+                            style={activePage === 'AddGames' ? { ...styles.button, ...styles.activeButton } : styles.button}
+                            onClick={() => setActivePage('AddGames')}
+                        >
+                            Add Games
+                        </button>
+                        <button
+                            style={activePage === 'AvailableTimes' ? { ...styles.button, ...styles.activeButton } : styles.button}
+                            onClick={() => setActivePage('AvailableTimes')}
+                        >
+                            Available Times
+                        </button>
+                        <button
+                            style={activePage === 'FeedbackDetails' ? { ...styles.button, ...styles.activeButton } : styles.button}
+                            onClick={() => setActivePage('FeedbackDetails')}
+                        >
+                            Feedback Details
+                        </button>
+                    </div>
+                </div>
+                <div style={styles.mainContent}>
+                    {renderActivePage()}
+                </div>
+            </div>
+            <Footer />
+        </>
+    );
+};
+
+const styles = {
+    container: {
         display: 'flex',
-        height: '100vh',
-        backgroundColor: '#161E38', // Light gray background
-
-    };
-
-    const sidebarStyle = {
-        width: '250px',
-        backgroundColor: '#1d284c', // Teal background
+        height: 'calc(100vh - 60px)',
+        backgroundColor: '#0a1e42',
         color: '#fff',
+        padding: '10px',
+    },
+    sidebar: {
+        width: '20%',
+        backgroundColor: '#1a2b57',
+        padding: '20px',
+        borderRadius: '8px',
+    },
+    sidebarTitle: {
+        marginTop: '45px',
+        marginBottom: '-10px',
+        fontSize: '22px',
+        fontWeight: 'bold',
+        lineHeight: 1.2,
+    },
+    sidebarTitle2: {
+        marginBottom: '80px',
+        fontSize: '22px',
+        fontWeight: 'bold',
+    },
+    buttonList: {
         display: 'flex',
         flexDirection: 'column',
-        padding: '20px',
-        boxShadow: '2px 0 5px rgba(0, 0, 0, 0.1)',
-    };
-
-    const buttonStyle = {
-        backgroundColor: '#004d40', // Darker teal
+    },
+    button: {
+        backgroundColor: '#fff',
         border: 'none',
-        color: '#fff',
-        padding: '10px 20px',
-        margin: '10px 0',
+        color: '#000',
+        padding: '10px',
+        marginBottom: '10px',
         borderRadius: '5px',
         cursor: 'pointer',
         textAlign: 'left',
-    };
-
-    const contentStyle = {
+    },
+    activeButton: {
+        backgroundColor: '#FFD700',
+        color: '#000',
+    },
+    mainContent: {
         flex: 1,
         padding: '20px',
-        backgroundColor: '#ffffff', // White background
+        backgroundColor: '#ffffff',
         overflowY: 'auto',
-    };
-
-    return (
-        <div style={containerStyle}>
-            <div style={sidebarStyle}>
-                <button style={buttonStyle} onClick={() => setActivePage('AddGames')}>Add Games</button>
-                <button style={buttonStyle} onClick={() => setActivePage('GamesDetails')}>Games Details</button>
-                <button style={buttonStyle} onClick={() => setActivePage('AvailableTimes')}>Available Times</button>
-                
-                <button style={buttonStyle} onClick={() => setActivePage('FeedbackDetails')}>Feedback Details</button>
-            </div>
-            <div style={contentStyle}>
-                {renderActivePage()}
-            </div>
-        </div>
-    );
+    },
 };
 
 export default GameUpdate;

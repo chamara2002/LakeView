@@ -5,6 +5,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useParams, useNavigate } from "react-router-dom";
 import NavBar from "../../components/core/NavBar";
 import Footer from "../../components/core/Footer";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UpdateGame = () => {
   const { id } = useParams(); // Get the game ID from the URL
@@ -76,9 +78,15 @@ const UpdateGame = () => {
   const handleUpdateGame = async (e) => {
     e.preventDefault();
 
+    // Check for empty fields
+    if (!gameName || !category || !description || price <= null || !image) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
     // Check for validation errors before submitting
     if (nameError || priceError) {
-      alert("Please fix validation errors before submitting.");
+      toast.error("Please fix validation errors before submitting.");
       return;
     }
 
@@ -96,11 +104,12 @@ const UpdateGame = () => {
         `http://localhost:3000/api/games/games/${id}`,
         updatedGameData
       );
-      alert("Game updated successfully!");
-      navigate("/GameDetails");
+      toast.success("Game updated successfully!");
+      // Optionally navigate to a different page after success
+      // navigate("/GameDetails");
     } catch (error) {
       console.error("There was an error updating the game:", error);
-      console.error("Error details:", error.response?.data || error.message);
+      toast.error("There was an error updating the game.");
     }
   };
 
@@ -121,11 +130,19 @@ const UpdateGame = () => {
         selectedTime.getHours(),
         selectedTime.getMinutes()
       );
+
+      const now = new Date();
+
+      if (combinedDateTime < now) {
+        toast.error("Selected date and time cannot be in the past.");
+        return;
+      }
+
       setAvailableTimes([...availableTimes, combinedDateTime]);
       setSelectedDate(null); // Reset the date picker
       setSelectedTime(null); // Reset the time picker
     } else {
-      alert("Please select both date and time before adding.");
+      toast.error("Please select both date and time before adding.");
     }
   };
 
@@ -136,6 +153,10 @@ const UpdateGame = () => {
   return (
     <div style={styles.pageContainer}>
       <NavBar />
+      <br />
+      <h2 style={styles.title}>
+        <center>Update Game</center>
+      </h2>
       <div style={styles.addGamesContainer}>
         <form style={styles.form} onSubmit={handleUpdateGame}>
           <div style={styles.formGroup}>
@@ -188,42 +209,39 @@ const UpdateGame = () => {
           </div>
 
           <div style={styles.formGroup}>
-            <label style={styles.label}>Available Date:</label>
-            <DatePicker
-              selected={selectedDate}
-              onChange={handleDateChange}
-              dateFormat="yyyy/MM/dd"
-              placeholderText="Select a date"
-              style={styles.input}
-            />
+            <label style={styles.label}>Available Date & Time:</label>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <DatePicker
+                selected={selectedDate}
+                onChange={handleDateChange}
+                dateFormat="yyyy/MM/dd"
+                placeholderText="Select a date"
+                style={styles.input}
+              />
+              <DatePicker
+                selected={selectedTime}
+                onChange={handleTimeChange}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                timeCaption="Time"
+                dateFormat="h:mm aa"
+                placeholderText="Select a time"
+                style={styles.input}
+              />
+              <button type="button" onClick={addDateTime} style={styles.addtButton}>
+                Add
+              </button>
+            </div>
           </div>
-
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Available Time:</label>
-            <DatePicker
-              selected={selectedTime}
-              onChange={handleTimeChange}
-              showTimeSelect
-              showTimeSelectOnly
-              timeIntervals={15}
-              timeCaption="Time"
-              dateFormat="h:mm aa"
-              placeholderText="Select a time"
-              style={styles.input}
-            />
-          </div>
-
-          <button type="button" onClick={addDateTime} style={styles.addButton}>
-            Add Date & Time
-          </button>
 
           {availableTimes.length > 0 && (
             <div style={styles.timesContainer}>
-              <h4 style={styles.timesTitle}>Picked Times:</h4>
+              <h1 style={styles.label}>Picked Times:</h1>
               <ul style={styles.timesList}>
                 {availableTimes.map((time, index) => (
                   <li key={index} style={styles.timeItem}>
-                    {time.toLocaleString()} {/* Display the date and time */}
+                    {time.toLocaleString()}{" "}
                     <button
                       type="button"
                       onClick={() => removeTime(index)}
@@ -236,6 +254,7 @@ const UpdateGame = () => {
               </ul>
             </div>
           )}
+          <br />
 
           <div style={styles.formGroup}>
             <label style={styles.label}>Game Image URL:</label>
@@ -253,6 +272,8 @@ const UpdateGame = () => {
           </button>
         </form>
       </div>
+      <ToastContainer />
+      <br /><br /><br />
       <Footer />
     </div>
   );
@@ -307,23 +328,31 @@ const styles = {
     color: "#000",
   },
   addButton: {
-    padding: "10px 20px",
     backgroundColor: "#FFD700",
-    borderRadius: "5px",
     border: "none",
+    color: "black",
+    padding: "10px",
+    borderRadius: "5px",
     cursor: "pointer",
-    color: "#1E2749",
-    fontSize: "16px",
-    fontWeight: "bold",
     width: "100%",
+    marginTop: "30px",
+  },
+  addtButton: {
+    backgroundColor: "#FFD700",
+    border: "none",
+    color: "black",
+    padding: "5px 10px",
+    borderRadius: "2px",
+    cursor: "pointer",
+    width: "20%",
+    height: "23px",
+    marginLeft: "40px",
   },
   timesContainer: {
     marginTop: "20px",
-  },
-  timesTitle: {
-    fontSize: "18px",
-    marginBottom: "10px",
-    color: "#FFD700",
+    padding: "10px",
+    backgroundColor: "#2E3553",
+    borderRadius: "5px",
   },
   timesList: {
     listStyleType: "none",
