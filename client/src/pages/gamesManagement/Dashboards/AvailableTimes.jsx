@@ -35,11 +35,6 @@ const AvailableTimes = () => {
   const filteredGames = games
     .filter((game) =>
       game.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .filter((game) =>
-      game.availableTimes.some((time) =>
-        new Date(time).toLocaleDateString().includes(dateSearchTerm)
-      )
     );
 
   const handleTimeDelete = (gameId, time) => async () => {
@@ -89,13 +84,6 @@ const AvailableTimes = () => {
            placeholder="Search by game name"
            value={searchTerm}
            onChange={handleSearchChange}
-           style={styles.searchInput}
-         />
-         <input
-           type="text"
-           placeholder="Search by date (e.g., 09/03/2024)"
-           value={dateSearchTerm}
-           onChange={handleDateSearchChange}
            style={styles.searchInput}
          />
        </div>
