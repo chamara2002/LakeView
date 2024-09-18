@@ -12,6 +12,9 @@ const LeaveRequestForm = () => {
   const [reason, setReason] = useState("");
   const navigate = useNavigate();
 
+  // Get today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split("T")[0];
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -91,22 +94,24 @@ const LeaveRequestForm = () => {
           <h2>Leave Request Form</h2>
           <br></br>
           <form onSubmit={handleSubmit}>
-          <h4>Leave Start Date</h4>
+            <h4>Leave Start Date</h4>
             <input
               style={inputStyle}
               type="date"
               placeholder="Leave Start Date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
+              min={today} // Set minimum selectable date to today
             />
             
-            <h4>Leave Start Date</h4>
+            <h4>Leave End Date</h4>
             <input
               style={inputStyle}
               type="date"
               placeholder="Leave End Date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
+              min={startDate || today} // Set min date to startDate or today if not set
             />
             
             <h4>Reason</h4>

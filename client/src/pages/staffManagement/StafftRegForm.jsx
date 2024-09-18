@@ -19,8 +19,10 @@ const StaffRegistrationForm = () => {
   const [errors, setErrors] = useState({
     name: '',
     position: '',
+    email: '',
     phone: '',
     nic: '',
+    salary: '',
   });
 
   const validateName = (value) => {
@@ -28,7 +30,7 @@ const StaffRegistrationForm = () => {
     if (!namePattern.test(value)) {
       setErrors((prevErrors) => ({ ...prevErrors, name: 'Name can only contain letters and spaces.' }));
     } else {
-      setErrors((prevErrors) => ({ ...prevErrors, name: '' }));
+      setErrors((prevErrors) => ({ ...prevErrors, name: '' })); 
     }
   };
 
@@ -38,6 +40,15 @@ const StaffRegistrationForm = () => {
       setErrors((prevErrors) => ({ ...prevErrors, position: 'Position can only contain letters and spaces.' }));
     } else {
       setErrors((prevErrors) => ({ ...prevErrors, position: '' }));
+    }
+  };
+
+  const validateEmail = (value) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(value)) {
+      setErrors((prevErrors) => ({ ...prevErrors, email: 'Invalid email format.' }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, email: '' }));
     }
   };
 
@@ -51,13 +62,22 @@ const StaffRegistrationForm = () => {
   };
 
   const validateNic = (value) => {
-    const nicPattern = /^\d{10}V$|^\d{12}$/i;  // NIC must be 12 digits or 10 digits followed by 'V' or 'v'.
+    const nicPattern = /^\d{10}V$|^\d{12}$/i;
     if (!nicPattern.test(value)) {
-        setErrors((prevErrors) => ({ ...prevErrors, nic: 'NIC must be 12 digits or 10 digits followed by V or v.' }));
+      setErrors((prevErrors) => ({ ...prevErrors, nic: 'NIC must be 12 digits or 10 digits followed by V or v.' }));
     } else {
-        setErrors((prevErrors) => ({ ...prevErrors, nic: '' }));
+      setErrors((prevErrors) => ({ ...prevErrors, nic: '' }));
     }
-};
+  };
+
+  const validateSalary = (value) => {
+    const salaryPattern = /^[1-9]\d*(\.\d+)?$/; // Positive numbers only
+    if (!salaryPattern.test(value)) {
+      setErrors((prevErrors) => ({ ...prevErrors, salary: 'Salary must be a positive number.' }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, salary: '' }));
+    }
+  };
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -70,6 +90,10 @@ const StaffRegistrationForm = () => {
         setPosition(value);
         validatePosition(value);
         break;
+      case 'email':
+        setEmail(value);
+        validateEmail(value);
+        break;
       case 'phone':
         setPhone(value);
         validatePhone(value);
@@ -80,9 +104,9 @@ const StaffRegistrationForm = () => {
         break;
       case 'salary':
         setSalary(value);
+        validateSalary(value);
         break;
       default:
-        if (id === 'email') setEmail(value);
         if (id === 'password') setPassword(value);
         if (id === 'address') setAddress(value);
         break;
@@ -91,6 +115,11 @@ const StaffRegistrationForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (Object.values(errors).some((error) => error !== '')) {
+      alert('Please fix the errors before submitting.');
+      return;
+    }
+
     try {
       const newUser = {
         username: name,
@@ -104,7 +133,6 @@ const StaffRegistrationForm = () => {
       };
       const response = await axios.post('http://localhost:3000/api/staff/add', newUser);
       console.log(response.data);
-      // Reset the form after successful submission
       setName('');
       setPosition('');
       setEmail('');
@@ -161,6 +189,7 @@ const StaffRegistrationForm = () => {
               value={email}
               onChange={handleChange}
             />
+            {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
           </div>
 
           <div style={inputContainerStyle}>
@@ -206,6 +235,7 @@ const StaffRegistrationForm = () => {
               value={salary}
               onChange={handleChange}
             />
+            {errors.salary && <p style={{ color: 'red' }}>{errors.salary}</p>}
           </div>
 
           <div style={inputContainerStyle}>
@@ -233,7 +263,7 @@ const StaffRegistrationForm = () => {
 
 // Styles
 const background = {
-  backgroundColor: '#161E38', // Dark background for the entire page
+  backgroundColor: '#161E38',
   height: '100vh',
 };
 
@@ -242,36 +272,36 @@ const formContainerStyle = {
   justifyContent: 'center',
   alignItems: 'center',
   height: '130vh',
-  backgroundColor: '#161E38', // Dark background for form container
+  backgroundColor: '#161E38',
 };
 
 const formStyle = {
-  backgroundColor: '#9b9fab', // Light background for the form itself
+  backgroundColor: '#9b9fab',
   padding: '20px',
   borderRadius: '8px',
-  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-  width: '400px',
+  boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
+  width: '500px',
 };
 
 const titleStyle = {
   textAlign: 'center',
-  marginBottom: '20px',
   color: '#333',
 };
 
 const inputContainerStyle = {
-  marginBottom: '15px',
+  marginBottom: '20px',
 };
 
 const labelStyle = {
   display: 'block',
-  marginBottom: '5px',
+  marginBottom: '8px',
   color: '#333',
 };
 
 const inputStyle = {
   width: '100%',
   padding: '8px',
+  fontSize: '14px',
   borderRadius: '4px',
   border: '1px solid #ccc',
   boxSizing: 'border-box',
@@ -285,25 +315,24 @@ const buttonContainerStyle = {
 const registerButtonStyle = {
   backgroundColor: '#4CAF50',
   color: 'white',
-  padding: '10px 15px',
   border: 'none',
-  borderRadius: '5px',
+  padding: '10px 20px',
+  borderRadius: '4px',
   cursor: 'pointer',
 };
 
 const clearButtonStyle = {
   backgroundColor: '#f44336',
   color: 'white',
-  padding: '10px 15px',
   border: 'none',
-  borderRadius: '5px',
+  padding: '10px 20px',
+  borderRadius: '4px',
   cursor: 'pointer',
 };
 
 const responsiveGrid = {
   display: 'grid',
-  gridTemplateColumns: '1fr',
-  gap: '15px',
+  gap: '1rem',
 };
 
 export default StaffRegistrationForm;

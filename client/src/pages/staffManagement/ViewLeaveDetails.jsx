@@ -8,9 +8,8 @@ import ReportButton from "../../components/reUseable/ReportButton";
 
 const LeaveDetails = () => {
   const [leaves, setLeaves] = useState([]);
-  const [ll,setLl] = useState([]);
   const [searchTermByDate, setSearchTermByDate] = useState("");
-  const [searchTermById, setSearchTermById] = useState("");
+  const [searchTermByStaffId, setSearchTermByStaffId] = useState(""); // New state for Staff ID search
 
   useEffect(() => {
     const fetchLeaves = async () => {
@@ -18,7 +17,7 @@ const LeaveDetails = () => {
         const response = await axios.get(
           "http://localhost:3000/api/attendance/attendance"
         );
-        const filteredData = response.data.filter(leave => leave.userId !== null);
+        const filteredData = response.data.filter((leave) => leave.userId !== null);
         setLeaves(filteredData);
       } catch (error) {
         console.error("Error fetching leave data:", error);
@@ -38,9 +37,7 @@ const LeaveDetails = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(
-        `http://localhost:3000/api/attendance/attendance/${id}`
-      );
+      await axios.delete(`http://localhost:3000/api/attendance/attendance/${id}`);
       setLeaves((prevLeaves) => prevLeaves.filter((leave) => leave._id !== id));
     } catch (error) {
       console.error("Error deleting leave:", error);
@@ -51,18 +48,18 @@ const LeaveDetails = () => {
     setSearchTermByDate(event.target.value);
   };
 
-  const handleSearchById = (event) => {
-    setSearchTermById(event.target.value);
+  const handleSearchByStaffId = (event) => {
+    setSearchTermByStaffId(event.target.value); // Handle Staff ID search term
   };
 
-  const filteredLeaves = leaves.filter(leave => {
+  // Filter leaves by date and staff ID
+  const filteredLeaves = leaves.filter((leave) => {
     const leaveDate = new Date(leave.start).toLocaleDateString();
-    const userIdStr = leave.userId._id.slice || ''; // Access userId._id for filtering
-    const usernameStr = leave.userId.username || ''; // Access userId.username if needed
-  
+    const staffId = leave.userId._id;
+
     return (
       (searchTermByDate ? leaveDate.includes(searchTermByDate) : true) &&
-      (searchTermById ? userIdStr.includes(searchTermById) || usernameStr.includes(searchTermById) : true)
+      (searchTermByStaffId ? staffId.includes(searchTermByStaffId) : true)
     );
   });
 
@@ -73,8 +70,7 @@ const LeaveDetails = () => {
 
     const tableData = filteredLeaves.map((leave) => [
       leave._id,
-      leave.userId,
-      
+      leave.userId._id,
       new Date(leave.start).toLocaleDateString(),
       new Date(leave.start).toLocaleTimeString(),
       leave.end ? new Date(leave.end).toLocaleTimeString() : "N/A",
@@ -82,7 +78,7 @@ const LeaveDetails = () => {
     ]);
 
     doc.autoTable({
-      head: [["Attendance ID","Staff ID", "Date", "Attendant Time", "Leave Time", "OT Hours"]],
+      head: [["Attendance ID", "Staff ID", "Date", "Attendant Time", "Leave Time", "OT Hours"]],
       body: tableData,
       startY: 30,
       theme: "grid",
@@ -93,14 +89,12 @@ const LeaveDetails = () => {
     doc.save("attendance_details_report.pdf");
   };
 
-  console.log(filteredLeaves);
-
   return (
     <div>
       <NavBar />
       <div style={styles.pageContainer}>
-        <br></br>
-        <br></br>
+        <br />
+        <br />
         <h2 style={styles.heading}>Attendance Details</h2>
         <input
           type="text"
@@ -111,9 +105,9 @@ const LeaveDetails = () => {
         />
         <input
           type="text"
-          placeholder="Search by Staff ID"
-          value={searchTermById}
-          onChange={handleSearchById}
+          placeholder="Search by Staff ID" // New search bar for Staff ID
+          value={searchTermByStaffId}
+          onChange={handleSearchByStaffId}
           style={styles.searchBar}
         />
         <table style={styles.table}>
@@ -131,8 +125,8 @@ const LeaveDetails = () => {
           <tbody>
             {filteredLeaves.map((leave) => (
               <tr key={leave._id} style={styles.tableRow}>
-                <td style={styles.tableCell}>ATT {leave._id.slice(20,23)}</td>
-                <td style={styles.tableCell}>EMP {leave.userId._id.slice(20,23)}</td>
+                <td style={styles.tableCell}>{leave._id}</td>
+                <td style={styles.tableCell}>{leave.userId._id}</td>
                 <td style={styles.tableCell}>
                   {new Date(leave.start).toLocaleDateString()}
                 </td>
@@ -142,9 +136,7 @@ const LeaveDetails = () => {
                 <td style={styles.tableCell}>
                   {leave.end ? new Date(leave.end).toLocaleTimeString() : "N/A"}
                 </td>
-                <td style={styles.tableCell}>
-                  {calculateHours(leave.start, leave.end)}
-                </td>
+                <td style={styles.tableCell}>{calculateHours(leave.start, leave.end)}</td>
                 <td style={styles.tableCell}>
                   <button
                     style={styles.deleteButton}
@@ -157,7 +149,8 @@ const LeaveDetails = () => {
             ))}
           </tbody>
         </table>
-        <br/><br/>
+        <br />
+        <br />
         <button style={styles.exportButton} onClick={handleExportPDF}>
           Export Report as PDF
         </button>
