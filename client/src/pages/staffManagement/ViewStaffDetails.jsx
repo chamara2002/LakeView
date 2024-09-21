@@ -171,7 +171,7 @@ const StaffTable = () => {
                   <th style={thStyle}>Email</th>
                   <th style={thStyle}>Address</th>
                   <th style={thStyle}>Job Position</th>
-                  <th style={thStyle}>Salary for hours</th>
+                  <th style={thStyle}>Salary</th>
                   <th style={thStyle}>Option</th>
                 </tr>
               </thead>
