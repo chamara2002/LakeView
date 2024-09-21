@@ -252,7 +252,7 @@ const StaffRegistrationForm = () => {
 
           <div style={buttonContainerStyle}>
             <button type="submit" style={registerButtonStyle}>Register</button>
-            <button type="reset" style={clearButtonStyle}>Clear</button>
+            
           </div>
         </form>
       </div>
