@@ -84,18 +84,27 @@ const SalaryTable = () => {
         attendance.ot || 0;
     })
 
-    // Calculate OT and final salaries for each employee for each month
-    Object.keys(groupedData).forEach((employeeId) => {
-      Object.keys(groupedData[employeeId].months).forEach((monthYear) => {
-        const employeeMonthData = groupedData[employeeId].months[monthYear];
-        employeeMonthData.otSalary =
-          (employeeMonthData.otHours-8) *
-          ((employeeMonthData.normalSalary / 160) * 2);; // Assuming OT rate is four times the normal rate
-        employeeMonthData.finalSalary =
-          employeeMonthData.normalSalary + employeeMonthData.otSalary;
-          employeeMonthData.otHours=employeeMonthData.otHours-8;
-      });
-    });
+   // Calculate OT and final salaries for each employee for each month
+Object.keys(groupedData).forEach((employeeId) => {
+  Object.keys(groupedData[employeeId].months).forEach((monthYear) => {
+    const employeeMonthData = groupedData[employeeId].months[monthYear];
+
+    // Adjust OT hours if more than 8
+    const otHours = employeeMonthData.otHours > 8 
+      ? employeeMonthData.otHours - 8 
+      : employeeMonthData.otHours;
+
+    // Calculate OT salary (assuming OT rate is two times the normal rate)
+    employeeMonthData.otSalary = otHours * ((employeeMonthData.normalSalary / 160) * 2);
+    
+    // Calculate final salary
+    employeeMonthData.finalSalary = employeeMonthData.normalSalary + employeeMonthData.otSalary;
+    
+    // Assign adjusted OT hours back to the object
+    employeeMonthData.otHours = otHours;
+  });
+});
+
 
     return groupedData;
   };

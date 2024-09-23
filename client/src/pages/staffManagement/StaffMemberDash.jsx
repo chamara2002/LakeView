@@ -127,15 +127,24 @@ const StaffmemberDash = () => {
       console.log(salaryData)
 
       // Calculate OT and final salaries for each employee for the current month
-      Object.keys(groupedData).forEach((employeeId) => {
-        const employeeData = groupedData[employeeId];
-        employeeData.otSalary =
-          (employeeData.otHours-8) *
-          ((employeeData.normalSalary / 160) * 2); // Assuming OT rate is twice the normal rate
-        employeeData.finalSalary =
-          employeeData.normalSalary + employeeData.otSalary;
-          employeeData.OT=employeeData.otHours-8;
-      });
+Object.keys(groupedData).forEach((employeeId) => {
+  const employeeData = groupedData[employeeId];
+  
+  // Adjust OT hours if more than 8
+  const otHours = employeeData.otHours > 8 
+    ? employeeData.otHours - 8 
+    : employeeData.otHours;
+  
+  // Calculate OT salary (assuming OT rate is twice the normal rate)
+  employeeData.otSalary = otHours * ((employeeData.normalSalary / 160) * 2);
+  
+  // Calculate final salary
+  employeeData.finalSalary = employeeData.normalSalary + employeeData.otSalary;
+  
+  // Store the adjusted OT hours
+  employeeData.OT = otHours;
+});
+
 
       return groupedData;
     } catch (error) {
