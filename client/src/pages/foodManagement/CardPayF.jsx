@@ -137,7 +137,7 @@ const styles = {
   container: {
     padding: "40px 20px",
     textAlign: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161E38",
     color: "#FFFFFF",
     minHeight: "70vh",
     display: "flex",
@@ -164,7 +164,7 @@ const styles = {
     width: "100%",
   },
   paymentSection: {
-    backgroundColor: "#2B2B2B",
+    backgroundColor: "#1D284C",
     color: "#FFFFFF",
     padding: "40px",
     borderRadius: "10px",
@@ -175,7 +175,7 @@ const styles = {
   sectionTitle: {
     fontSize: "24px",
     marginBottom: "20px",
-    color: "#00C0FF",
+    color: "#FFFFFF",
   },
   form: {
     display: "flex",
@@ -198,7 +198,7 @@ const styles = {
     display: "block",
     marginBottom: "8px",
     fontSize: "14px",
-    color: "#CCCCCC",
+    color: "#ffffff",
   },
   input: {
     width: "100%",
@@ -214,13 +214,14 @@ const styles = {
   submitButton: {
     padding: "15px 20px",
     fontSize: "18px",
-    backgroundColor: "#00C0FF",
-    color: "#FFFFFF",
+    backgroundColor: "#FFBB00",
+    color: "#000000",
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
     width: "100%",
     transition: "background-color 0.3s",
+    fontWeight: "bold",
   },
 };
 

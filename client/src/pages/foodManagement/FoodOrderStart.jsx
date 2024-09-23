@@ -21,7 +21,7 @@ const navigate = useNavigate();
             <div className={styles.mainContainerTitle}>
               <h3>
                 {" "}
-                LAKEVIEW <br /> RESTAURANT{" "}
+                LAKEVIEW RESTAURANT{" "}
               </h3>
             </div>
             <div className="mainContainerNavBar">
@@ -29,16 +29,16 @@ const navigate = useNavigate();
             </div>
           </div>
           <div className={styles.mainContainerBody}>
-            <h4>Welcome to our Food management Portal</h4>
-            <br />
+            <h4>Welcome to Our Food management Portal</h4>
+            
             <p className="foodcaption">
-              Your gateway to a seamless dining experience at Lakeview Gaming
-              zone.
+              Your gateway to a seamless dining experience at 
+              <br></br><br></br>Lakeview Gaming Zone.
             </p>
             <br />
             <br />
             <div onClick={()=>navigate('/food')}>
-              <CustomButton color="#FFBB00" buttonText="Order"  />
+              <CustomButton color="#FFBB00" fontWeight="bold" buttonText="Order Now"  />
             </div>
           </div>
         </div>

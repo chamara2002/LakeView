@@ -9,8 +9,11 @@ const Cart = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  const handleRemove = (_id) => {
-    dispatch({ type: "REMOVE_FROM_CART", payload: _id });
+  const handleRemove = (_id, name) => {
+    if (window.confirm(`Are you sure you want to remove "${name}" from the cart?`)) {
+      dispatch({ type: "REMOVE_FROM_CART", payload: _id });
+      alert(`"${name}" has been removed from your cart.`);
+    }
   };
 
   const handleQuantityChange = (_id, quantity) => {
@@ -39,18 +42,18 @@ const Cart = () => {
 
   return (
     <div style={pageStyle}>
-      <NavBar />
+      <NavBar name="foods" />
       <div style={cartStyle}>
-        <h2>Your Cart</h2>
+        <h2 style={centeredHeadingStyle}>My Cart</h2>
         <input
           type="text"
           placeholder="Search your cart..."
           value={searchQuery}
           onChange={handleSearchChange}
           style={searchInputStyle}
-        />
+        /><br />
         {filteredCart.length === 0 ? (
-          <p>Your cart is empty</p>
+          <p style={{ color: "white" }}>Cart is Empty.</p>
         ) : (
           filteredCart.map((item) => (
             <div key={item._id} style={cartItemStyle}>
@@ -67,7 +70,7 @@ const Cart = () => {
                   Total: Rs.{((item.price || 0) * item.quantity).toFixed(2)}
                 </p>
                 <button
-                  onClick={() => handleRemove(item._id)}
+                  onClick={() => handleRemove(item._id, item.name)}
                   style={buttonStyle}
                 >
                   Remove
@@ -105,21 +108,25 @@ const Cart = () => {
 };
 
 // Inline CSS styles
-
-
 const pageStyle = {
   backgroundColor: "#161E38",
   padding: "20px",
   minHeight: "100vh",
 };
+
 const cartStyle = {
   maxWidth: "1200px",
   margin: "20px auto",
   padding: "20px",
-  backgroundColor: "#bcbbb6",
+  backgroundColor: "#1D284C",
   borderRadius: "8px",
   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-  
+};
+
+const centeredHeadingStyle = {
+  color: "white",
+  textAlign: "center",  // Center the text horizontally
+  margin: "20px 0",     // Add some space around the heading
 };
 
 const searchInputStyle = {
@@ -128,13 +135,15 @@ const searchInputStyle = {
   borderRadius: "4px",
   border: "1px solid #ccc",
   width: "30%",
+  display: "block",     // Makes the input a block element
+  margin: "0 auto",     // Centers the input horizontally
 };
 
 const cartItemStyle = {
   display: "flex",
   alignItems: "center",
   padding: "15px",
-  backgroundColor: "#74736e",
+  backgroundColor: "#858DA8",
   borderRadius: "8px",
   marginBottom: "20px",
   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
@@ -155,30 +164,34 @@ const cartItemDetailsStyle = {
 const cartTotalStyle = {
   textAlign: "right",
   marginTop: "30px",
+  color: "white",
 };
 
 const checkoutButtonStyle = {
   display: "block",
-  width: "100%",
+  width: "20%",
   padding: "15px",
-  backgroundColor: "#28a745",
-  color: "#fff",
+  backgroundColor: "#FFBB00",
+  color: "Black",
   border: "none",
   borderRadius: "8px",
   cursor: "pointer",
   fontSize: "16px",
   marginTop: "20px",
+  fontWeight: "bold",
+  margin: "20px auto",
 };
 
 const buttonStyle = {
   padding: "10px 15px",
-  backgroundColor: "#007bff",
-  color: "#fff",
+  backgroundColor: "#FFBB00",
+  color: "Black",
   border: "none",
   borderRadius: "8px",
   cursor: "pointer",
   marginRight: "10px",
   fontSize: "14px",
+  fontWeight: "bold",
 };
 
 buttonStyle[":hover"] = {

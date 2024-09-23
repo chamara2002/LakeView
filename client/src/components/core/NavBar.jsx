@@ -78,11 +78,14 @@ const NavBar = ({ name }) => {
         >
           Support
         </Link>
-        { authState.isAuthenticated && currentPage === "foods" ? (
-          <Link to="/cart">🛒 Cart ({cart.length})</Link>
+        {authState.isAuthenticated && currentPage === "foods" ? (
+        <Link to="/cart" style={{ color: "white" }}>
+        🛒 Cart ({cart.length})
+        </Link>
         ) : (
-          <></>
+        <></>
         )}
+        
 
         {authState.isAuthenticated ? (
           <Link to="/" className={styles.link}>
