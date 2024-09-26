@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'; // Add useContext import
+import React, { useEffect, useContext } from 'react';
 import NavBar from '../../components/core/NavBar';
 import Footer from '../../components/core/Footer';
 import axios from 'axios';
@@ -10,7 +10,7 @@ const GameBillInfo = () => {
   const [game, setGame] = React.useState('');
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { bookingDetails } = useContext(BookingContext); // Use useContext to get bookingDetails
+  const { bookingDetails } = useContext(BookingContext); 
 
   useEffect(() => {
     if (!bookingDetails.itemId) {
@@ -25,7 +25,7 @@ const GameBillInfo = () => {
       .catch(error => {
         console.error('Error fetching game details:', error);
       });
-  }, [bookingDetails.itemId]); // Add bookingDetails.itemId as dependency
+  }, [bookingDetails.itemId]); 
 
   const handleCashPay = async () => {
     try {
@@ -48,21 +48,15 @@ const GameBillInfo = () => {
       <NavBar name="games" />
       <div style={styles.container}>
         <div style={styles.header}>
-          <h1 style={styles.mainTitle}>{game.name}</h1>
-          <h2 style={styles.subTitle}>Booking Form</h2>
+        <h3 style={styles.methodTitle}>Choose a Payment Method</h3>
+          
         </div>
-        <div style={styles.body}>
-          <div style={styles.billInformation}>
-            <h3>Bill Information</h3>
-            <p>{`${game.name} booking fee = R.S.${game.price} X  ${bookingDetails.seatNumbers.length} seats `}</p>
-            <p>{`Total amount = R.S.${bookingDetails.total}`}</p>
-          </div>
-          <div style={styles.paymentMethod}>
-            <h3>Payment Method</h3>
-            <button style={styles.button} onClick={() => navigate(`/PayOnline`)}>Card Payment &rarr;</button>
-            <button style={styles.button} onClick={handleCashPay}>Cash on Delivery &rarr;</button>
-            <button style={styles.button} onClick={()=>navigate('/games')}>Cancel</button>
-          </div>
+
+        <div style={styles.paymentMethod}>
+          
+          <button style={styles.button} onClick={() => navigate(`/PayOnline`)}>Card Payment &rarr;</button>
+          <button style={styles.button} onClick={handleCashPay}>Cash on Delivery &rarr;</button>
+          <button style={styles.button} onClick={() => navigate('/games')}>Cancel</button>
         </div>
       </div>
       <Footer />
@@ -72,48 +66,43 @@ const GameBillInfo = () => {
 
 const styles = {
   container: {
-    padding: '20px',
+    padding: '40px',
     textAlign: 'center',
-    backgroundColor: '#1E1E1E',
+    backgroundColor: '#161E38',
     color: '#FFFFFF',
     minHeight: '70vh',
   },
   header: {
-    marginBottom: '20px',
+    marginBottom: '30px',
   },
   mainTitle: {
     fontSize: '36px',
-    margin: '0',
+    fontWeight: 'bold',
+  },
+  methodTitle: {
+    fontSize: '26px',
+    fontWeight: '600',
+    marginBottom: '20px',
+    color: '#FFDD57',
   },
   subTitle: {
     fontSize: '24px',
-    margin: '0',
-  },
-  body: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    marginTop: '40px',
-  },
-  billInformation: {
-    backgroundColor: '#F0F0F0',
-    color: '#000000',
-    padding: '20px',
-    borderRadius: '8px',
-    width: '40%',
+    marginTop: '10px',
   },
   paymentMethod: {
     backgroundColor: '#F0F0F0',
     color: '#000000',
-    padding: '20px',
-    borderRadius: '8px',
-    width: '40%',
+    padding: '40px',
+    borderRadius: '12px',
+    maxWidth: '400px',
+    margin: '0 auto',
+    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)',
   },
   button: {
     display: 'block',
     width: '100%',
-    padding: '10px 20px',
-    margin: '10px 0',
+    padding: '12px 20px',
+    margin: '15px 0',
     fontSize: '16px',
     backgroundColor: '#333333',
     color: '#FFFFFF',

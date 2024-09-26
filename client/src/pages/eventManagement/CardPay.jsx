@@ -42,14 +42,15 @@ const CardPay = () => {
 
   return (
     <>
-      <NavBar name="events" />
+      <NavBar name="" />
       <div style={styles.container}>
-        <div style={styles.header}>
-          <h1 style={styles.mainTitle}>Victory Arena</h1>
-          <h2 style={styles.subTitle}>Booking Form</h2>
-        </div>
+        <div style={styles.header}></div>
         <div style={styles.body}>
-          <div style={styles.paymentSection}>
+          <div
+            style={styles.paymentSection}
+            onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
+            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          >
             <h3 style={styles.sectionTitle}>Card Payment</h3>
             <form style={styles.form} onSubmit={handlePayment}>
               <div style={styles.inputGroup}>
@@ -108,6 +109,17 @@ const CardPay = () => {
               <button
                 type="submit"
                 style={styles.submitButton}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = "#0090C7";
+                  e.currentTarget.style.transform = "scale(1.05)";
+                  e.currentTarget.style.boxShadow =
+                    "0 4px 12px rgba(0, 192, 255, 0.3)";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = "#00C0FF";
+                  e.currentTarget.style.transform = "scale(1)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
               >
                 Submit
               </button>
@@ -124,12 +136,13 @@ const styles = {
   container: {
     padding: "40px 20px",
     textAlign: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161E38",
     color: "#FFFFFF",
     minHeight: "70vh",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: "center",
   },
   header: {
     marginBottom: "30px",
@@ -151,18 +164,25 @@ const styles = {
     width: "100%",
   },
   paymentSection: {
-    backgroundColor: "#2B2B2B",
+    background: "linear-gradient(145deg, #2A2A2A, #1C1C1C)", // Gradient for a modern, sleek look
     color: "#FFFFFF",
     padding: "40px",
-    borderRadius: "10px",
+    borderRadius: "15px", // Increased border-radius for a smoother card shape
     width: "100%",
     maxWidth: "500px",
-    boxShadow: "0 4px 15px rgba(0, 0, 0, 0.3)",
+    boxShadow: "0 8px 30px rgba(0, 0, 0, 0.5)", // Stronger shadow for depth
+    transition: "transform 0.3s ease-in-out",
+  },
+  paymentSectionHover: {
+    transform: "scale(1.02)", // Slight scale on hover for interactivity
   },
   sectionTitle: {
-    fontSize: "24px",
-    marginBottom: "20px",
-    color: "#00C0FF",
+    fontSize: "26px",
+    marginBottom: "25px",
+    color: "#00C0FF", // Bright color for title
+    textAlign: "center",
+    fontWeight: "bold",
+    textTransform: "uppercase",
   },
   form: {
     display: "flex",
@@ -185,29 +205,43 @@ const styles = {
     display: "block",
     marginBottom: "8px",
     fontSize: "14px",
-    color: "#CCCCCC",
+    color: "#BBBBBB", // Softer color for the label
+    textTransform: "uppercase",
   },
   input: {
     width: "100%",
-    padding: "12px 15px",
-    borderRadius: "5px",
+    padding: "14px 16px", // Increased padding for comfort
+    borderRadius: "8px", // Smoother rounded edges
     border: "1px solid #444",
-    backgroundColor: "#333333",
+    backgroundColor: "#2F2F2F", // Slightly lighter background for contrast
     color: "#FFFFFF",
     fontSize: "16px",
     outline: "none",
     boxSizing: "border-box",
+    transition: "border-color 0.3s, background-color 0.3s", // Smooth transition for interactive feel
+  },
+  inputFocus: {
+    borderColor: "#00C0FF", // Blue border when input is focused
+    backgroundColor: "#3A3A3A", // Lighter background on focus
   },
   submitButton: {
     padding: "15px 20px",
     fontSize: "18px",
-    backgroundColor: "#00C0FF",
+    backgroundColor: "#00C0FF", // Bright CTA color
     color: "#FFFFFF",
     border: "none",
-    borderRadius: "5px",
+    borderRadius: "8px",
     cursor: "pointer",
     width: "100%",
-    transition: "background-color 0.3s",
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    letterSpacing: "1px",
+    transition: "background-color 0.3s, transform 0.2s, box-shadow 0.2s", // Interactive feel
+  },
+  submitButtonHover: {
+    backgroundColor: "#0090C7", // Darker shade on hover
+    transform: "scale(1.05)",
+    boxShadow: "0 4px 12px rgba(0, 192, 255, 0.3)", // Softer glow effect
   },
 };
 

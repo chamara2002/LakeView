@@ -18,7 +18,7 @@ const MovieBookingManagement = () => {
   const handleConfirm = (bookingId) => {
     axios
       .put(`http://localhost:3000/api/bkm/bookings/${bookingId}`)
-      .then((response) => {
+      .then(() => {
         setBookings((prevBookings) =>
           prevBookings.map((booking) =>
             booking._id === bookingId
@@ -33,7 +33,7 @@ const MovieBookingManagement = () => {
   const handleDelete = (bookingId) => {
     axios
       .delete(`http://localhost:3000/api/bkm/bookings/${bookingId}`)
-      .then((response) => {
+      .then(() => {
         setBookings((prevBookings) =>
           prevBookings.filter((booking) => booking._id !== bookingId)
         );
@@ -48,15 +48,7 @@ const MovieBookingManagement = () => {
   return (
     <div>
       <NavBar />
-      
-      <div
-        style={{
-          backgroundColor: "#161E38",
-          minHeight: "100vh",
-          padding: "20px",
-        }}
-      >
-        
+      <div style={{ backgroundColor: "#161E38", minHeight: "100vh", padding: "20px" }}>
         <input
           type="text"
           placeholder="Search by movie name"
@@ -87,35 +79,23 @@ const MovieBookingManagement = () => {
             <tbody>
               {filteredBookings.map((booking) => (
                 <tr key={booking._id} style={trStyle}>
-                  <td style={tdStyle}>
-                    {booking.movie?.name || "Unknown Movie"}
-                  </td>
-                  <td style={tdStyle}>
-                    {booking.customer?.email || "Unknown Customer"}
-                  </td>
-                  <td style={tdStyle}>
-                    {booking.seatNumbers ? booking.seatNumbers.length : 0}
-                  </td>
+                  <td style={tdStyle}>{booking.movie?.name || "Unknown Movie"}</td>
+                  <td style={tdStyle}>{booking.customer?.email || "Unknown Customer"}</td>
+                  <td style={tdStyle}>{booking.seatNumbers ? booking.seatNumbers.length : 0}</td>
                   <td style={tdStyle}>${booking.totalPrice.toFixed(2)}</td>
-                  <td style={tdStyle}>
-                    {booking.confirmed ? "Paid" : "Not paid"}
-                  </td>
+                  <td style={tdStyle}>{booking.confirmed ? "Paid" : "Not paid"}</td>
                   <td style={tdStyle}>
                     <button
                       onClick={() => handleConfirm(booking._id)}
                       disabled={booking.confirmed}
                       style={{
                         ...cardButtonStyle,
-                        backgroundColor: booking.confirmed
-                          ? "#28a745"
-                          : "#007bff",
+                        backgroundColor: booking.confirmed ? "#28a745" : "#007bff",
                         cursor: booking.confirmed ? "default" : "pointer",
                         marginRight: "10px",
                       }}
                     >
-                      {booking.confirmed
-                        ? "Payment confirmed"
-                        : "Confirm Payment"}
+                      {booking.confirmed ? "Payment confirmed" : "Confirm Payment"}
                     </button>
                     <button
                       onClick={() => handleDelete(booking._id)}
@@ -132,8 +112,14 @@ const MovieBookingManagement = () => {
             </tbody>
           </table>
         </div>
-        <br></br>
-       <center> <ReportButton></ReportButton></center>
+        <br />
+        <center>
+          <ReportButton 
+            bookings={filteredBookings} 
+            title="Movie Bookings" 
+            fileName="movie_bookings_report.pdf" 
+          />
+        </center>
       </div>
       <Footer />
     </div>

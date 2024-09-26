@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Footer from "../../components/core/Footer";
 import NavBar from "../../components/core/NavBar";
-import { useNavigate } from "react-router-dom";
-import ReportButton from "../../components/reUseable/ReportButton";
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const BookingManagement = () => {
   const [payments, setPayments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -47,10 +46,34 @@ const BookingManagement = () => {
     payment.event?.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Event Booking Report", 14, 20); // Updated title
+
+    const tableColumn = ["Event Name", "Customer Email", "Price", "Payment Status"];
+    const tableRows = filteredPayments.map((payment) => [
+      payment.event?.name || "Unknown Event",
+      payment.participant?.email || "Unknown Customer",
+      `$${payment.amount}`,
+      payment.status,
+    ]);
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 30,
+      styles: { fillColor: [40, 40, 40], textColor: [255, 255, 255] },
+      headStyles: { fillColor: [50, 50, 50] },
+      alternateRowStyles: { fillColor: [220, 220, 220] },
+    });
+
+    doc.save("event_booking_report.pdf"); // Updated filename
+  };
+
   return (
     <div>
       <NavBar />
-      
       <div style={{ backgroundColor: "#161E38", minHeight: "100vh", padding: "20px" }}>
         <input
           type="text"
@@ -121,8 +144,12 @@ const BookingManagement = () => {
             )}
           </tbody>
         </table>
-        <br></br>
-       <center> <ReportButton></ReportButton></center>
+        <br />
+        <center>
+          <button onClick={handleDownloadPDF} style={styles.button}>
+            Generate Report
+          </button>
+        </center>
       </div>
       <Footer />
     </div>
@@ -142,13 +169,17 @@ const tdStyle = {
   padding: "12px",
 };
 
-const buttonStyle = {
-  padding: "10px 20px",
-  backgroundColor: "#007bff",
-  color: "#fff",
-  border: "none",
-  borderRadius: "4px",
-  cursor: "pointer",
+const styles = {
+  button: {
+    padding: '10px 20px',
+    backgroundColor: '#4CAF50',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+    fontSize: '16px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease',
+  }
 };
 
 export default BookingManagement;

@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import NavBar from "../../components/core/NavBar";
 import Footer from "../../components/core/Footer";
 import { useAuth } from "../foodManagement/context/authContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BookingContext } from "../foodManagement/context/BookingContext";
 
@@ -11,8 +11,68 @@ const CardPayV = () => {
   const navigate = useNavigate();
   const { bookingDetails } = useContext(BookingContext);
 
+  const [formData, setFormData] = useState({
+    cardNumber: '',
+    cardName: '',
+    expiryDate: '',
+    securityCode: ''
+  });
+
+  const [errors, setErrors] = useState({
+    cardNumber: '',
+    cardName: '',
+    expiryDate: '',
+    securityCode: ''
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const validateForm = () => {
+    let formIsValid = true;
+    const newErrors = {};
+
+    // Validate card number (12 digits only)
+    if (!/^\d{12}$/.test(formData.cardNumber)) {
+      newErrors.cardNumber = "Card number must be exactly 12 digits";
+      formIsValid = false;
+    }
+
+    // Validate card name (letters only)
+    if (!/^[A-Za-z\s]+$/.test(formData.cardName)) {
+      newErrors.cardName = "Name on card must contain only letters";
+      formIsValid = false;
+    }
+
+    // Validate expiry date (month after current month)
+    const currentDate = new Date();
+    const selectedDate = new Date(formData.expiryDate);
+    if (selectedDate <= currentDate) {
+      newErrors.expiryDate = "Expiry date must be a future month";
+      formIsValid = false;
+    }
+
+    // Validate security code (4 digits only)
+    if (!/^\d{4}$/.test(formData.securityCode)) {
+      newErrors.securityCode = "Security code must be exactly 4 digits";
+      formIsValid = false;
+    }
+
+    setErrors(newErrors);
+    return formIsValid;
+  };
+
   const handlePayment = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return; // Stop submission if the form is invalid
+    }
 
     if (bookingDetails.type === "movie") {
       try {
@@ -51,7 +111,6 @@ const CardPayV = () => {
     <>
       <NavBar name="" />
       <div style={styles.container}>
-       
         <div style={styles.body}>
           <div style={styles.paymentSection}>
             <h3 style={styles.sectionTitle}>Card Payment</h3>
@@ -64,10 +123,15 @@ const CardPayV = () => {
                   type="text"
                   id="cardNumber"
                   name="cardNumber"
-                  placeholder="1234 5678 9123 4567"
+                  placeholder="1234 5678 9123"
                   style={styles.input}
+                  value={formData.cardNumber}
+                  onChange={handleInputChange}
                   required
                 />
+                {errors.cardNumber && (
+                  <span style={styles.errorText}>{errors.cardNumber}</span>
+                )}
               </div>
               <div style={styles.inputGroup}>
                 <label htmlFor="cardName" style={styles.label}>
@@ -79,8 +143,13 @@ const CardPayV = () => {
                   name="cardName"
                   placeholder="John Doe"
                   style={styles.input}
+                  value={formData.cardName}
+                  onChange={handleInputChange}
                   required
                 />
+                {errors.cardName && (
+                  <span style={styles.errorText}>{errors.cardName}</span>
+                )}
               </div>
               <div style={styles.inputGroupRow}>
                 <div style={styles.inputGroupSmall}>
@@ -92,8 +161,13 @@ const CardPayV = () => {
                     id="expiryDate"
                     name="expiryDate"
                     style={styles.input}
+                    value={formData.expiryDate}
+                    onChange={handleInputChange}
                     required
                   />
+                  {errors.expiryDate && (
+                    <span style={styles.errorText}>{errors.expiryDate}</span>
+                  )}
                 </div>
                 <div style={styles.inputGroupSmall}>
                   <label htmlFor="securityCode" style={styles.label}>
@@ -105,8 +179,13 @@ const CardPayV = () => {
                     name="securityCode"
                     placeholder="••••"
                     style={styles.input}
+                    value={formData.securityCode}
+                    onChange={handleInputChange}
                     required
                   />
+                  {errors.securityCode && (
+                    <span style={styles.errorText}>{errors.securityCode}</span>
+                  )}
                 </div>
               </div>
               <button type="submit" style={styles.submitButton}>
@@ -125,25 +204,12 @@ const styles = {
   container: {
     padding: "40px 20px",
     textAlign: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161E38",
     color: "#FFFFFF",
     minHeight: "70vh",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  },
-  header: {
-    marginBottom: "30px",
-  },
-  mainTitle: {
-    fontSize: "42px",
-    margin: "0",
-    color: "#00C0FF",
-  },
-  subTitle: {
-    fontSize: "28px",
-    margin: "10px 0 0 0",
-    color: "#CCCCCC",
   },
   body: {
     display: "flex",
@@ -209,6 +275,11 @@ const styles = {
     cursor: "pointer",
     width: "100%",
     transition: "background-color 0.3s",
+  },
+  errorText: {
+    color: "red",
+    fontSize: "12px",
+    marginTop: "5px",
   },
 };
 
