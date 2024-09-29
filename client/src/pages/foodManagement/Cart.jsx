@@ -1,24 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "./context/CartContext";
 import NavBar from "../../components/core/NavBar";
 import Footer from "../../components/core/Footer";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS
 
 const Cart = () => {
   const { cart, dispatch } = useCart();
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
+  // Notify if the cart is empty when the component mounts
+  useEffect(() => {
+    if (cart.length === 0) {
+      toast.warning("Your cart is empty. Please add items to your cart.");
+    }
+  }, [cart]); // Runs every time `cart` changes
+
   const handleRemove = (_id, name) => {
     if (window.confirm(`Are you sure you want to remove "${name}" from the cart?`)) {
       dispatch({ type: "REMOVE_FROM_CART", payload: _id });
-      alert(`"${name}" has been removed from your cart.`);
+      toast.success(`"${name}" has been removed from your cart.`);
     }
   };
 
   const handleQuantityChange = (_id, quantity) => {
     if (quantity < 1) return; // Prevent setting quantity less than 1
     dispatch({ type: "UPDATE_QUANTITY", payload: { _id, quantity } });
+    toast.info(`Quantity updated for item.`);
   };
 
   const handleSearchChange = (e) => {
@@ -36,8 +46,13 @@ const Cart = () => {
   );
 
   const handlenavigate = () => {
+    if (cart.length === 0) {
+      toast.warning("Please include items in your cart before proceeding to checkout."); // Show notification if cart is empty
+      return; // Prevent navigation
+    }
     navigate("/foodPurchase");
     localStorage.setItem("cart", JSON.stringify(cart));
+    toast.info(`Navigating to checkout...`);
   };
 
   return (
@@ -98,11 +113,12 @@ const Cart = () => {
         <div style={cartTotalStyle}>
           <h3>Total Price: Rs.{totalItemsPrice.toFixed(2)}</h3>
         </div>
-        <button onClick={handlenavigate} style={checkoutButtonStyle}>
+        <button onClick={handlenavigate} style={checkoutButtonStyle} disabled={filteredCart.length === 0}>
           Proceed to checkout
         </button>
       </div>
       <Footer />
+      <ToastContainer /> {/* Add the ToastContainer to your component */}
     </div>
   );
 };
@@ -125,8 +141,8 @@ const cartStyle = {
 
 const centeredHeadingStyle = {
   color: "white",
-  textAlign: "center",  // Center the text horizontally
-  margin: "20px 0",     // Add some space around the heading
+  textAlign: "center",
+  margin: "20px 0",
 };
 
 const searchInputStyle = {
@@ -135,8 +151,8 @@ const searchInputStyle = {
   borderRadius: "4px",
   border: "1px solid #ccc",
   width: "30%",
-  display: "block",     // Makes the input a block element
-  margin: "0 auto",     // Centers the input horizontally
+  display: "block",
+  margin: "0 auto",
 };
 
 const cartItemStyle = {

@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "../../pages/foodManagement/context/CartContext";
 import { useAuth } from "../../pages/foodManagement/context/authContext";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const FoodCard = ({ food }) => {
   const { dispatch } = useCart();
-  const { user, authState } = useAuth();
+  const { authState } = useAuth();
   const navigate = useNavigate();
 
   const addToCart = () => {
@@ -14,10 +16,20 @@ const FoodCard = ({ food }) => {
         type: "ADD_TO_CART",
         payload: { ...food, quantity: 1 },
       });
-      alert(`${food.name} has been successfully added to your cart!`);
+
+      // Show success toast
+      toast.success(`${food.name} has been added to your cart!`, {
+        position: "top-right",
+        autoClose: 1000, // Toast lasts for 1 seconds
+        onClose: () => navigate('/food'), // Redirect after toast closes
+      });
     } else {
-      alert("Please login to add items to cart!");
-      navigate('/login');
+      // Show warning toast
+      toast.warn("Please login to add items to the cart!", {
+        position: "top-right",
+        autoClose: 1000, // Toast lasts for 1 seconds
+        onClose: () => navigate('/login'), // Redirect after toast closes
+      });
     }
   };
 
@@ -33,6 +45,7 @@ const FoodCard = ({ food }) => {
       <button style={styles.addToCartBtn} onClick={addToCart}>
         Add to Cart
       </button>
+      <ToastContainer /> {/* Ensure the ToastContainer is rendered */}
     </div>
   );
 };
@@ -49,10 +62,6 @@ const styles = {
     margin: "20px",
     transition: "transform 0.3s ease, box-shadow 0.3s ease",
     position: "relative",
-  },
-  foodCardHover: {
-    transform: "translateY(-5px)",
-    boxShadow: "0 4px 16px rgba(0, 0, 0, 0.2)",
   },
   foodImage: {
     width: "100%",
@@ -85,9 +94,6 @@ const styles = {
     marginTop: "10px",
     fontWeight: "bold",
     transition: "background-color 0.3s ease",
-  },
-  addToCartBtnHover: {
-    backgroundColor: "#218838",
   },
 };
 
