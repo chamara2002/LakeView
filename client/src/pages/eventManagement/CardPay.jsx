@@ -29,31 +29,51 @@ const CardPay = () => {
       });
   }, [id]);
 
+  const validateField = (name, value) => {
+    let error = "";
+    
+    switch (name) {
+      case "cardNumber":
+        if (!/^\d{16}$/.test(value)) {
+          error = "Card number must be 16 digits.";
+        }
+        break;
+
+      case "cardName":
+        if (!/^[A-Za-z\s]+$/.test(value)) {
+          error = "Name on card must only contain letters.";
+        }
+        break;
+
+      case "expiryDate":
+        const currentDate = new Date();
+        const selectedDate = new Date(value);
+        if (selectedDate <= currentDate) {
+          error = "Expiry date must be in the future.";
+        }
+        break;
+
+      case "securityCode":
+        if (!/^\d{3}$/.test(value)) {
+          error = "Security code must be 3 digits.";
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    return error;
+  };
+
   const validateForm = () => {
     let formErrors = {};
-    const { cardNumber, cardName, expiryDate, securityCode } = formData;
-
-    // Card Number Validation
-    if (!/^\d{16}$/.test(cardNumber)) {
-      formErrors.cardNumber = "Card number must be 16 digits.";
-    }
-
-    // Name on Card Validation
-    if (!/^[A-Za-z\s]+$/.test(cardName)) {
-      formErrors.cardName = "Name on card must only contain letters.";
-    }
-
-    // Expiry Date Validation
-    const currentDate = new Date();
-    const selectedDate = new Date(expiryDate);
-    if (selectedDate <= currentDate) {
-      formErrors.expiryDate = "Expiry date must be in the future.";
-    }
-
-    // Security Code Validation
-    if (!/^\d{3}$/.test(securityCode)) {
-      formErrors.securityCode = "Security code must be 3 digits.";
-    }
+    Object.keys(formData).forEach((field) => {
+      const error = validateField(field, formData[field]);
+      if (error) {
+        formErrors[field] = error;
+      }
+    });
 
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
@@ -83,10 +103,19 @@ const CardPay = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Update form data
     setFormData({
       ...formData,
       [name]: value,
     });
+
+    // Validate the field in real-time
+    const error = validateField(name, value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: error,
+    }));
   };
 
   return (

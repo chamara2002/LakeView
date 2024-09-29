@@ -25,11 +25,52 @@ const CardPayV = () => {
     securityCode: ''
   });
 
+  const validateField = (name, value) => {
+    let error = '';
+    
+    switch (name) {
+      case "cardNumber":
+        if (!/^\d{16}$/.test(value)) {
+          error = "Card number must be exactly 16 digits";
+        }
+        break;
+      case "cardName":
+        if (!/^[A-Za-z\s]+$/.test(value)) {
+          error = "Name on card must contain only letters";
+        }
+        break;
+      case "expiryDate":
+        const currentDate = new Date();
+        const selectedDate = new Date(value);
+        if (selectedDate <= currentDate) {
+          error = "Expiry date must be a future month";
+        }
+        break;
+      case "securityCode":
+        if (!/^\d{3}$/.test(value)) {
+          error = "Security code must be exactly 3 digits";
+        }
+        break;
+      default:
+        break;
+    }
+
+    return error;
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
     setFormData({
       ...formData,
       [name]: value
+    });
+
+    // Real-time validation
+    const error = validateField(name, value);
+    setErrors({
+      ...errors,
+      [name]: error
     });
   };
 
@@ -37,31 +78,13 @@ const CardPayV = () => {
     let formIsValid = true;
     const newErrors = {};
 
-    // Validate card number (12 digits only)
-    if (!/^\d{12}$/.test(formData.cardNumber)) {
-      newErrors.cardNumber = "Card number must be exactly 12 digits";
-      formIsValid = false;
-    }
-
-    // Validate card name (letters only)
-    if (!/^[A-Za-z\s]+$/.test(formData.cardName)) {
-      newErrors.cardName = "Name on card must contain only letters";
-      formIsValid = false;
-    }
-
-    // Validate expiry date (month after current month)
-    const currentDate = new Date();
-    const selectedDate = new Date(formData.expiryDate);
-    if (selectedDate <= currentDate) {
-      newErrors.expiryDate = "Expiry date must be a future month";
-      formIsValid = false;
-    }
-
-    // Validate security code (4 digits only)
-    if (!/^\d{4}$/.test(formData.securityCode)) {
-      newErrors.securityCode = "Security code must be exactly 4 digits";
-      formIsValid = false;
-    }
+    Object.keys(formData).forEach((field) => {
+      const error = validateField(field, formData[field]);
+      if (error) {
+        newErrors[field] = error;
+        formIsValid = false;
+      }
+    });
 
     setErrors(newErrors);
     return formIsValid;
@@ -123,7 +146,7 @@ const CardPayV = () => {
                   type="text"
                   id="cardNumber"
                   name="cardNumber"
-                  placeholder="1234 5678 9123"
+                  placeholder="1234 5678 9123 4567"
                   style={styles.input}
                   value={formData.cardNumber}
                   onChange={handleInputChange}
@@ -177,7 +200,7 @@ const CardPayV = () => {
                     type="password"
                     id="securityCode"
                     name="securityCode"
-                    placeholder="••••"
+                    placeholder="•••"
                     style={styles.input}
                     value={formData.securityCode}
                     onChange={handleInputChange}
