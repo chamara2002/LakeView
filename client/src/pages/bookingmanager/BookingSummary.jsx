@@ -5,12 +5,12 @@ import Footer from "../../components/core/Footer";
 import axios from "axios";
 import { useAuth } from "../foodManagement/context/authContext";
 import { BookingContext } from "../foodManagement/context/BookingContext";
-import { FaAlignCenter } from "react-icons/fa";
+import { FaCalendarAlt, FaUser, FaEnvelope } from "react-icons/fa"; // Icons
 
 const BookingSummary = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [item, setItem] = useState({});
-  const [isDateValid, setIsDateValid] = useState(true); // State for date validation
+  const [isDateValid, setIsDateValid] = useState(true);
   const navigate = useNavigate();
   const { user } = useAuth();
   const { bookingDetails } = useContext(BookingContext);
@@ -39,15 +39,15 @@ const BookingSummary = () => {
 
   const handleDateChange = (e) => {
     const selected = e.target.value;
-    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split("T")[0];
     setSelectedDate(selected);
-    setIsDateValid(selected >= today); // Check if the selected date is not in the past
+    setIsDateValid(selected >= today);
   };
 
   const handleConfirm = () => {
     if (selectedDate) {
       alert(`Booking confirmed for ${selectedDate}`);
-      bookingDetails.type === "movie" ? navigate('/movieBillinfo') : navigate('/gameBillInfo');
+      bookingDetails.type === "movie" ? navigate("/movieBillinfo") : navigate("/gameBillInfo");
     }
   };
 
@@ -55,18 +55,32 @@ const BookingSummary = () => {
     <>
       <NavBar name="Booking" />
       <div style={styles.container}>
-        <h2 style={styles.title}>Booking Summary</h2>
+        {/* Booking Summary Title centered at the top */}
+        <div style={styles.titleContainer}>
+          <h2 style={styles.title}>Booking Summary</h2>
+        </div>
 
+        {/* Content Section */}
         <div style={styles.content}>
-          <h3>Bill Information</h3> 
-          <p>{`${item.name} booking fee = R.S.${item.price} X ${bookingDetails.seatNumbers.length} seats`}</p>
-          <p>{`Total amount = R.S.${bookingDetails.total}`}</p>
-          <h3>User information</h3>
-          <p>{`Name: ${user.user.name}`}</p>
-          <p>{`Email: ${user.user.email}`}</p>
+          <div style={styles.card}>
+            <h3>Bill Information</h3>
+            <p>{`${item.name} booking fee = R.S.${item.price} X ${bookingDetails.seatNumbers.length} seats`}</p>
+            <p>{`Total amount = R.S.${bookingDetails.total}`}</p>
+          </div>
+
+          <div style={styles.card}>
+            <h3>User Information</h3>
+            <p>
+              <FaUser /> {`Name: ${user.user.name}`}
+            </p>
+            <p>
+              <FaEnvelope /> {`Email: ${user.user.email}`}
+            </p>
+          </div>
+
           <div style={styles.formGroup}>
             <label style={styles.label} htmlFor="date">
-              Select a Date:
+              <FaCalendarAlt /> Select a Date:
             </label>
             <input
               type="date"
@@ -75,16 +89,14 @@ const BookingSummary = () => {
               onChange={handleDateChange}
               style={styles.input}
             />
-            {!isDateValid && (
-              <p style={styles.error}>Please select a valid date.</p>
-            )}
+            {!isDateValid && <p style={styles.error}>Please select a valid date.</p>}
           </div>
           <button
             style={styles.button}
             onClick={handleConfirm}
             disabled={!selectedDate || !isDateValid}
           >
-            OK
+            Confirm Booking
           </button>
         </div>
       </div>
@@ -94,52 +106,84 @@ const BookingSummary = () => {
 };
 
 const styles = {
-  content: {
-    marginTop: "100px", 
-    backgroundColor: "#c9cbd0",
-    padding: "20px",
-    width: "50%",
-    margin: "0 auto",
-    borderRadius: "10px",
-  },
   container: {
-    padding: "20px",
+    padding: "40px 20px", // Adjusted padding
     textAlign: "center",
-    backgroundColor: "#161E38",
-    color: "#000000",
-    minHeight: "70vh",
+    background: "#161E38",
+    color: "#333333",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column", // Stack the title and content vertically
+    justifyContent: "flex-start", // Align content from the top
+    alignItems: "center",
+  },
+  titleContainer: {
+    marginBottom: "20px", // Space between title and content
   },
   title: {
-    fontSize: "28px",
-    marginBottom: "20px",
+    fontSize: "36px",
+    fontWeight: "700",
+    color: "#e3e8ec",
+    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
+    paddingBottom: "10px", // Additional space below the title
+  },
+  content: {
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    padding: "30px", // Reduced padding to adjust height
+    width: "60%", // Increased width to fit content better
+    borderRadius: "20px",
+    backdropFilter: "blur(10px)", // Frosted glass effect
+    boxShadow: "0 10px 20px rgba(0, 0, 0, 0.15)", // Neumorphism shadow
+    transition: "box-shadow 0.3s ease",
+    textAlign: "left", // Left-align content
+  },
+  card: {
+    backgroundColor: "#ffffff",
+    padding: "15px", // Reduced padding to fit more content
+    borderRadius: "12px",
+    marginBottom: "15px", // Reduced margin between cards
+    boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)", // Shadow for card
+    transition: "transform 0.3s ease",
   },
   formGroup: {
-    marginBottom: "20px",
+    marginBottom: "20px", // Reduced space before the date input
   },
   label: {
     fontSize: "18px",
     marginRight: "10px",
+    fontWeight: "600",
+    color: "#495057",
+    display: "block",
+    marginBottom: "10px",
   },
   input: {
-    padding: "8px",
+    padding: "12px", // Reduced padding for the input field
     fontSize: "16px",
-    borderRadius: "5px",
+    borderRadius: "12px",
+    border: "1px solid #ced4da",
+    width: "100%",
+    maxWidth: "400px",
+    boxShadow: "0 3px 6px rgba(0, 0, 0, 0.05)",
+    outline: "none",
+    transition: "border-color 0.3s ease",
   },
   button: {
-    padding: "10px 20px",
-    fontSize: "16px",
-    backgroundColor: "#333333",
-    color: "#FFFFFF",
+    padding: "12px 24px", // Reduced padding for button
+    fontSize: "18px",
+    backgroundColor: "#28a745",
+    color: "#ffffff",
     border: "none",
-    borderRadius: "5px",
+    borderRadius: "8px",
     cursor: "pointer",
     marginTop: "20px",
     width: "100%",
-    maxWidth: "200px",
+    maxWidth: "300px",
+    transition: "background-color 0.3s ease, transform 0.2s ease",
   },
   error: {
-    color: "red",
+    color: "#dc3545",
     marginTop: "10px",
+    fontSize: "14px",
   },
 };
 

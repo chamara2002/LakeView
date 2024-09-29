@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import NavBar from "../../components/core/NavBar";
 import Footer from "../../components/core/Footer";
 import { useAuth } from "../foodManagement/context/authContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BookingContext } from "../foodManagement/context/BookingContext";
 
@@ -11,8 +11,91 @@ const CardPayV = () => {
   const navigate = useNavigate();
   const { bookingDetails } = useContext(BookingContext);
 
+  const [formData, setFormData] = useState({
+    cardNumber: '',
+    cardName: '',
+    expiryDate: '',
+    securityCode: ''
+  });
+
+  const [errors, setErrors] = useState({
+    cardNumber: '',
+    cardName: '',
+    expiryDate: '',
+    securityCode: ''
+  });
+
+  const validateField = (name, value) => {
+    let error = '';
+    
+    switch (name) {
+      case "cardNumber":
+        if (!/^\d{16}$/.test(value)) {
+          error = "Card number must be exactly 16 digits";
+        }
+        break;
+      case "cardName":
+        if (!/^[A-Za-z\s]+$/.test(value)) {
+          error = "Name on card must contain only letters";
+        }
+        break;
+      case "expiryDate":
+        const currentDate = new Date();
+        const selectedDate = new Date(value);
+        if (selectedDate <= currentDate) {
+          error = "Expiry date must be a future month";
+        }
+        break;
+      case "securityCode":
+        if (!/^\d{3}$/.test(value)) {
+          error = "Security code must be exactly 3 digits";
+        }
+        break;
+      default:
+        break;
+    }
+
+    return error;
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+
+    // Real-time validation
+    const error = validateField(name, value);
+    setErrors({
+      ...errors,
+      [name]: error
+    });
+  };
+
+  const validateForm = () => {
+    let formIsValid = true;
+    const newErrors = {};
+
+    Object.keys(formData).forEach((field) => {
+      const error = validateField(field, formData[field]);
+      if (error) {
+        newErrors[field] = error;
+        formIsValid = false;
+      }
+    });
+
+    setErrors(newErrors);
+    return formIsValid;
+  };
+
   const handlePayment = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return; // Stop submission if the form is invalid
+    }
 
     if (bookingDetails.type === "movie") {
       try {
@@ -51,7 +134,6 @@ const CardPayV = () => {
     <>
       <NavBar name="" />
       <div style={styles.container}>
-       
         <div style={styles.body}>
           <div style={styles.paymentSection}>
             <h3 style={styles.sectionTitle}>Card Payment</h3>
@@ -66,8 +148,13 @@ const CardPayV = () => {
                   name="cardNumber"
                   placeholder="1234 5678 9123 4567"
                   style={styles.input}
+                  value={formData.cardNumber}
+                  onChange={handleInputChange}
                   required
                 />
+                {errors.cardNumber && (
+                  <span style={styles.errorText}>{errors.cardNumber}</span>
+                )}
               </div>
               <div style={styles.inputGroup}>
                 <label htmlFor="cardName" style={styles.label}>
@@ -79,8 +166,13 @@ const CardPayV = () => {
                   name="cardName"
                   placeholder="John Doe"
                   style={styles.input}
+                  value={formData.cardName}
+                  onChange={handleInputChange}
                   required
                 />
+                {errors.cardName && (
+                  <span style={styles.errorText}>{errors.cardName}</span>
+                )}
               </div>
               <div style={styles.inputGroupRow}>
                 <div style={styles.inputGroupSmall}>
@@ -92,8 +184,13 @@ const CardPayV = () => {
                     id="expiryDate"
                     name="expiryDate"
                     style={styles.input}
+                    value={formData.expiryDate}
+                    onChange={handleInputChange}
                     required
                   />
+                  {errors.expiryDate && (
+                    <span style={styles.errorText}>{errors.expiryDate}</span>
+                  )}
                 </div>
                 <div style={styles.inputGroupSmall}>
                   <label htmlFor="securityCode" style={styles.label}>
@@ -103,10 +200,15 @@ const CardPayV = () => {
                     type="password"
                     id="securityCode"
                     name="securityCode"
-                    placeholder="••••"
+                    placeholder="•••"
                     style={styles.input}
+                    value={formData.securityCode}
+                    onChange={handleInputChange}
                     required
                   />
+                  {errors.securityCode && (
+                    <span style={styles.errorText}>{errors.securityCode}</span>
+                  )}
                 </div>
               </div>
               <button type="submit" style={styles.submitButton}>
@@ -125,25 +227,12 @@ const styles = {
   container: {
     padding: "40px 20px",
     textAlign: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161E38",
     color: "#FFFFFF",
     minHeight: "70vh",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  },
-  header: {
-    marginBottom: "30px",
-  },
-  mainTitle: {
-    fontSize: "42px",
-    margin: "0",
-    color: "#00C0FF",
-  },
-  subTitle: {
-    fontSize: "28px",
-    margin: "10px 0 0 0",
-    color: "#CCCCCC",
   },
   body: {
     display: "flex",
@@ -209,6 +298,11 @@ const styles = {
     cursor: "pointer",
     width: "100%",
     transition: "background-color 0.3s",
+  },
+  errorText: {
+    color: "red",
+    fontSize: "12px",
+    marginTop: "5px",
   },
 };
 
