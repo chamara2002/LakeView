@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const FoodCard = ({ food }) => {
   const { dispatch } = useCart();
-  const { user,authState } = useAuth();
+  const { user, authState } = useAuth();
   const navigate = useNavigate();
 
   const addToCart = () => {
@@ -14,6 +14,7 @@ const FoodCard = ({ food }) => {
         type: "ADD_TO_CART",
         payload: { ...food, quantity: 1 },
       });
+      alert(`${food.name} has been successfully added to your cart!`);
     } else {
       alert("Please login to add items to cart!");
       navigate('/login');
@@ -27,9 +28,6 @@ const FoodCard = ({ food }) => {
         <h3>{food.name}</h3>
         <p>{food.description}</p>
         <p>Rs.{food.price.toFixed(2)}</p>
-        {/* <div style={styles.foodRating}>
-          <span>⭐ {Math.floor(Math.random() * 5) + 1}</span>
-        </div> */}
       </div>
       <div style={styles.favoriteIcon}>💛</div>
       <button style={styles.addToCartBtn} onClick={addToCart}>
@@ -66,10 +64,6 @@ const styles = {
     padding: "15px",
     textAlign: "center",
   },
-  foodRating: {
-    marginTop: "10px",
-    color: "#f39c12",
-  },
   favoriteIcon: {
     position: "absolute",
     top: "10px",
@@ -79,8 +73,8 @@ const styles = {
     cursor: "pointer",
   },
   addToCartBtn: {
-    backgroundColor: "#28a745",
-    color: "white",
+    backgroundColor: "#FFBB00",
+    color: "Black",
     border: "none",
     padding: "10px",
     borderRadius: "4px",
@@ -89,6 +83,7 @@ const styles = {
     textAlign: "center",
     fontSize: "1em",
     marginTop: "10px",
+    fontWeight: "bold",
     transition: "background-color 0.3s ease",
   },
   addToCartBtnHover: {

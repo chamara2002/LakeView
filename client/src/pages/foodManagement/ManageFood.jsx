@@ -5,6 +5,8 @@ import FoodSideBar from "./FoodSideBar";
 import styles from "../../pages/foodManagement/styles/manageFood.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FoodPage = () => {
   const [foods, setFoods] = useState([]);
@@ -16,6 +18,7 @@ const FoodPage = () => {
       setFoods(response.data);
     } catch (error) {
       console.error("Error fetching foods:", error);
+      toast.error("Failed to fetch food items.");
     }
   };
 
@@ -26,11 +29,11 @@ const FoodPage = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/api/food/delete/${id}`);
-      alert("Item deleted successfully!");
-      fetchFood();
+      toast.success("Item deleted successfully!");
+      fetchFood(); // Refresh the food list after deletion
     } catch (error) {
       console.error("Error deleting item:", error);
-      alert("Failed to delete item.");
+      toast.error("Failed to delete item.");
     }
   };
 
@@ -38,9 +41,8 @@ const FoodPage = () => {
     <>
       <NavBar name="foods" />
       <div className={styles.pageContent}>
-        
         <div className={styles.manageItems}>
-        <FoodSideBar /> 
+          <FoodSideBar />
           <h2>Manage All Menu Items</h2>
           <div className={styles.tableWrapper}>
             <table className={styles.foodTable}>
@@ -91,6 +93,9 @@ const FoodPage = () => {
         </div>
       </div>
       <Footer />
+
+      {/* ToastContainer for displaying notifications */}
+      <ToastContainer />
     </>
   );
 };

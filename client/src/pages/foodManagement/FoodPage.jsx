@@ -76,7 +76,7 @@ const FoodPage = () => {
               border: '1px solid #ccc',
               width: '10%',
               maxWidth: '400px',
-              backgroundColor: '#ddbd2d',
+              backgroundColor: '#FFBB00',
               color: '#333333',
               fontSize: '16px',
               boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
@@ -90,7 +90,7 @@ const FoodPage = () => {
           >
             <option value="">All Categories</option>
             <option value="Soups">Soups</option>
-            <option value="Chinese food">Cheese Foods</option>
+            <option value="Chinese food">Chinese Foods</option>
             <option value="Pizza">Pizzas</option>
             <option value="Dessert">Desserts</option>
             <option value="Drinks">Drinks</option>

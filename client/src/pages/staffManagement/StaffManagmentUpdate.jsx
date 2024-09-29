@@ -53,10 +53,10 @@ const StaffUpdatePage = () => {
     }
 
     if (name === "nic") {
-      if (!/^\d{10}[vV]$/.test(value) && !/^\d{12}$/.test(value)) {
+      if (!/^\d{9}[vV]$/.test(value) && !/^\d{12}$/.test(value)) {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          nic: "NIC must be 12 digits or 10 digits followed by 'V' or 'v'.",
+          nic: "NIC must be 12 digits or 9 digits followed by 'V' or 'v'.",
         }));
       } else {
         setErrors((prevErrors) => ({

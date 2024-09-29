@@ -65,11 +65,11 @@ const FoodPurchase = () => {
       <div style={styles.container}>
         <div style={styles.header}>
           <h1 style={styles.mainTitle}>{movie.name}</h1>
-          <h2 style={styles.subTitle}>Payment Form</h2>
+          <h2 style={styles.subTitle}></h2>
         </div>
         <div style={styles.body}>
           <div style={styles.billInformation}>
-            <h3>Bill Information</h3>
+          <h3 style={{ color: "white", fontSize: "26px" }}>Bill Information</h3>
             <CartSummary />
           </div>
           <div style={styles.paymentMethod}>
@@ -98,7 +98,7 @@ const styles = {
   container: {
     padding: "20px",
     textAlign: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#161E38",
     color: "#FFFFFF",
     minHeight: "70vh",
   },
@@ -120,18 +120,20 @@ const styles = {
     marginTop: "40px",
   },
   billInformation: {
-    backgroundColor: "#F0F0F0",
+    backgroundColor: "#1D284C",
     color: "#000000",
     padding: "20px",
     borderRadius: "8px",
     width: "40%",
+    
   },
   paymentMethod: {
-    backgroundColor: "#F0F0F0",
+    backgroundColor: "#858DA8",
     color: "#000000",
     padding: "20px",
     borderRadius: "8px",
     width: "40%",
+    fontSize: "24px",
   },
   button: {
     display: "block",
@@ -139,12 +141,14 @@ const styles = {
     padding: "10px 20px",
     margin: "10px 0",
     fontSize: "16px",
-    backgroundColor: "#333333",
-    color: "#FFFFFF",
+    backgroundColor: "#FFBB00",
+    color: "#000000",
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
+    fontWeight: "bold",
   },
+  
 };
 
 export default FoodPurchase;

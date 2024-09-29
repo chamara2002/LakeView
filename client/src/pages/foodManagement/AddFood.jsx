@@ -4,6 +4,8 @@ import Footer from '../../components/core/Footer';
 import NavBar from '../../components/core/NavBar';
 import FoodSidebar from './FoodSideBar';
 import DropdownNavBar from '../../components/core/DropDownbar';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddFood = () => {
   const [formData, setFormData] = useState({
@@ -82,29 +84,34 @@ const AddFood = () => {
         ingredients: formData.ingredients.split(',').map((item) => item.trim()),
       };
 
-      await axios.post('http://localhost:3000/api/food/add-food', dataToSend);
-      alert('Food item added successfully!');
+      const response = await axios.post('http://localhost:3000/api/food/add-food', dataToSend);
 
-      setFormData({
-        name: '',
-        ingredients: '',
-        category: '',
-        price: '',
-        isAvailable: true,
-        imageUrl: ''
-      });
-      setErrors({});
+      // Show success notification
+      toast.success('Food item added successfully!');
+
+      // Clear form and errors after 2 seconds delay
+      setTimeout(() => {
+        setFormData({
+          name: '',
+          ingredients: '',
+          category: '',
+          price: '',
+          isAvailable: true,
+          imageUrl: ''
+        });
+        setErrors({});
+      }, 1000); // 2 seconds delay
     } catch (error) {
-      console.error('Error adding food item:', error);
-      alert('Failed to add food item. Please try again.');
+      console.error('Error adding food item:', error.response ? error.response.data : error.message);
+      toast.error('Failed to add food item. Please try again.');
     }
   };
 
   return (
     <div>
-      <NavBar />
+      <NavBar name="foods" />
       <br></br>
-      <DropdownNavBar></DropdownNavBar>
+      <DropdownNavBar />
       
       <div style={styles.container}>
         <h2 style={styles.heading}>Add Food Item</h2>
@@ -123,7 +130,7 @@ const AddFood = () => {
           </div>
 
           <div style={styles.formGroup}>
-            <label style={styles.label}>Ingredients (comma separated)</label>
+            <label style={styles.label}>Ingredients </label>
             <input
               type="text"
               name="ingredients"
@@ -145,7 +152,7 @@ const AddFood = () => {
             >
               <option value="">Select category</option>
               <option value="Soups">Soups</option>
-              <option value="Chinese food">Chinese food</option>
+              <option value="Chinese food">Chinese Food</option>
               <option value="Pizza">Pizza</option>
               <option value="Dessert">Dessert</option>
               <option value="Drinks">Drinks</option>
@@ -156,14 +163,12 @@ const AddFood = () => {
           <div style={styles.formGroup}>
             <label style={styles.label}>Price</label>
             <input
-              type="number"
+              type="text"
               name="price"
               value={formData.price}
               onChange={handleChange}
               style={styles.input}
               placeholder="Enter price"
-              min="0"
-              step="0.01"
             />
             {errors.price && <span style={styles.error}>{errors.price}</span>}
           </div>
@@ -194,12 +199,20 @@ const AddFood = () => {
             {errors.imageUrl && <span style={styles.error}>{errors.imageUrl}</span>}
           </div>
 
-          <button type="submit" style={styles.submitButton}>
+          <button
+            type="submit"
+            style={styles.submitButton}
+            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = styles.submitButtonHover.backgroundColor)}
+            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = styles.submitButton.backgroundColor)}
+          >
             Add Food
           </button>
         </form>
       </div>
       <Footer />
+
+      {/* ToastContainer for displaying notifications */}
+      <ToastContainer />
     </div>
   );
 };
@@ -208,47 +221,68 @@ const styles = {
   container: {
     maxWidth: '600px',
     margin: '0 auto',
-    padding: '20px',
-    backgroundColor: '#f4f4f4',
+    padding: '30px',
+    backgroundColor: '#858DA8',
     borderRadius: '10px',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-    height: '70vh',
+    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
+    color: '#ffffff',
+    transition: 'all 0.3s ease',
   },
   heading: {
     textAlign: 'center',
     marginBottom: '20px',
+    fontSize: '28px',
+    fontWeight: 'bold',
+    color: '#000000',
   },
   form: {
     display: 'flex',
     flexDirection: 'column',
+    color: '#000000',
   },
   formGroup: {
-    marginBottom: '15px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: '20px',
   },
   label: {
-    marginBottom: '5px',
-    fontSize: '14px',
+    width: '100px',
+    marginRight: '20px',
+    fontSize: '16px',
     fontWeight: 'bold',
   },
   input: {
+    flex: '1',
     padding: '10px',
     fontSize: '16px',
     borderRadius: '5px',
     border: '1px solid #ccc',
+    backgroundColor: '#D9D9D9',
+    color: '#000000',
+    transition: 'border-color 0.3s ease',
   },
   error: {
-    color: 'red',
+    color: '#FF6347',
     fontSize: '12px',
     marginTop: '5px',
   },
   submitButton: {
     padding: '10px',
-    backgroundColor: '#4CAF50',
-    color: '#fff',
+    backgroundColor: '#FFBB00',
+    color: '#000000',
     border: 'none',
     borderRadius: '5px',
-    fontSize: '16px',
+    fontSize: '18px',
     cursor: 'pointer',
+    transition: 'background-color 0.3s ease',
+    fontWeight: 'bold',
+    width: '250px',
+    textAlign: 'center',
+    margin: '20px auto',
+  },
+  submitButtonHover: {
+    backgroundColor: '#FF8C00',
   },
 };
 

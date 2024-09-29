@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import NavBar from "../../components/core/NavBar";
 import Footer from "../../components/core/Footer";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UpdateFoodItems = () => {
   const { id } = useParams();
@@ -22,9 +24,10 @@ const UpdateFoodItems = () => {
       try {
         const response = await axios.get(`http://localhost:3000/api/food/${id}`);
         const data = response.data;
+
         setFormData({
           name: data.name,
-          ingredients: data.ingredients.join(', '),
+          ingredients: Array.isArray(data.ingredients) ? data.ingredients.join(', ') : '',
           category: data.category,
           price: data.price,
           isAvailable: data.isAvailable,
@@ -41,9 +44,8 @@ const UpdateFoodItems = () => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    // Validation to prevent symbols in the name field
     if (name === 'name') {
-      const regex = /^[a-zA-Z\s]*$/; // Regular expression to allow only letters and spaces
+      const regex = /^[a-zA-Z\s]*$/;
       if (!regex.test(value)) {
         alert('Item name can only contain letters and spaces.');
         return;
@@ -59,41 +61,33 @@ const UpdateFoodItems = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const ingredientsArray = formData.ingredients.split(',').map(ingredient => ingredient.trim());
-    const updatedData = { ...formData, ingredients: ingredientsArray };
 
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('name', updatedData.name);
-      formDataToSend.append('ingredients', JSON.stringify(updatedData.ingredients));
-      formDataToSend.append('category', updatedData.category);
-      formDataToSend.append('price', updatedData.price);
-      formDataToSend.append('isAvailable', updatedData.isAvailable);
-      if (updatedData.imageUrl) {
-        formDataToSend.append('imageUrl', updatedData.imageUrl);
-      }
+      const updatedData = { ...formData, ingredients: ingredientsArray };
 
-      const response = await axios.put(`http://localhost:3000/api/food/update/${id}`, formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const response = await axios.put(`http://localhost:3000/api/food/update/${id}`, updatedData);
 
-      console.log('Food item updated:', response.data);
-      navigate('/manageFoods');
-    
+      // Show success notification
+      toast.success('Food item updated successfully!');
+
+      setTimeout(() => {
+        navigate('/manageFoods'); // Navigate after a short delay
+      }, 2000); // Delay of 2 seconds
     } catch (error) {
       console.error('Error updating food item:', error.response ? error.response.data : error.message);
+      toast.error('Error updating food item.');
     }
   };
 
   return (
     <div style={styles.container}>
-      <NavBar />
+      <NavBar name="foods" />
+      <ToastContainer />
       <div style={styles.updateFoodItem}>
         <h2 style={styles.heading}>Update Food Item</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Item Name:</label>
+            <label style={styles.label}>Item Name</label>
             <input
               type="text"
               name="name"
@@ -103,7 +97,7 @@ const UpdateFoodItems = () => {
             />
           </div>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Ingredients:</label>
+            <label style={styles.label}>Ingredients</label>
             <input
               type="text"
               name="ingredients"
@@ -113,24 +107,25 @@ const UpdateFoodItems = () => {
             />
           </div>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Category:</label>
+            <label style={styles.label}>Category</label>
             <select
               name="category"
               value={formData.category}
               onChange={handleChange}
               style={styles.select}
             >
-              <option value="Appetizer">Appetizer</option>
-              <option value="Main Course">Main Course</option>
-              <option value="Beverage">Beverage</option>
-              <option value="Dessert">Dessert</option>
+              <option value="">Select category</option>
+              <option value="Soups">Soups</option>
+              <option value="Chinese food">Chinese Food</option>
               <option value="Pizza">Pizza</option>
+              <option value="Dessert">Dessert</option>
+              <option value="Drinks">Drinks</option>
             </select>
           </div>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Price:</label>
+            <label style={styles.label}>Price</label>
             <input
-              type="number"
+              type="text"
               name="price"
               value={formData.price}
               onChange={handleChange}
@@ -138,7 +133,7 @@ const UpdateFoodItems = () => {
             />
           </div>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Available:</label>
+            <label style={styles.label}>Available</label>
             <input
               type="checkbox"
               name="isAvailable"
@@ -148,7 +143,7 @@ const UpdateFoodItems = () => {
             />
           </div>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Image URL:</label>
+            <label style={styles.label}>Image URL</label>
             <input
               type="text"
               name="imageUrl"
@@ -173,7 +168,7 @@ const styles = {
     maxWidth: '600px',
     margin: 'auto',
     padding: '20px',
-    backgroundColor: '#c9cbd0',
+    backgroundColor: '#858DA8',
     borderRadius: '10px',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
   },
@@ -184,42 +179,54 @@ const styles = {
   form: {
     display: 'flex',
     flexDirection: 'column',
+    color: '#000000',
   },
   formGroup: {
-    marginBottom: '15px',
-    width: '60%',
-    padding: '5px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: '20px',
   },
   label: {
-    marginBottom: '5px',
+    width: '100px',
+    marginRight: '20px',
+    fontSize: '16px',
     fontWeight: 'bold',
-    padding: '5px',
   },
   input: {
-    width: '80%',
+    flex: '1',
     padding: '10px',
+    fontSize: '16px',
     borderRadius: '5px',
     border: '1px solid #ccc',
+    backgroundColor: '#D9D9D9',
+    color: '#000000',
   },
   select: {
-    width: '100%',
+    flex: '1',
     padding: '10px',
     borderRadius: '5px',
     border: '1px solid #ccc',
+    backgroundColor: '#D9D9D9',
+    color: '#000000',
+    fontSize: '16px',
   },
   checkbox: {
     width: '20px',
     height: '20px',
   },
   button: {
-    padding: '10px 20px',
-    backgroundColor: '#28a745',
-    color: '#fff',
+    padding: '10px',
+    backgroundColor: '#FFBB00',
+    color: '#000000',
     border: 'none',
     borderRadius: '5px',
+    fontSize: '18px',
     cursor: 'pointer',
-    alignSelf: 'center',
-    marginTop: '10px',
+    fontWeight: 'bold',
+    width: '250px',
+    textAlign: 'center',
+    margin: "20px auto",
   },
 };
 

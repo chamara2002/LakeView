@@ -151,7 +151,17 @@ const AddGames = () => {
               placeholder="Game Name"
               style={styles.input}
               value={gameName}
-              onChange={(e) => setGameName(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+
+                if (/^[a-zA-Z\s]*$/.test(value)) {
+                  const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
+                  setGameName(capitalizedValue); 
+                  setNameError(""); 
+                } else {
+                  setNameError("Please enter only letters and spaces."); 
+                }
+              }}
             />
             {nameError && <p style={styles.errorText}>{nameError}</p>}
           </div>

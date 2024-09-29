@@ -18,7 +18,7 @@
     max-width: 800px; /* Optional: Limit the width for better readability */
     width: 100%;
     text-align: center; /* Center text inside */
-    background-color: #d2d0c7; /* Optional: Different background for mainContainer */
+    background-color: #1D284C; /* Optional: Different background for mainContainer */
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -30,16 +30,16 @@
   
   .mainContainerTitle h3 {
     font-size: 2rem;
-    color: #ddbd2d; /* Example title color */
+    color: #FFBB00; /* Example title color */
     margin: 0;
   }
-  
-  
   
   .mainContainerBody {
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: #ffffff;
+    font-size: 18px;
   }
   
   .foodcaption {

@@ -37,7 +37,7 @@ const ReportButton = ({ bookings, title, fileName }) => {
       head: [tableColumn],
       body: tableRows,
       startY: 30,
-      styles: { fillColor: [40, 40, 40], textColor: [255, 255, 255] },
+      styles: { fillColor: [40, 40, 40], textColor: [0, 0, 0] },
       headStyles: { fillColor: [50, 50, 50] },
       alternateRowStyles: { fillColor: [220, 220, 220] },
     });
