@@ -66,7 +66,7 @@ const GameDetails = () => {
             {filteredGames.length > 0 ? (
               filteredGames.map((game) => (
                 <tr key={game._id} style={styles.row}>
-                  <td style={styles.cell}>{game._id}</td>
+                  <td style={styles.cell}>{"GID" + game._id.slice(-4)}</td>
                   <td style={styles.cell}>{game.category}</td>
                   <td style={styles.cell}>{game.name}</td>
                   <td style={styles.cell}>{game.description}</td>

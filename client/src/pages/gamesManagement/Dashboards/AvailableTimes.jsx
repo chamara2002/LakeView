@@ -107,7 +107,7 @@ const AvailableTimes = () => {
                filteredGames.map((game) =>
                  game.availableTimes.map((time, index) => (
                    <tr key={`${game._id}-${index}`} style={styles.tableRow}>
-                     <td style={styles.tableCell}>{game._id}</td>
+                     <td style={styles.tableCell}>{"GID" + game._id.slice(-4)}</td>
                      <td style={styles.tableCell}>{game.name}</td>
                      <td style={styles.tableCell}>
                        {new Date(time).toLocaleTimeString([], {

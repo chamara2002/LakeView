@@ -95,7 +95,7 @@ Object.keys(groupedData).forEach((employeeId) => {
       : employeeMonthData.otHours;
 
     // Calculate OT salary (assuming OT rate is two times the normal rate)
-    employeeMonthData.otSalary = otHours * ((employeeMonthData.normalSalary / 160) * 2);
+    employeeMonthData.otSalary = otHours * ((employeeMonthData.normalSalary / 160) * 1.5);
     
     // Calculate final salary
     employeeMonthData.finalSalary = employeeMonthData.normalSalary + employeeMonthData.otSalary;
@@ -144,27 +144,27 @@ Object.keys(groupedData).forEach((employeeId) => {
   };
 
   const tableStyle = {
-    width: "100%",
-    borderCollapse: "collapse",
-    backgroundColor: "#1b1f38",
+    width: '100%',
+    borderCollapse: 'collapse',
+    marginTop: '20px',
   };
 
   const thStyle = {
-    padding: "12px",
-    border: "1px solid #ccc",
-    backgroundColor: "#000000",
-    fontWeight: "bold",
-    textAlign: "left",
-    color: "#ffffff",
+    borderBottom: '1px solid #444',
+    padding: '10px',
+    backgroundColor: '#2E3A59',
+    textAlign: 'left',
+    color: 'white',
   };
 
   const tdStyle = {
-    padding: "12px",
-    border: "1px solid #ccc",
-    textAlign: "left",
-    color: "#e0e0e0",
+    borderBottom: '1px solid #444',
+    padding: '10px',
+    textAlign: 'left',
+    color: 'white',
+    borderCollapse: "collapse",
+    lineHeight: "1.5",
   };
-
   const inputContainerStyle = {
     display: "flex",
     flexDirection: "column",
@@ -172,13 +172,13 @@ Object.keys(groupedData).forEach((employeeId) => {
   };
 
   const inputStyle = {
-    padding: "10px",
     marginBottom: "10px",
+    padding: "10px",
+    width: "40%",
     borderRadius: "5px",
-    border: "1px solid #ccc",
-    width: "250px",
-    backgroundColor: "#2c3e50",
-    color: "#ffffff",
+    border: "1px solid #2C3354",
+    backgroundColor: "#243055",
+    color: "#fff",
   };
 
   const headingStyle = {
@@ -209,7 +209,7 @@ Object.keys(groupedData).forEach((employeeId) => {
         {Object.keys(filteredSalaryDetails).map((employeeId) => (
           <div key={employeeId}>
             <h2 style={headingStyle}>
-              {filteredSalaryDetails[employeeId].username} (ID: {employeeId})
+              {filteredSalaryDetails[employeeId].username} (ID: {"SID"+employeeId.slice(-4)})
             </h2>
             <div style={tableContainerStyle}>
               <table style={tableStyle}>

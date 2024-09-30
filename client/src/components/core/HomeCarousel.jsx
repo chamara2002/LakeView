@@ -1,6 +1,6 @@
 // src/Carousel.js
-import React, { useState } from 'react';
-import styles from '../../styles/carousel.module.css';	
+import React, { useState, useEffect } from 'react';
+import styles from '../../styles/carousel.module.css';
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from 'react-icons/fa';
 
 const Carousel = ({ images }) => {
@@ -13,6 +13,12 @@ const Carousel = ({ images }) => {
   const goToNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
   };
+
+  useEffect(() => {
+    const intervalId = setInterval(goToNext, 5000); 
+
+    return () => clearInterval(intervalId);
+  }, [images.length]); 
 
   return (
     <div className={styles.carousel}>

@@ -212,7 +212,7 @@ const UpdateGame = () => {
               type="number"
               placeholder="Price"
               style={styles.input}
-              value={price}
+              value={price === 0 ? '' : price}
               onChange={(e) => setPrice(Number(e.target.value))}
             />
             {priceError && <p style={styles.errorText}>{priceError}</p>}
