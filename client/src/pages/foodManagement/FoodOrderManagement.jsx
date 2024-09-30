@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { jsPDF } from "jspdf"; // Import jsPDF
-import "jspdf-autotable"; // Import autoTable plugin for jsPDF
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 import Footer from "../../components/core/Footer";
 import NavBar from "../../components/core/NavBar";
 import ReportButton from "../../components/reUseable/ReportButton";
 import DropdownNavBar from "../../components/core/DropDownbar";
-import { ToastContainer, toast } from "react-toastify"; // Import toast
-import "react-toastify/dist/ReactToastify.css"; // Import toastify styles
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FoodOrderManagement = () => {
   const [orders, setOrders] = useState([]);
-  const [searchIdQuery, setSearchIdQuery] = useState(""); // Search by order ID
-  const [completionStatus, setCompletionStatus] = useState(""); // New state for searching by completion status
+  const [searchIdQuery, setSearchIdQuery] = useState("");
+  const [completionStatus, setCompletionStatus] = useState("");
 
   useEffect(() => {
     axios
@@ -32,11 +32,11 @@ const FoodOrderManagement = () => {
             order._id === orderId ? { ...order, isCompleted: true } : order
           )
         );
-        toast.success("Payment confirmed successfully!"); // Success notification
+        toast.success("Payment confirmed successfully!");
       })
       .catch((error) => {
         console.error("Error completing order:", error);
-        toast.error("Failed to confirm payment."); // Error notification
+        toast.error("Failed to confirm payment.");
       });
   };
 
@@ -47,15 +47,14 @@ const FoodOrderManagement = () => {
         setOrders((prevOrders) =>
           prevOrders.filter((order) => order._id !== orderId)
         );
-        toast.success("Order deleted successfully!"); // Success notification
+        toast.success("Order deleted successfully!");
       })
       .catch((error) => {
         console.error("Error deleting order:", error);
-        toast.error("Failed to delete order."); // Error notification
+        toast.error("Failed to delete order.");
       });
   };
 
-  // Filter orders based on search criteria
   const filteredOrders = orders.filter((order) => {
     const matchesId = order._id.toLowerCase().includes(searchIdQuery.toLowerCase());
     const matchesCompletion =
@@ -67,23 +66,17 @@ const FoodOrderManagement = () => {
     return matchesId && matchesCompletion;
   });
 
-  // Export orders to PDF
   const handleExportPDF = () => {
     const doc = new jsPDF();
-
-    // Add title to the PDF
     doc.text("Food Orders Report", 14, 20);
-
-    // Format data for autoTable
     const tableData = filteredOrders.map((order) => [
-      order._id,
-      order.userId,
+      formatId(order._id, "OID"),
+      formatId(order.userId, "CID"),
       order.meals.map((meal) => `${meal.food?.name || "Unknown"} (${meal.quantity})`).join(", "),
       `Rs.${order.totalPrice.toFixed(2)}`,
       order.isCompleted ? "Paid" : "Not Paid",
     ]);
 
-    // Add autoTable with order data
     doc.autoTable({
       head: [["Order ID", "Customer ID", "Meals", "Total Price", "Status"]],
       body: tableData,
@@ -93,24 +86,32 @@ const FoodOrderManagement = () => {
       styles: { cellPadding: 3, fontSize: 10 },
     });
 
-    // Save the PDF
+    // Calculate summary data
+    const totalPaid = filteredOrders.filter(order => order.isCompleted).length;
+    const totalNotPaid = filteredOrders.filter(order => !order.isCompleted).length;
+    const totalRevenue = filteredOrders.reduce((total, order) => total + (order.isCompleted ? order.totalPrice : 0), 0).toFixed(2);
+
+    // Add summary to PDF
+    doc.text(`Total Orders: ${filteredOrders.length}`, 14, doc.autoTable.previous.finalY + 10);
+    doc.text(`Total Paid: ${totalPaid}`, 14, doc.autoTable.previous.finalY + 20);
+    doc.text(`Total Not Paid: ${totalNotPaid}`, 14, doc.autoTable.previous.finalY + 30);
+    doc.text(`Total Revenue: Rs.${totalRevenue}`, 14, doc.autoTable.previous.finalY + 40);
+
     doc.save("food_orders_report.pdf");
+  };
+
+  // Utility function to format the ID with a prefix
+  const formatId = (id, prefix) => {
+    return `${prefix}${id.slice(0, 7)}`; // Return the prefix and first 4 characters of the ID
   };
 
   return (
     <div>
       <NavBar name="foods" />
-      
-      <div
-        style={{
-          backgroundColor: "#161E38",
-          minHeight: "100vh",
-          padding: "20px",
-        }}
-      >
+      <div style={{ backgroundColor: "#161E38", minHeight: "100vh", padding: "20px" }}>
         <DropdownNavBar />
-        <h2 style={{ color: "white", textAlign: "center", fontSize: "30px"}}>Manage Orders </h2>
-        <br></br><br></br>
+        <h2 style={{ color: "white", textAlign: "center", fontSize: "30px" }}>Manage Orders </h2>
+        <br />
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
           <input
             type="text"
@@ -124,7 +125,6 @@ const FoodOrderManagement = () => {
               border: "1px solid #ccc",
               color: "#000",
               fontSize: "16px",
-              
             }}
           />
           <select
@@ -144,9 +144,7 @@ const FoodOrderManagement = () => {
             <option value="not_completed">Not Paid</option>
           </select>
         </div>
-          
-        <br></br>
-        
+        <br />
         <table
           style={{ width: "100%", borderCollapse: "collapse", color: "#fff", border: "1px solid #ddd", borderRadius: "4px" }}
         >
@@ -164,15 +162,13 @@ const FoodOrderManagement = () => {
           <tbody>
             {filteredOrders.length === 0 ? (
               <tr>
-                <td colSpan="7" style={tdStyle}>
-                  No orders found
-                </td>
+                <td colSpan="7" style={tdStyle}>No orders found</td>
               </tr>
             ) : (
               filteredOrders.map((order) => (
                 <tr key={order._id}>
-                  <td style={tdStyle}>{order._id}</td>
-                  <td style={tdStyle}>{order.userId}</td>
+                  <td style={tdStyle}>{formatId(order._id, "OID")}</td>
+                  <td style={tdStyle}>{formatId(order.userId, "CID")}</td>
                   <td style={tdStyle}>
                     {order.meals.map((meal) => (
                       <div key={meal.food?._id}>
@@ -191,7 +187,7 @@ const FoodOrderManagement = () => {
                         backgroundColor: order.isCompleted ? "#FFBB00" : "#007bff",
                         color: "#000",
                         border: "none",
-                        borderRadius: "4px",               
+                        borderRadius: "4px",
                         cursor: order.isCompleted ? "default" : "pointer",
                       }}
                     >
@@ -229,9 +225,7 @@ const FoodOrderManagement = () => {
         <br /><br /><br />
       </div>
 
-      {/* Toast container for displaying notifications */}
       <ToastContainer />
-
       <Footer />
     </div>
   );
@@ -242,8 +236,8 @@ const thStyle = {
   padding: "18px",
   textAlign: "left",
   color: "#000",
-  backgroundColor:"#858DA8",
-  fontWeight:"bold",
+  backgroundColor: "#858DA8",
+  fontWeight: "bold",
   fontSize: "18px",
 };
 
@@ -262,7 +256,7 @@ const styles = {
     cursor: "pointer",
     margin: "20px auto",
     display: "flex",
-    fontWeight:"bold",
+    fontWeight: "bold",
   },
 };
 

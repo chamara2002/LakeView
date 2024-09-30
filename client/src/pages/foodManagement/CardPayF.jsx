@@ -5,6 +5,8 @@ import { useAuth } from "../foodManagement/context/authContext";
 import { useCart } from "./context/CartContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const CardPayF = () => {
   const navigate = useNavigate();
@@ -77,7 +79,7 @@ const CardPayF = () => {
     // Check if there are any validation errors
     const hasErrors = Object.values(errors).some((error) => error);
     if (hasErrors) {
-      alert("Please fix the errors in the form.");
+      toast.error("Please fix the errors in the form.");
       return;
     }
 
@@ -105,13 +107,14 @@ const CardPayF = () => {
         isCompleted: true,
       });
 
-      alert("Order placed successfully!");
+      alert("Order placed successfully!"); 
       localStorage.removeItem("cart");
-      localStorage.removeItem("total");
+      localStorage.removeItem("total");   
       navigate("/food/start");
       dispatch({ type: "CLEAR_CART" });
     } catch (error) {
       console.error("Error during checkout:", error);
+      toast.error("Error during checkout. Please try again.");
     }
   };
 
@@ -197,13 +200,14 @@ const CardPayF = () => {
                 </div>
               </div>
               <button type="submit" style={styles.submitButton}>
-                Submit
+                Pay Now
               </button>
             </form>
           </div>
         </div>
       </div>
       <Footer />
+      <ToastContainer />
     </>
   );
 };

@@ -12,9 +12,11 @@ const FoodPage = () => {
   const [foods, setFoods] = useState([]);
   const navigate = useNavigate();
 
+  // Fetch food items from the API
   const fetchFood = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/food");
+      console.log(response.data); // Log the response data for debugging
       setFoods(response.data);
     } catch (error) {
       console.error("Error fetching foods:", error);
@@ -22,10 +24,12 @@ const FoodPage = () => {
     }
   };
 
+  // Fetch data on component mount
   useEffect(() => {
     fetchFood();
   }, []);
 
+  // Handle delete food item
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/api/food/delete/${id}`);
@@ -51,43 +55,49 @@ const FoodPage = () => {
                   <th>#</th>
                   <th>Image</th>
                   <th>Item Name</th>
+                  <th>Ingredients</th>
                   <th>Price</th>
+                  <th>Available</th> {/* Added Available column */}
                   <th>Update</th>
                   <th>Delete</th>
                 </tr>
               </thead>
               <tbody>
-                {foods.map((item, index) => (
-                  <tr key={item._id}>
-                    <td>{index + 1}</td>
-                    <td>
-                      <img
-                        src={item.imageUrl}
-                        alt={item.name}
-                        className={styles.foodImage}
-                      />
-                    </td>
-                    <td>{item.name}</td>
-                    <td>{`Rs. ${item.price.toFixed(2)}`}</td>
-                    <td>
-                      <button
-                        className={styles.updateButton}
-                        onClick={() => navigate(`/updateFoodItem/${item._id}`)}
-                      >
-                        ✏️
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className={styles.deleteButton}
-                        onClick={() => handleDelete(item._id)}
-                      >
-                        🗑️
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+  {foods.map((item, index) => (
+    <tr key={item._id}>
+      <td>{index + 1}</td>
+      <td>
+        <img
+          src={item.imageUrl}
+          alt={item.name}
+          className={styles.foodImage}
+        />
+      </td>
+      <td>{item.name}</td>
+      <td>{item.ingredients?.join(", ") || "N/A"}</td>
+      <td>{`Rs. ${item.price.toFixed(2)}`}</td>
+      {/* Corrected to use item.isAvailable */}
+      <td>{item.isAvailable ? "Yes" : "No"}</td>
+      <td>
+        <button
+          className={styles.updateButton}
+          onClick={() => navigate(`/updateFoodItem/${item._id}`)}
+        >
+          ✏️
+        </button>
+      </td>
+      <td>
+        <button
+          className={styles.deleteButton}
+          onClick={() => handleDelete(item._id)}
+        >
+          🗑️
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
             </table>
           </div>
         </div>
