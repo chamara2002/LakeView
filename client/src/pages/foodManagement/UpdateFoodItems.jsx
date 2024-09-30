@@ -19,6 +19,8 @@ const UpdateFoodItems = () => {
     imageUrl: ''
   });
 
+  const [errors, setErrors] = useState({});
+
   useEffect(() => {
     const fetchFoodItem = async () => {
       try {
@@ -41,30 +43,92 @@ const UpdateFoodItems = () => {
     fetchFoodItem();
   }, [id]);
 
+  const validateField = (name, value) => {
+    let error = '';
+    const nameRegex = /^[A-Za-z\s]+$/;
+    const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
+    const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+    const categories = ['Soups', 'Chinese food', 'Pizza', 'Dessert', 'Drinks'];
+    const ingredientsRegex = /^[A-Za-z\s,]+$/;
+
+    switch (name) {
+      case 'name':
+        if (!value) {
+          error = 'Name is required.';
+        } else if (!nameRegex.test(value)) {
+          error = 'Name can only contain letters and spaces.';
+        }
+        break;
+      case 'ingredients':
+        if (!value) {
+          error = 'Ingredients are required.';
+        } else if (!ingredientsRegex.test(value)) {
+          error = 'Ingredients can only contain letters, spaces, and commas.';
+        }
+        break;
+      case 'category':
+        if (!value) {
+          error = 'Category is required.';
+        } else if (!categories.includes(value)) {
+          error = 'Please select a valid category.';
+        }
+        break;
+      case 'price':
+        if (!value) {
+          error = 'Price is required.';
+        } else if (!priceRegex.test(value) || parseFloat(value) <= 0) {
+          error = 'Price must be a positive number.';
+        }
+        break;
+      case 'imageUrl':
+        if (value && !urlRegex.test(value)) {
+          error = 'Please enter a valid URL.';
+        }
+        break;
+      default:
+        break;
+    }
+
+    return error;
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    if (name === 'name') {
-      const regex = /^[a-zA-Z\s]*$/;
-      if (!regex.test(value)) {
-        alert('Item name can only contain letters and spaces.');
-        return;
-      }
-    }
+    // Validate the field in real-time
+    const error = validateField(name, type === 'checkbox' ? checked : value);
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
 
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const ingredientsArray = formData.ingredients.split(',').map(ingredient => ingredient.trim());
+
+    // Check for any remaining errors before submitting
+    let valid = true;
+    const newErrors = {};
+    for (const key in formData) {
+      const error = validateField(key, formData[key]);
+      if (error) {
+        valid = false;
+        newErrors[key] = error;
+      }
+    }
+    setErrors(newErrors);
+
+    if (!valid) {
+      toast.error('Please fix the errors before submitting.');
+      return;
+    }
 
     try {
       const updatedData = { ...formData, ingredients: ingredientsArray };
-
       const response = await axios.put(`http://localhost:3000/api/food/update/${id}`, updatedData);
 
       // Show success notification
@@ -95,6 +159,7 @@ const UpdateFoodItems = () => {
               onChange={handleChange}
               style={styles.input}
             />
+            {errors.name && <span style={styles.error}>{errors.name}</span>}
           </div>
           <div style={styles.formGroup}>
             <label style={styles.label}>Ingredients</label>
@@ -105,6 +170,7 @@ const UpdateFoodItems = () => {
               onChange={handleChange}
               style={styles.input}
             />
+            {errors.ingredients && <span style={styles.error}>{errors.ingredients}</span>}
           </div>
           <div style={styles.formGroup}>
             <label style={styles.label}>Category</label>
@@ -121,6 +187,7 @@ const UpdateFoodItems = () => {
               <option value="Dessert">Dessert</option>
               <option value="Drinks">Drinks</option>
             </select>
+            {errors.category && <span style={styles.error}>{errors.category}</span>}
           </div>
           <div style={styles.formGroup}>
             <label style={styles.label}>Price</label>
@@ -131,6 +198,7 @@ const UpdateFoodItems = () => {
               onChange={handleChange}
               style={styles.input}
             />
+            {errors.price && <span style={styles.error}>{errors.price}</span>}
           </div>
           <div style={styles.formGroup}>
             <label style={styles.label}>Available</label>
@@ -151,6 +219,7 @@ const UpdateFoodItems = () => {
               onChange={handleChange}
               style={styles.input}
             />
+            {errors.imageUrl && <span style={styles.error}>{errors.imageUrl}</span>}
           </div>
           <button type="submit" style={styles.button}>Update Item</button>
         </form>
@@ -227,6 +296,11 @@ const styles = {
     width: '250px',
     textAlign: 'center',
     margin: "20px auto",
+  },
+  error: {
+    color: 'red',
+    fontSize: '12px',
+    marginLeft: '20px',
   },
 };
 

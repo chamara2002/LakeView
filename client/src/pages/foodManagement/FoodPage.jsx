@@ -12,15 +12,17 @@ const FoodPage = () => {
   useEffect(() => {
     const fetchFood = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/food"); 
+        const response = await axios.get("http://localhost:3000/api/food");
+        console.log(response.data); // Log the fetched data to verify the structure
         setFoods(response.data);
       } catch (error) {
         console.error("Error fetching foods:", error);
       }
     };
-
+  
     fetchFood();
   }, []);
+  
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -33,8 +35,10 @@ const FoodPage = () => {
   const filteredFoods = foods.filter(food => {
     const matchesCategory = selectedCategory === "" || food.category === selectedCategory;
     const matchesSearch = food.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
+    const isAvailable = food.isAvailable; 
+    return matchesCategory && matchesSearch && isAvailable;
   });
+  
 
   return (
     <div>
@@ -77,7 +81,7 @@ const FoodPage = () => {
               width: '10%',
               maxWidth: '400px',
               backgroundColor: '#FFBB00',
-              color: '#333333',
+              color: '#000000',
               fontSize: '16px',
               boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
               cursor: 'pointer',
@@ -96,7 +100,18 @@ const FoodPage = () => {
             <option value="Drinks">Drinks</option>
           </select>
         </header>
-        <FoodList foods={filteredFoods} />
+        {filteredFoods.length > 0 ? (
+          <FoodList foods={filteredFoods} />
+        ) : (
+          <div style={{
+            textAlign: 'center',
+            marginTop: '20px',
+            fontSize: '18px',
+            color: '#FFBB00'
+          }}>
+            No Food Items Found.
+          </div>
+        )}
       </div>
       <Footer />  
     </div>

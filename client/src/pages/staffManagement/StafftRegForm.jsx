@@ -18,11 +18,11 @@ const StaffRegistrationForm = () => {
 
   const [errors, setErrors] = useState({
     name: '',
-    position: '',
     email: '',
     phone: '',
     nic: '',
     salary: '',
+    password:'',
   });
 
   const validateName = (value) => {
@@ -31,15 +31,6 @@ const StaffRegistrationForm = () => {
       setErrors((prevErrors) => ({ ...prevErrors, name: 'Name can only contain letters and spaces.' }));
     } else {
       setErrors((prevErrors) => ({ ...prevErrors, name: '' })); 
-    }
-  };
-
-  const validatePosition = (value) => {
-    const positionPattern = /^[A-Za-z\s]+$/;
-    if (!positionPattern.test(value)) {
-      setErrors((prevErrors) => ({ ...prevErrors, position: 'Position can only contain letters and spaces.' }));
-    } else {
-      setErrors((prevErrors) => ({ ...prevErrors, position: '' }));
     }
   };
 
@@ -70,6 +61,23 @@ const StaffRegistrationForm = () => {
     }
   };
 
+  const validatePassword = (value) => {
+    const passwordPattern = /^[A-Za-z0-9]{6,}$/;
+
+    if (!passwordPattern.test(value)) {
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            password: 'Password must be at least 6 characters long and can only include letters and numbers.',
+        }));
+    } else {
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            password: '',
+        }));
+    }
+};
+
+
   const validateSalary = (value) => {
     const salaryPattern = /^[1-9]\d*(\.\d+)?$/; // Positive numbers only
     if (!salaryPattern.test(value)) {
@@ -98,6 +106,10 @@ const StaffRegistrationForm = () => {
         setPhone(value);
         validatePhone(value);
         break;
+      case 'password':
+        setPassword(value);
+        validatePassword(value);
+        break;
       case 'nic':
         setNic(value);
         validateNic(value);
@@ -107,7 +119,6 @@ const StaffRegistrationForm = () => {
         validateSalary(value);
         break;
       default:
-        if (id === 'password') setPassword(value);
         if (id === 'address') setAddress(value);
         break;
     }
@@ -162,6 +173,7 @@ const StaffRegistrationForm = () => {
               style={inputStyle}
               type="text"
               id="name"
+              placeholder="Full Name"
               value={name}
               onChange={handleChange}
             />
@@ -170,15 +182,19 @@ const StaffRegistrationForm = () => {
 
           <div style={inputContainerStyle}>
             <label style={labelStyle} htmlFor="job">Position</label>
-            <input
-              style={inputStyle}
-              type="text"
-              id="job"
-              value={position}
-              onChange={handleChange}
-            />
-            {errors.position && <p style={{ color: 'red' }}>{errors.position}</p>}
-          </div>
+            <select
+                style={inputStyle}
+                id="job"
+                value={position}
+                onChange={handleChange}
+            >
+                <option value="" disabled>Select your position</option>
+                <option value="Manager">Manager</option>
+                <option value="Cleaner">Cleaner</option>
+                <option value="Technician">Technician</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
 
           <div style={inputContainerStyle}>
             <label style={labelStyle} htmlFor="email">Email</label>
@@ -186,6 +202,7 @@ const StaffRegistrationForm = () => {
               style={inputStyle}
               type="email"
               id="email"
+              placeholder="Email"
               value={email}
               onChange={handleChange}
             />
@@ -198,9 +215,11 @@ const StaffRegistrationForm = () => {
               style={inputStyle}
               type="password"
               id="password"
+              placeholder="Strong Password"
               value={password}
               onChange={handleChange}
             />
+            {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
           </div>
 
           <div style={inputContainerStyle}>
@@ -209,6 +228,7 @@ const StaffRegistrationForm = () => {
               style={inputStyle}
               type="text"
               id="nic"
+              placeholder="NIC Number" 
               value={nic}
               onChange={handleChange}
             />
@@ -221,6 +241,7 @@ const StaffRegistrationForm = () => {
               style={inputStyle}
               type="text"
               id="address"
+              placeholder="Address"
               value={address}
               onChange={handleChange}
             />
@@ -232,6 +253,7 @@ const StaffRegistrationForm = () => {
               style={inputStyle}
               type="text"
               id="salary"
+              placeholder="Salary"
               value={salary}
               onChange={handleChange}
             />
@@ -244,6 +266,7 @@ const StaffRegistrationForm = () => {
               style={inputStyle}
               type="text"
               id="phone"
+              placeholder="Phone Number"
               value={phone}
               onChange={handleChange}
             />
@@ -276,7 +299,7 @@ const formContainerStyle = {
 };
 
 const formStyle = {
-  backgroundColor: '#9b9fab',
+  backgroundColor: '#1D284C',
   padding: '20px',
   borderRadius: '8px',
   boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
@@ -285,7 +308,7 @@ const formStyle = {
 
 const titleStyle = {
   textAlign: 'center',
-  color: '#333',
+  color: 'white',
 };
 
 const inputContainerStyle = {
@@ -295,7 +318,7 @@ const inputContainerStyle = {
 const labelStyle = {
   display: 'block',
   marginBottom: '8px',
-  color: '#333',
+  color: 'white',
 };
 
 const inputStyle = {
@@ -309,7 +332,7 @@ const inputStyle = {
 
 const buttonContainerStyle = {
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'center',
 };
 
 const registerButtonStyle = {

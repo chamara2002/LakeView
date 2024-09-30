@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; 
 import Footer from "../../components/core/Footer";
 import NavBar from "../../components/core/NavBar";
 import { useNavigate } from "react-router-dom";
@@ -11,18 +11,23 @@ const StaffmemberDash = () => {
   const [salaryData, setSalaryData] = useState({}); // Initialize with an empty object
   const [attendanceMarked, setAttendanceMarked] = useState(false); // Track attendance status
 
+  // Unique identifier for the allowed laptop (example: based on user agent)
+  const allowedUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36"; // Replace with actual user agent string
+
+  const isAllowedDevice = () => {
+    return navigator.userAgent === allowedUserAgent; // Check if the current device matches the allowed device
+  };
+
   const handleMarkAttendance = async () => {
     if (!user.user || !user.user._id) {
       console.error("User not authenticated");
       return;
     }
 
-    /*//Check network type
-    const networkType = navigator.connection?.effectiveType;
-    if (networkType !== "4g") {
-      alert("Attendance can only be marked within the company's network.");
+    if (!isAllowedDevice()) {
+      alert("Attendance can only be marked from the authorized laptop.");
       return;
-    }*/
+    }
 
     if (attendanceMarked) {
       alert("Attendance already marked. Please end your current attendance before marking again.");
@@ -55,13 +60,6 @@ const StaffmemberDash = () => {
       return;
     }
 
-    /*//Check network type
-    const networkType = navigator.connection?.effectiveType;
-    if (networkType !== "4g") {
-      alert("Attendance can only be marked within the company's network.");
-      return;
-    }*/
-
     try {
       const endTime = new Date().toISOString();
       const startTimeDate = new Date(startTime);
@@ -88,9 +86,7 @@ const StaffmemberDash = () => {
 
   const fetchCurrentMonthData = async () => {
     try {
-      const attendanceResponse = await axios.get(
-        "http://localhost:3000/api/attendance/attendance"
-      );
+      const attendanceResponse = await axios.get("http://localhost:3000/api/attendance/attendance");
       const staffResponse = await axios.get("http://localhost:3000/api/staff/");
 
       const attendanceData = attendanceResponse.data;
@@ -124,27 +120,24 @@ const StaffmemberDash = () => {
         groupedData[staffMember._id].otHours += attendance.ot || 0;
       });
 
-      console.log(salaryData)
-
       // Calculate OT and final salaries for each employee for the current month
-Object.keys(groupedData).forEach((employeeId) => {
-  const employeeData = groupedData[employeeId];
-  
-  // Adjust OT hours if more than 8
-  const otHours = employeeData.otHours > 8 
-    ? employeeData.otHours - 8 
-    : employeeData.otHours;
-  
-  // Calculate OT salary (assuming OT rate is twice the normal rate)
-  employeeData.otSalary = otHours * ((employeeData.normalSalary / 160) * 2);
-  
-  // Calculate final salary
-  employeeData.finalSalary = employeeData.normalSalary + employeeData.otSalary;
-  
-  // Store the adjusted OT hours
-  employeeData.OT = otHours;
-});
-
+      Object.keys(groupedData).forEach((employeeId) => {
+        const employeeData = groupedData[employeeId];
+        
+        // Adjust OT hours if more than 8
+        const otHours = employeeData.otHours > 8 
+          ? employeeData.otHours - 8 :0;
+          
+        
+        // Calculate OT salary (assuming OT rate is twice the normal rate)
+        employeeData.otSalary = otHours * ((employeeData.normalSalary / 160) * 1.5);
+        
+        // Calculate final salary
+        employeeData.finalSalary = employeeData.normalSalary + employeeData.otSalary;
+        
+        // Store the adjusted OT hours
+        employeeData.OT = otHours;
+      });
 
       return groupedData;
     } catch (error) {
@@ -196,9 +189,9 @@ Object.keys(groupedData).forEach((employeeId) => {
           <h1 style={{ color: "white", marginBottom: "30px" }}>
             STAFF MEMBER DASHBOARD
           </h1>
-          <br></br>
-          <br></br>
-          <br></br>
+          <br />
+          <br />
+          <br />
 
           {/* Button Groups */}
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -286,7 +279,7 @@ Object.keys(groupedData).forEach((employeeId) => {
             </div>
           </div>
         </div>
-        <br></br>
+        <br />
         <div style={{
           border: '1px solid #ccc',
           borderRadius: '5px',
@@ -316,7 +309,7 @@ Object.keys(groupedData).forEach((employeeId) => {
             color: '#666',
             margin: '10px 0'
           }}>
-            Ot Hours : {salaryData ? salaryData.OT : 'N/A'}
+            OT Hours : {salaryData ? salaryData.OT : 'N/A'}
           </p>
           <p style={{
             fontSize: '16px',

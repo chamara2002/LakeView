@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../foodManagement/context/authContext";
 import CartSummary from "./CartSummery";
 import { useCart } from "./context/CartContext";
+import { toast, ToastContainer } from "react-toastify"; // Import toast
+import "react-toastify/dist/ReactToastify.css"; // Import toast CSS
 
 const FoodPurchase = () => {
   const [movie, setMovie] = React.useState("");
@@ -22,7 +24,7 @@ const FoodPurchase = () => {
       : 0;
 
     if (!savedCart || savedCart.length === 0) {
-      alert("Your cart is empty!");
+      toast.error("Your cart is empty!"); // Show error toast
       return;
     }
 
@@ -48,20 +50,26 @@ const FoodPurchase = () => {
         isCompleted: false,
       });
 
-      // Redirect or show a success message
+      // Show success toast
+      toast.success("Order placed successfully!");
+      
+      // Clear cart and localStorage
       dispatch({ type: "CLEAR_CART" });
-      alert("Order placed successfully!");
       localStorage.removeItem("cart");
       localStorage.removeItem("total");
-      navigate("/food/start");
+
+      // Redirect
+      setTimeout(() => navigate("/food/start"), 2000); // Delay redirect for toast
     } catch (error) {
       console.error("Error during checkout:", error);
+      toast.error("Error placing order. Please try again."); // Show error toast
     }
   };
 
   return (
     <>
       <NavBar name="foods" />
+      <ToastContainer /> {/* Add ToastContainer */}
       <div style={styles.container}>
         <div style={styles.header}>
           <h1 style={styles.mainTitle}>{movie.name}</h1>

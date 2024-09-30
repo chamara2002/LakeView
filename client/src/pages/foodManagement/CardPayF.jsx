@@ -1,61 +1,120 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState } from "react";
 import NavBar from "../../components/core/NavBar";
 import Footer from "../../components/core/Footer";
 import { useAuth } from "../foodManagement/context/authContext";
 import { useCart } from "./context/CartContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { BookingContext } from "../foodManagement/context/BookingContext";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const CardPayF = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [cart, setCart] = useState([]);
-  const {dispatch} = useCart();
+  const { dispatch } = useCart();
+
+  // State for form values and validation errors
+  const [formValues, setFormValues] = useState({
+    cardNumber: "",
+    cardName: "",
+    expiryDate: "",
+    securityCode: "",
+  });
+
+  const [errors, setErrors] = useState({
+    cardNumber: "",
+    cardName: "",
+    expiryDate: "",
+    securityCode: "",
+  });
+
+  // Real-time validation function
+  const validateField = (name, value) => {
+    let errorMsg = "";
+
+    switch (name) {
+      case "cardNumber":
+        if (!/^\d{16}$/.test(value)) {
+          errorMsg = "Card number must be 16 digits.";
+        }
+        break;
+      case "cardName":
+        if (!/^[A-Za-z\s]+$/.test(value)) {
+          errorMsg = "Name on card must contain only letters.";
+        }
+        break;
+      case "expiryDate":
+        const today = new Date();
+        const selectedDate = new Date(value);
+
+        // Check if the expiry date is valid and in the future
+        if (!value) {
+          errorMsg = "Expiry date is required.";
+        } else if (selectedDate < today) {
+          errorMsg = "Expiry date must be in the future.";
+        }
+        break;
+      case "securityCode":
+        if (!/^\d{3,4}$/.test(value)) {
+          errorMsg = "Security code must be 3 or 4 digits.";
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+    validateField(name, value); // Real-time validation on input change
+  };
 
   const handlePayment = async (e) => {
     e.preventDefault();
 
+    // Check if there are any validation errors
+    const hasErrors = Object.values(errors).some((error) => error);
+    if (hasErrors) {
+      toast.error("Please fix the errors in the form.");
+      return;
+    }
+
     // Load cart from localStorage
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    console.log("Loaded cart:", storedCart); // Check if the cart data is correct
     setCart(storedCart);
 
-    const total = localStorage.getItem("total")
-      ? localStorage.getItem("total")
-      : 0;
+    const total = localStorage.getItem("total") ? localStorage.getItem("total") : 0;
 
     try {
-      // Collect cart items
       const meals = storedCart.map((item) => ({
         food: item._id,
         quantity: item.quantity,
       }));
-      console.log("Meals to be sent:", meals); // Verify that meals data is correct
 
-      // Calculate total price
       const totalPrice = storedCart.reduce(
         (total, item) => total + item.price * item.quantity,
         0
       );
-      console.log("Total price:", totalPrice); // Verify total price calculation
 
-      // Post request to the backend
       await axios.post("http://localhost:3000/api/order/add-order", {
         userId: user.user._id,
         meals,
-        totalPrice: totalPrice, // Use calculated totalPrice
+        totalPrice,
         isCompleted: true,
       });
 
-      // Redirect or show a success message
-      alert("Order placed successfully!");
+      alert("Order placed successfully!"); 
       localStorage.removeItem("cart");
-      localStorage.removeItem("total");
+      localStorage.removeItem("total");   
       navigate("/food/start");
-      dispatch({ type: "CLEAR_CART" }); // Clear cart in the context
+      dispatch({ type: "CLEAR_CART" });
     } catch (error) {
       console.error("Error during checkout:", error);
+      toast.error("Error during checkout. Please try again.");
     }
   };
 
@@ -63,7 +122,6 @@ const CardPayF = () => {
     <>
       <NavBar name="foods" />
       <div style={styles.container}>
-       
         <div style={styles.body}>
           <div style={styles.paymentSection}>
             <h3 style={styles.sectionTitle}>Card Payment</h3>
@@ -77,9 +135,14 @@ const CardPayF = () => {
                   id="cardNumber"
                   name="cardNumber"
                   placeholder="1234 5678 9123 4567"
+                  value={formValues.cardNumber}
+                  onChange={handleInputChange}
                   style={styles.input}
                   required
                 />
+                {errors.cardNumber && (
+                  <span style={styles.error}>{errors.cardNumber}</span>
+                )}
               </div>
               <div style={styles.inputGroup}>
                 <label htmlFor="cardName" style={styles.label}>
@@ -90,9 +153,14 @@ const CardPayF = () => {
                   id="cardName"
                   name="cardName"
                   placeholder="John Doe"
+                  value={formValues.cardName}
+                  onChange={handleInputChange}
                   style={styles.input}
                   required
                 />
+                {errors.cardName && (
+                  <span style={styles.error}>{errors.cardName}</span>
+                )}
               </div>
               <div style={styles.inputGroupRow}>
                 <div style={styles.inputGroupSmall}>
@@ -103,9 +171,14 @@ const CardPayF = () => {
                     type="month"
                     id="expiryDate"
                     name="expiryDate"
+                    value={formValues.expiryDate}
+                    onChange={handleInputChange}
                     style={styles.input}
                     required
                   />
+                  {errors.expiryDate && (
+                    <span style={styles.error}>{errors.expiryDate}</span>
+                  )}
                 </div>
                 <div style={styles.inputGroupSmall}>
                   <label htmlFor="securityCode" style={styles.label}>
@@ -116,19 +189,25 @@ const CardPayF = () => {
                     id="securityCode"
                     name="securityCode"
                     placeholder="••••"
+                    value={formValues.securityCode}
+                    onChange={handleInputChange}
                     style={styles.input}
                     required
                   />
+                  {errors.securityCode && (
+                    <span style={styles.error}>{errors.securityCode}</span>
+                  )}
                 </div>
               </div>
               <button type="submit" style={styles.submitButton}>
-                Submit
+                Pay Now
               </button>
             </form>
           </div>
         </div>
       </div>
       <Footer />
+      <ToastContainer />
     </>
   );
 };
@@ -222,6 +301,11 @@ const styles = {
     width: "100%",
     transition: "background-color 0.3s",
     fontWeight: "bold",
+  },
+  error: {
+    color: "#FF4136",
+    fontSize: "12px",
+    marginTop: "8px",
   },
 };
 

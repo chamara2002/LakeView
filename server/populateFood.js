@@ -99,6 +99,7 @@ const foodItems = [
     isAvailable: true,
     imageUrl: 'https://bing.com/th?id=OSK.afe0b0732f41eaf93c37a27c224c434d',
   },
+  
 ];
 
 // Insert food items into the database

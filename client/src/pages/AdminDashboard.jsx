@@ -124,7 +124,8 @@ const styles = {
   },
   header: {
     textAlign: "center",
-    marginBottom: "30px",
+    marginBottom: "40px",
+    marginTop: "-200px",
     color: "#ffffff",
     fontSize: "2rem",
     fontWeight: "bold",

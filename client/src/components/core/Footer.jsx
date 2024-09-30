@@ -1,5 +1,5 @@
 import styles from "../../styles/footer.module.css"
-import logo from "/logo.png";
+import logo from "/logo02.png";
 import { FaInstagram } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { PiXLogo } from "react-icons/pi";
@@ -14,7 +14,7 @@ const Footer = () => {
         <div
           className = {styles.box1}
         >
-          <img src={logo} alt="" width={200} />
+          <img src={logo} alt="" width={60}/><br></br><br></br>
           <div
             className={styles.logos}
           >

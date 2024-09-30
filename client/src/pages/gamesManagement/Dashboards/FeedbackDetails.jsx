@@ -51,7 +51,7 @@ const FeedbackDetails = () => {
 
     // Format data for autoTable based on filtered feedbacks
     const tableData = filteredFeedbacks.map(feedback => [
-      feedback.gameId,
+      "GID"+feedback.gameId.slice(-4),
       feedback.gameName,
       feedback.user,
       feedback.feedback,
@@ -108,7 +108,7 @@ const FeedbackDetails = () => {
           <tbody>
             {filteredFeedbacks.map((feedback) => (
               <tr key={feedback.feedbackId} style={styles.tableRow}>
-                <td style={styles.tableCell}>{feedback.gameId}</td>
+                <td style={styles.tableCell}>{"GID" + feedback.gameId.slice(-4)}</td>
                 <td style={styles.tableCell}>{feedback.gameName}</td>
                 <td style={styles.tableCell}>{feedback.user}</td>
                 <td style={styles.tableCell}>{feedback.feedback}</td>

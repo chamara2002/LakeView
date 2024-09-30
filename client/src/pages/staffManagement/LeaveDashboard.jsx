@@ -33,12 +33,19 @@ const LeaveRequests = () => {
   const containerStyle = {
     width: '80%',
     margin: '0 auto',
-    backgroundColor: '#9b9fab',
+    backgroundColor: '#161E38',
     padding: '20px',
     borderRadius: '8px',
     textAlign: 'center',
     minheight: '100vh',
     height: 'auto',
+  };
+
+  const heading = {
+    fontSize: "25px", // Large font for the heading
+    fontWeight: "bold",
+    color: "white", // Bright color for heading
+    textAlign: "center",
   };
 
   const tableStyle = {
@@ -48,16 +55,20 @@ const LeaveRequests = () => {
   };
 
   const thStyle = {
-    borderBottom: '2px solid #ddd',
+    borderBottom: '1px solid #444',
     padding: '10px',
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#2E3A59',
     textAlign: 'left',
+    color: 'white',
   };
 
   const tdStyle = {
-    borderBottom: '1px solid #ddd',
+    borderBottom: '1px solid #444',
     padding: '10px',
     textAlign: 'left',
+    color: 'white',
+    borderCollapse: "collapse",
+    lineHeight: "1.5",
   };
 
   const statusAcceptedStyle = {
@@ -69,8 +80,8 @@ const LeaveRequests = () => {
   };
 
   const statusPendingStyle = {
-    color: 'black',
-    backgroundColor: 'yellow', // Yellow background
+    color: 'white',
+    backgroundColor: '#FF6347', // Yellow background
     padding: '5px 10px',
     borderRadius: '5px',
     cursor: 'pointer',
@@ -80,7 +91,7 @@ const LeaveRequests = () => {
     <div style={{backgroundColor: '#161E38'}}>
       <NavBar></NavBar>
       <div style={containerStyle}>
-      <h2>LEAVE REQUESTS</h2>
+      <h2 style={heading}> Leave Requets</h2>
       <table style={tableStyle}>
         <thead>
           <tr>
