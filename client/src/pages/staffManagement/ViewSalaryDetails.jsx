@@ -89,10 +89,12 @@ Object.keys(groupedData).forEach((employeeId) => {
   Object.keys(groupedData[employeeId].months).forEach((monthYear) => {
     const employeeMonthData = groupedData[employeeId].months[monthYear];
 
-    // Adjust OT hours if more than 8
-    const otHours = employeeMonthData.otHours > 8 
-      ? employeeMonthData.otHours - 8 
-      : employeeMonthData.otHours;
+    
+
+      // Adjust OT hours if more than 8
+      const otHours = employeeMonthData.otHours > 8 
+      ? employeeMonthData.otHours - 8 :0;
+      
 
     // Calculate OT salary (assuming OT rate is two times the normal rate)
     employeeMonthData.otSalary = otHours * ((employeeMonthData.normalSalary / 160) * 1.5);

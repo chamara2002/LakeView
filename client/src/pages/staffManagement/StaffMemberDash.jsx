@@ -126,8 +126,8 @@ const StaffmemberDash = () => {
         
         // Adjust OT hours if more than 8
         const otHours = employeeData.otHours > 8 
-          ? employeeData.otHours - 8 
-          : employeeData.otHours;
+          ? employeeData.otHours - 8 :0;
+          
         
         // Calculate OT salary (assuming OT rate is twice the normal rate)
         employeeData.otSalary = otHours * ((employeeData.normalSalary / 160) * 1.5);
