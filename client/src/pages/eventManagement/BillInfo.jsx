@@ -8,7 +8,7 @@ import { useAuth } from '../foodManagement/context/authContext';
 const BillInfo = () => {
   const [event, setEvent] = React.useState('');
 
-  const { id } = useParams(); // Get the event ID from the URL
+  const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -38,11 +38,9 @@ const BillInfo = () => {
     }
   };
 
-  console.log(event);
-
   return (
     <>
-      <NavBar name="" />
+      <NavBar />
       <div style={styles.container}>
         <div style={styles.header}>
           <h1 style={styles.mainTitle}>Payment Summary</h1>
@@ -50,18 +48,30 @@ const BillInfo = () => {
         <div style={styles.body}>
           <div style={styles.billInformation}>
             <h3 style={styles.sectionTitle}>Bill Information</h3>
-            <p style={styles.infoText}>{`${event.name} booking fee = ${event.price}`}</p>
-            <p style={styles.infoText}>{`Total amount = ${event.price}`}</p>
+            <div style={styles.infoBlock}>
+              <p style={styles.infoText}>
+                <strong>Event:</strong> {event.name || "Loading..."}
+              </p>
+              <p style={styles.infoText}>
+                <strong>Booking Fee:</strong> ${event.price || "Loading..."}
+              </p>
+              <p style={styles.infoText}>
+                <strong>Total Amount:</strong> ${event.price || "Loading..."}
+              </p>
+            </div>
           </div>
           <div style={styles.paymentMethod}>
             <h3 style={styles.sectionTitle}>Payment Method</h3>
+            <p style={styles.methodDescription}>
+              Choose your preferred payment method below:
+            </p>
             <button
-              style={styles.button}
+              style={{ ...styles.button, ...styles.buttonPrimary }}
               onClick={() => navigate(`/cardpay/${id}`)}
             >
               Card Payment &rarr;
             </button>
-            <button style={styles.button} onClick={handleCashPay}>
+            <button style={{ ...styles.button, ...styles.buttonSecondary }} onClick={handleCashPay}>
               Cash on Arrival &rarr;
             </button>
           </div>
@@ -74,92 +84,111 @@ const BillInfo = () => {
 
 const styles = {
   container: {
-    padding: '20px',
+    padding: '40px',
     textAlign: 'center',
-    backgroundColor: '#161E38', // Original background color
+    backgroundColor: '#161E38',
     color: '#FFFFFF',
-    minHeight: '70vh',
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   header: {
-    marginBottom: '20px',
-    padding: '20px',
+    marginBottom: '30px',
   },
   mainTitle: {
-    fontSize: '30px',
-    margin: '0',
-    color: '#FFDC5A',
+    fontSize: '28px',
     fontWeight: 'bold',
-    letterSpacing: '1px',
-    
+    color: '#FFDC5A',
+    textTransform: 'uppercase',
+    letterSpacing: '2px',
   },
   body: {
     display: 'flex',
     justifyContent: 'space-around',
     alignItems: 'flex-start',
-    marginTop: '40px',
+    marginTop: '30px',
     gap: '20px',
     flexWrap: 'wrap',
+    width: '100%',
+    maxWidth: '1200px',
   },
   billInformation: {
-    background: 'linear-gradient(135deg, #ffffff, #f0f0f0)',
+    background: '#ffffff',
     color: '#333',
-    padding: '20px',
-    borderRadius: '20px',
-    boxShadow: '0 12px 24px rgba(0, 0, 0, 0.1)',
-    width: '45%',
-    transition: 'transform 0.3s, box-shadow 0.3s',
+    padding: '30px',
+    borderRadius: '15px',
+    boxShadow: '0 12px 24px rgba(0, 0, 0, 0.3)',
+    width: '60%',
+    transition: 'transform 0.3s ease',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   paymentMethod: {
-    background: 'linear-gradient(135deg, #ffffff, #f0f0f0)',
+    background: '#ffffff',
     color: '#333',
-    padding: '20px',
-    borderRadius: '20px',
-    boxShadow: '0 12px 24px rgba(0, 0, 0, 0.1)',
-    width: '45%',
-    transition: 'transform 0.3s, box-shadow 0.3s',
+    padding: '30px',
+    borderRadius: '15px',
+    boxShadow: '0 12px 24px rgba(0, 0, 0, 0.3)',
+    width: '60%',
+    transition: 'transform 0.3s ease',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   sectionTitle: {
     marginBottom: '15px',
-    fontSize: '24px',
-    fontWeight: '600',
+    fontSize: '26px',
+    fontWeight: 'bold',
     color: '#161E38',
     borderBottom: '2px solid #FFDC5A',
     paddingBottom: '10px',
+    width: '100%',
+    textAlign: 'center',
+  },
+  infoBlock: {
+    margin: '15px 0',
+    textAlign: 'left',
   },
   infoText: {
     fontSize: '18px',
     lineHeight: '1.6',
     color: '#555',
+    margin: '8px 0',
+  },
+  methodDescription: {
+    fontSize: '16px',
+    color: '#777',
+    marginBottom: '10px',
   },
   button: {
     display: 'block',
     width: '100%',
-    padding: '12px 20px',
+    padding: '15px',
     margin: '10px 0',
-    fontSize: '16px',
+    fontSize: '18px',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    transition: 'background-color 0.3s, transform 0.2s',
+  },
+  buttonPrimary: {
     backgroundColor: '#007BFF',
     color: '#FFFFFF',
-    border: 'none',
-    borderRadius: '10px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s, transform 0.2s, box-shadow 0.2s',
-    fontWeight: 'bold',
   },
-  buttonHover: {
+  buttonSecondary: {
+    backgroundColor: '#28a745',
+    color: '#FFFFFF',
+  },
+  buttonPrimaryHover: {
     backgroundColor: '#0056b3',
     transform: 'scale(1.05)',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
   },
-};
-
-// Add hover effect on buttons using pseudo-class
-const buttonHoverStyles = {
-  button: {
-    '&:hover': {
-      backgroundColor: '#0056b3',
-      transform: 'scale(1.05)',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    },
+  buttonSecondaryHover: {
+    backgroundColor: '#218838',
+    transform: 'scale(1.05)',
   },
 };
 

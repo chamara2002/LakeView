@@ -17,25 +17,26 @@ const BookingEvent = () => {
   }, [user, navigate]);
 
   if (!user || !user.user) {
-    return null; 
+    return null;
   }
 
   const [formData, setFormData] = useState({
-    event: id || '', 
+    event: id || '',
     paymentMethod: 'online',
-    eventDate: '', 
+    eventDate: '',
+    eventTime: '', // New state for event time
     customer: user.user._id,
   });
 
-  const [isDateValid, setIsDateValid] = useState(true); // State for date validation
+  const [isDateValid, setIsDateValid] = useState(true);
 
   // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     if (name === 'eventDate') {
-      const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-      setIsDateValid(value >= today); // Check if the selected date is not in the past
+      const today = new Date().toISOString().split('T')[0];
+      setIsDateValid(value >= today);
     }
 
     setFormData((prevData) => ({
@@ -55,12 +56,12 @@ const BookingEvent = () => {
     try {
       await axios.post('http://localhost:3000/api/booking/create', {
         ...formData,
-        bookingDate: new Date(), // Set current date for bookingDate
-        status: 'pending', // Default status
-        paymentStatus: 'unpaid', // Default paymentStatus
+        bookingDate: new Date(),
+        status: 'pending',
+        paymentStatus: 'unpaid',
       });
 
-      navigate(`/billinfo/${id}`); // Redirect to a confirmation page or similar
+      navigate(`/billinfo/${id}`);
     } catch (error) {
       console.error('Error booking the event:', error);
     }
@@ -70,7 +71,6 @@ const BookingEvent = () => {
     <>
       <NavBar name="events" />
       <div style={styles.container}>
-       
         <form style={styles.form} onSubmit={handleSubmit}>
           <div style={styles.formGroup}>
             <label style={styles.label}>Event ID</label>
@@ -81,9 +81,10 @@ const BookingEvent = () => {
               value={id}
               onChange={handleChange}
               style={styles.input}
-              readOnly // Making the event ID field read-only
+              readOnly
             />
           </div>
+
           <div style={styles.formGroup}>
             <label style={styles.label}>Payment Method</label>
             <select
@@ -97,6 +98,7 @@ const BookingEvent = () => {
               <option value="online">Online</option>
             </select>
           </div>
+
           <div style={styles.formGroup}>
             <label style={styles.label}>Event Date</label>
             <input
@@ -111,6 +113,24 @@ const BookingEvent = () => {
               <p style={styles.error}>Please select a valid date.</p>
             )}
           </div>
+
+          {/* Time selection dropdown */}
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Event Time</label>
+            <select
+              name="eventTime"
+              value={formData.eventTime}
+              onChange={handleChange}
+              style={styles.input}
+              required
+            >
+              <option value="" disabled>Select time</option>
+              <option value="4:00 PM - 6:00 PM">4:00 PM - 6:00 PM</option>
+              <option value="7:30 PM - 9:30 PM">7:30 PM - 9:30 PM</option>
+              <option value="10:00 PM - 12:00 AM">10:00 PM - 12:00 AM</option>
+            </select>
+          </div>
+
           <button type="submit" style={styles.submitButton} disabled={!isDateValid}>
             Save Details and Next
           </button>

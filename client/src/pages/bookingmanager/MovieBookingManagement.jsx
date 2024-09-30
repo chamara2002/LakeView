@@ -41,33 +41,45 @@ const MovieBookingManagement = () => {
       .catch((error) => console.error("Error deleting booking:", error));
   };
 
+  // Search logic that filters based on movie name
   const filteredBookings = bookings.filter((booking) =>
     booking.movie?.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const totalSeats = filteredBookings.reduce(
+    (acc, booking) => acc + (booking.seatNumbers ? booking.seatNumbers.length : 0),
+    0
+  );
+  const totalRevenue = filteredBookings.reduce(
+    (acc, booking) => acc + booking.totalPrice,
+    0
+  );
+
+  // Helper function to generate custom booking ID in the format MB1234567
+  const generateBookingId = (booking) => {
+    const shortId = booking._id.slice(-5); // Take the last 5 characters of the existing ID
+    return `MB${shortId}`; // Combine prefix with the short ID
+  };
 
   return (
     <div>
       <NavBar />
       <div style={{ backgroundColor: "#161E38", minHeight: "100vh", padding: "20px" }}>
-        <input
-          type="text"
-          placeholder="Search by movie name"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginBottom: "20px",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-            color: "#000",
-          }}
-        />
-        
+        <div style={searchBarContainerStyle}>
+          <input
+            type="text"
+            placeholder="Search by movie name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={searchBarStyle}
+          />
+        </div>
+
         <div style={tableGridStyle}>
           <table style={tableStyle}>
             <thead>
               <tr>
+                <th style={thStyle}>Booking ID</th>
                 <th style={thStyle}>Movie Name</th>
                 <th style={thStyle}>Customer Email</th>
                 <th style={thStyle}>Seats</th>
@@ -79,10 +91,11 @@ const MovieBookingManagement = () => {
             <tbody>
               {filteredBookings.map((booking) => (
                 <tr key={booking._id} style={trStyle}>
+                  <td style={tdStyle}>{generateBookingId(booking)}</td> {/* Use the custom booking ID format */}
                   <td style={tdStyle}>{booking.movie?.name || "Unknown Movie"}</td>
                   <td style={tdStyle}>{booking.customer?.email || "Unknown Customer"}</td>
                   <td style={tdStyle}>{booking.seatNumbers ? booking.seatNumbers.length : 0}</td>
-                  <td style={tdStyle}>${booking.totalPrice.toFixed(2)}</td>
+                  <td style={tdStyle}>Rs.{booking.totalPrice.toFixed(2)}</td>
                   <td style={tdStyle}>{booking.confirmed ? "Paid" : "Not paid"}</td>
                   <td style={tdStyle}>
                     <button
@@ -114,10 +127,10 @@ const MovieBookingManagement = () => {
         </div>
         <br />
         <center>
-          <ReportButton 
-            bookings={filteredBookings} 
-            title="Movie Bookings" 
-            fileName="movie_bookings_report.pdf" 
+          <ReportButton
+            bookings={filteredBookings}
+            title="Movie Bookings"
+            fileName="movie_bookings_report.pdf"
           />
         </center>
       </div>
@@ -127,6 +140,26 @@ const MovieBookingManagement = () => {
 };
 
 // Styles
+const searchBarContainerStyle = {
+  display: "flex",
+  justifyContent: "center",
+  marginBottom: "20px",
+};
+
+const searchBarStyle = {
+  width: "60%", // Responsive width for large screens
+  maxWidth: "800px", // Maximum width
+  padding: "15px 20px",
+  borderRadius: "30px",
+  border: "1px solid #ccc",
+  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow effect
+  transition: "all 0.3s ease", // Smooth transitions
+  outline: "none",
+  fontSize: "16px",
+  backgroundColor: "#f9f9f9", // Light background for focus
+  color: "#333",
+};
+
 const tableGridStyle = {
   display: "block",
   width: "100%",
