@@ -26,48 +26,79 @@ const AddFood = () => {
     };
   }, []);
 
+  const validateField = (name, value) => {
+    let error = '';
+    const nameRegex = /^[A-Za-z\s]+$/;
+    const ingredientsRegex = /^[A-Za-z\s,]+$/;
+    const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
+    const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+    const categories = ['Soups', 'Chinese food', 'Pizza', 'Dessert', 'Drinks'];
+
+    switch (name) {
+      case 'name':
+        if (!value) {
+          error = 'Name is required.';
+        } else if (!nameRegex.test(value)) {
+          error = 'Name can only contain letters and spaces.';
+        }
+        break;
+        case 'ingredients':
+          if (!value) {
+            error = 'Ingredients are required.';
+          } else if (!ingredientsRegex.test(value)) {
+            error = 'Ingredients can only contain letters, spaces, and commas.';
+          }
+          break;
+      case 'category':
+        if (!value) {
+          error = 'Category is required.';
+        } else if (!categories.includes(value)) {
+          error = 'Please select a valid category.';
+        }
+        break;
+      case 'price':
+        if (!value) {
+          error = 'Price is required.';
+        } else if (!priceRegex.test(value) || parseFloat(value) <= 0) {
+          error = 'Price must be a positive number.';
+        }
+        break;
+      case 'imageUrl':
+        if (value && !urlRegex.test(value)) {
+          error = 'Please enter a valid URL.';
+        }
+        break;
+      default:
+        break;
+    }
+
+    return error;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+
+    const fieldError = validateField(name, value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: fieldError,
+    }));
   };
 
   const validate = () => {
-    const errors = {};
-
-    const nameRegex = /^[A-Za-z\s]+$/;
-    if (!formData.name) {
-      errors.name = 'Name is required.';
-    } else if (!nameRegex.test(formData.name)) {
-      errors.name = 'Name can only contain letters and spaces.';
-    }
-
-    if (!formData.ingredients) {
-      errors.ingredients = 'Ingredients are required.';
-    }
-
-    const categories = ['Soups', 'Chinese food', 'Pizza', 'Dessert', 'Drinks'];
-    if (!formData.category) {
-      errors.category = 'Category is required.';
-    } else if (!categories.includes(formData.category)) {
-      errors.category = 'Please select a valid category.';
-    }
-
-    const priceRegex = /^[0-9]+(\.[0-9]{1,2})?$/;
-    if (!formData.price) {
-      errors.price = 'Price is required.';
-    } else if (!priceRegex.test(formData.price) || parseFloat(formData.price) <= 0) {
-      errors.price = 'Price must be a positive number.';
-    }
-
-    const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
-    if (formData.imageUrl && !urlRegex.test(formData.imageUrl)) {
-      errors.imageUrl = 'Please enter a valid URL.';
-    }
-
-    return errors;
+    const validationErrors = {};
+    Object.keys(formData).forEach((key) => {
+      const error = validateField(key, formData[key]);
+      if (error) {
+        validationErrors[key] = error;
+      }
+    });
+    return validationErrors;
   };
 
   const handleSubmit = async (e) => {
@@ -100,7 +131,7 @@ const AddFood = () => {
           imageUrl: ''
         });
         setErrors({});
-      }, 1000); // 2 seconds delay
+      }, 1000);
     } catch (error) {
       console.error('Error adding food item:', error.response ? error.response.data : error.message);
       toast.error('Failed to add food item. Please try again.');
@@ -211,7 +242,6 @@ const AddFood = () => {
       </div>
       <Footer />
 
-      {/* ToastContainer for displaying notifications */}
       <ToastContainer />
     </div>
   );
@@ -284,6 +314,13 @@ const styles = {
   submitButtonHover: {
     backgroundColor: '#FF8C00',
   },
+  error: {
+    color: 'red',
+    fontSize: '12px',
+    marginLeft: '20px',
+  },
+  
+  
 };
 
 export default AddFood;

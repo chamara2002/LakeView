@@ -9,8 +9,7 @@ import Footer from "../../components/core/Footer";
 const SeatSelection = ({ movieId, pricePerSeat }) => {
   const [unavailableSeats, setUnavailableSeats] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
-  const { bookingDetails, setBookingItem, addSeats } =
-    useContext(BookingContext);
+  const { bookingDetails, setBookingItem, addSeats } = useContext(BookingContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,19 +73,23 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
         <div
           key={seatNumber}
           style={{
-            width: "35px",
-            height: "35px",
-            lineHeight: "35px",
+            width: "40px",
+            height: "40px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: "5px",
             border: "1px solid #333",
             cursor: unavailableSeats.includes(seatNumber) ? "not-allowed" : "pointer",
-            textAlign: "center",
             backgroundColor: unavailableSeats.includes(seatNumber)
               ? "grey"
               : selectedSeats.includes(seatNumber)
               ? "green"
               : "#fff",
             color: selectedSeats.includes(seatNumber) ? "#fff" : "#000",
+            fontWeight: "bold",
             userSelect: "none",
+            transition: "transform 0.3s, background-color 0.3s",
           }}
           onClick={() => handleSeatClick(seatNumber)}
         >
@@ -98,58 +101,71 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
   };
 
   return (
-
-    <div>
-      
     <div style={{ backgroundColor: "#161E38", minHeight: "80vh" }}>
-      <NavBar></NavBar>
-    <div style={{ textAlign: "center",  }}>
-      <h3>Select Your Seats</h3>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(10, 1fr)",
-          gap: "px",
-          maxWidth: "400px",
-          margin: "0 auto",
-        }}
-      >
-        {renderSeats()}
+      <NavBar /> {/* Navigation bar is kept as is */}
+      <div style={{ textAlign: "center", padding: "20px" }}>
+        <h3 style={{ marginBottom: "20px", color: "#ffffff", fontSize: "1.8rem" }}>
+          Select Your Tickets
+        </h3>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(10, 40px)",
+            gap: "12px",
+            maxWidth: "450px",
+            margin: "0 auto",
+          }}
+        >
+          {renderSeats()}
+        </div>
       </div>
-      <button
-        onClick={confirmSelection}
-        style={{
-          marginTop: "20px",
-          padding: "10px 20px",
-          backgroundColor: "#28a745",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-          borderRadius: "5px",
-        }}
-      >
-        Confirm Selection
-      </button>
-      <button
-        onClick={() =>
-          navigate("/booking-summary")
-        }
-        style={{
-          marginTop: "20px",
-          padding: "10px 20px",
-          backgroundColor: "#28a745",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-          borderRadius: "5px",
-          marginLeft: "10px",
-        }}
-      >
-        Proceed
-      </button>
-    </div>
-    </div>
-    <Footer></Footer>
+
+      <div style={{ marginTop: "20px", textAlign: "center" }}>
+        <button
+          onClick={confirmSelection}
+          style={{
+            padding: "12px 30px",
+            backgroundColor: "#28A745",
+            color: "white",
+            border: "none",
+            cursor: "pointer",
+            borderRadius: "5px",
+            fontSize: "1rem",
+            fontWeight: "bold",
+            marginRight: "10px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            transition: "background-color 0.3s, transform 0.2s",
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#218838")}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#28A745")}
+          onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.98)")}
+          onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          Confirm Selection
+        </button>
+        <button
+          onClick={() => navigate("/booking-summary")}
+          style={{
+            padding: "12px 30px",
+            backgroundColor: "#007BFF",
+            color: "white",
+            border: "none",
+            cursor: "pointer",
+            borderRadius: "5px",
+            fontSize: "1rem",
+            fontWeight: "bold",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            transition: "background-color 0.3s, transform 0.2s",
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#0056b3")}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#007BFF")}
+          onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.98)")}
+          onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          Proceed
+        </button>
+      </div>
+      <Footer />
     </div>
   );
 };

@@ -70,7 +70,7 @@ const BookingEvent = () => {
     <>
       <NavBar name="events" />
       <div style={styles.container}>
-        <h1 style={styles.heading}>Victory Arena Booking Form</h1>
+       
         <form style={styles.form} onSubmit={handleSubmit}>
           <div style={styles.formGroup}>
             <label style={styles.label}>Event ID</label>

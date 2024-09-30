@@ -18,7 +18,7 @@ const GameBookingManagement = () => {
   const handleConfirm = (bookingId) => {
     axios
       .put(`http://localhost:3000/api/bkg/game-bookings/${bookingId}`)
-      .then((response) => {
+      .then(() => {
         setBookings((prevBookings) =>
           prevBookings.map((booking) =>
             booking._id === bookingId
@@ -33,7 +33,7 @@ const GameBookingManagement = () => {
   const handleDelete = (bookingId) => {
     axios
       .delete(`http://localhost:3000/api/bkg/game-bookings/${bookingId}`)
-      .then((response) => {
+      .then(() => {
         setBookings((prevBookings) =>
           prevBookings.filter((booking) => booking._id !== bookingId)
         );
@@ -48,13 +48,7 @@ const GameBookingManagement = () => {
   return (
     <div>
       <NavBar />
-      <div
-        style={{
-          backgroundColor: "#161E38",
-          minHeight: "100vh",
-          padding: "20px",
-        }}
-      >
+      <div style={{ backgroundColor: "#161E38", minHeight: "100vh", padding: "20px" }}>
         <input
           type="text"
           placeholder="Search by game name"
@@ -118,8 +112,14 @@ const GameBookingManagement = () => {
             </tbody>
           </table>
         </div>
-        <br></br>
-       <center> <ReportButton></ReportButton></center>
+        <br />
+        <center>
+          <ReportButton 
+            bookings={filteredBookings} 
+            title="Game Bookings" 
+            fileName="game_bookings_report.pdf" 
+          />
+        </center>
       </div>
       <Footer />
     </div>
