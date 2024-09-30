@@ -92,3 +92,27 @@
 .deleteButton {
   color: #ff4500;
 }
+.searchBar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.searchInput {
+  width: 300px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: #007bff; /* Adds a focus effect */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Adds a subtle glow when focused */
+}
+
+.centeredHeading {
+  text-align: center;
+}
+
