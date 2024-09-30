@@ -45,7 +45,7 @@ const LeaveDetails = () => {
   };
 
   const handleSearchByDate = (event) => {
-    setSearchTermByDate(event.target.value);
+    setSearchTermByDate(event.target.value); // Date is now in YYYY-MM-DD format
   };
 
   const handleSearchByStaffId = (event) => {
@@ -54,12 +54,12 @@ const LeaveDetails = () => {
 
   // Filter leaves by date and staff ID
   const filteredLeaves = leaves.filter((leave) => {
-    const leaveDate = new Date(leave.start).toLocaleDateString();
-    const staffId = leave.userId._id;
+    const leaveDate = new Date(leave.start).toISOString().slice(0, 10); // Format as YYYY-MM-DD
+    const staffId = "SID" + leave.userId._id.slice(-4); // Add "SID" prefix to staffId
 
     return (
       (searchTermByDate ? leaveDate.includes(searchTermByDate) : true) &&
-      (searchTermByStaffId ? staffId.includes(searchTermByStaffId) : true)
+      (searchTermByStaffId ? staffId.includes(searchTermByStaffId) : true) // Now searches with "SID" prefix
     );
   });
 
@@ -69,8 +69,8 @@ const LeaveDetails = () => {
     doc.text("Attendance Details Report", 14, 20);
 
     const tableData = filteredLeaves.map((leave) => [
-      leave._id,
-      leave.userId._id,
+      "AID" + leave._id.slice(-4),
+      "SID" + leave.userId._id.slice(-4),
       new Date(leave.start).toLocaleDateString(),
       new Date(leave.start).toLocaleTimeString(),
       leave.end ? new Date(leave.end).toLocaleTimeString() : "N/A",
@@ -97,7 +97,7 @@ const LeaveDetails = () => {
         <br />
         <h2 style={styles.heading}>Attendance Details</h2>
         <input
-          type="text"
+          type="date" // Changed input type to "date"
           placeholder="Search by Date (MM/DD/YYYY)"
           value={searchTermByDate}
           onChange={handleSearchByDate}
@@ -125,8 +125,8 @@ const LeaveDetails = () => {
           <tbody>
             {filteredLeaves.map((leave) => (
               <tr key={leave._id} style={styles.tableRow}>
-                <td style={styles.tableCell}>{leave._id}</td>
-                <td style={styles.tableCell}>{leave.userId._id}</td>
+                <td style={styles.tableCell}>{"AID" + leave._id.slice(-4)}</td>
+                <td style={styles.tableCell}>{"SID" + leave.userId._id.slice(-4)}</td>
                 <td style={styles.tableCell}>
                   {new Date(leave.start).toLocaleDateString()}
                 </td>
@@ -179,13 +179,13 @@ const styles = {
     textAlign: "center",
   },
   searchBar: {
-    margin: "20px 0",
-    padding: "10px",
-    width: "300px",
-    fontSize: "16px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
     marginBottom: "10px",
+    padding: "10px",
+    width: "40%",
+    borderRadius: "5px",
+    border: "1px solid #2C3354",
+    backgroundColor: "#243055",
+    color: "#fff",
   },
   table: {
     width: "100%",

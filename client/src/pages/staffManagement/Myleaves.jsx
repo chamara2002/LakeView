@@ -119,7 +119,7 @@ const Myleaves = () => {
           <thead>
             <tr style={rowStyle}>
               <th style={thTdStyle}>Leave ID</th>
-              <th style={thTdStyle}>Staff ID</th>
+              <th style={thTdStyle}>My ID</th>
               <th style={thTdStyle}>Start</th>
               <th style={thTdStyle}>End</th>
               <th style={thTdStyle}>Reason</th>
@@ -129,8 +129,8 @@ const Myleaves = () => {
           <tbody>
             {leaves.map((leave) => (
               <tr key={leave._id}>
-                <td style={thTdStyle}>{leave._id}</td>
-                <td style={thTdStyle}>{leave.employeeId._id}</td>
+                <td style={thTdStyle}>{"LID"+leave._id.slice(-4)}</td> {/* Last 4 characters of Leave ID */}
+                <td style={thTdStyle}>{"SID"+leave.employeeId._id.slice(-4)}</td> {/* Last 4 characters of Staff ID */}
                 <td style={thTdStyle}>
                   {new Date(leave.startDate).toLocaleDateString()}
                 </td>

@@ -9,13 +9,24 @@ const StaffLoginPage = () => {
 const {authState}= useAuth();
 console.log('staff login', authState);
   return (
-    <section style={{ backgroundColor: '#161E38' }}>
+    <section style={{ backgroundColor: '#1a2035' }}>
       <NavFunction name={'home'} />
-      <center><h1 style={{ color: 'white', fontFamily: 'serif' }}>Staff Login</h1>  </center>
+      <center><h1 style={styles.header}>Staff Login</h1>  </center>
       <Login />
       <Footer />
     </section>
   );
 };
+
+const styles = {
+  header: {
+    textAlign: "center",
+    marginBottom: "40px",
+    marginTop: "50px",
+    color: "#ffffff",
+    fontSize: "2rem",
+    fontWeight: "bold",
+  },
+}
 
 export default StaffLoginPage;

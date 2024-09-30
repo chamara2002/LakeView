@@ -183,7 +183,7 @@ const AddGames = () => {
               type="number"
               placeholder="Price"
               style={styles.input}
-              value={price}
+              value={price === 0 ? '' : price} // Show empty string instead of 0
               onChange={(e) => setPrice(Number(e.target.value))}
             />
             {priceError && <p style={styles.errorText}>{priceError}</p>}
@@ -238,9 +238,10 @@ const AddGames = () => {
           <br/>
 
           <div style={styles.formGroup}>
-            <label style={styles.label}>Upload Image:</label>
+            <label style={styles.label}>Game Image URL:</label>
             <input
               type="text"
+              placeholder="Image URL"
               value={image}
               onChange={handleImageChange}
               style={styles.fileInput}

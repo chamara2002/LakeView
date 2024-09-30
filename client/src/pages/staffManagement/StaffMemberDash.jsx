@@ -136,7 +136,7 @@ Object.keys(groupedData).forEach((employeeId) => {
     : employeeData.otHours;
   
   // Calculate OT salary (assuming OT rate is twice the normal rate)
-  employeeData.otSalary = otHours * ((employeeData.normalSalary / 160) * 2);
+  employeeData.otSalary = otHours * ((employeeData.normalSalary / 160) * 1.5);
   
   // Calculate final salary
   employeeData.finalSalary = employeeData.normalSalary + employeeData.otSalary;

@@ -81,6 +81,21 @@ const CategorizeNav = ({
     textAlign: 'left',
   });
 
+  const today = (category) => ({
+    fontSize: '13px',
+    width: '150px',
+    height: '10px',
+    backgroundColor: activeCategory === category ? '#000' : '#000',
+    color: activeCategory === category ? '#FFD700' : '#fff',
+    padding: '8px',
+    marginBottom: '10px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    textAlign: 'left',
+  });
+
+
+
   return (
     <div style={containerStyle}>
       <div style={sidebarStyle}>
@@ -111,7 +126,7 @@ const CategorizeNav = ({
             Water Games
           </li><br></br><br></br><br></br><br></br>
           <li
-            style={listItemStyle('today')}
+            style={today('today')}
             onClick={() => handleClick('today', onTodayClick)}
           >
             Today Available

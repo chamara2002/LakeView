@@ -26,86 +26,26 @@ const StaffTable = () => {
     fetchStaffData();
   }, []);
 
-  const containerStyle = {
-    padding: "20px",
-    backgroundColor: "#161E38",
-    color: "#ffffff",
-    height: "60vh",
-    overflow: "hidden",
-  };
-
-  const tableWrapperStyle = {
-    maxHeight: "50vh",
-    overflowY: "auto",
-  };
-
-  const tableStyle = {
-    width: "100%",
-    borderCollapse: "collapse",
-    marginTop: "20px",
-  };
-
-  const thStyle = {
-    padding: "10px",
-    border: "1px solid #ccc",
-    backgroundColor: "#000000",
-    fontWeight: "bold",
-    textAlign: "left",
-    position: "sticky",
-    top: 0,
-    zIndex: 1,
-  };
-
-  const tdStyle = {
-    padding: "10px",
-    border: "1px solid #ccc",
-    textAlign: "left",
-  };
-
-  const buttonStyle = {
-    padding: "5px 10px",
-    margin: "5px",
-    cursor: "pointer",
-    border: "none",
-    borderRadius: "5px",
-  };
-
-  const updateButtonStyle = {
-    ...buttonStyle,
-    backgroundColor: "#f0ad4e",
-    color: "white",
-  };
-
-  const deleteButtonStyle = {
-    ...buttonStyle,
-    backgroundColor: "#d9534f",
-    color: "white",
-  };
-
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value.toLowerCase());
+    setSearchQuery(e.target.value);
   };
 
   const handleIdSearchChange = (e) => {
-    setIdSearchQuery(e.target.value.toLowerCase());
+    setIdSearchQuery(e.target.value);
   };
 
   const filteredStaff = staffData.filter((staff) => {
-    const id = staff._id ? staff._id.toLowerCase() : "";
-    const name = staff.name ? staff.name.toLowerCase() : "";
-    const nic = staff.nic ? staff.nic.toLowerCase() : "";
-    const email = staff.email ? staff.email.toLowerCase() : "";
-    const address = staff.address ? staff.address.toLowerCase() : "";
-    const jobPosition = staff.jobPosition
-      ? staff.jobPosition.toLowerCase()
-      : "";
+    const id = "SID" + staff._id.slice(-4);
+    const name = staff.name ? staff.name : "";
+    const nic = staff.nic ? staff.nic : "";
+    const email = staff.email ? staff.email : "";
+    const address = staff.address ? staff.address : "";
+    const jobPosition = staff.jobPosition ? staff.jobPosition : "";
 
-    // If ID search query exists, only filter by ID
     if (idSearchQuery) {
       return id.includes(idSearchQuery);
     }
 
-    // Otherwise, filter by other fields based on search query
     return (
       name.includes(searchQuery) ||
       nic.includes(searchQuery) ||
@@ -132,69 +72,60 @@ const StaffTable = () => {
   return (
     <div>
       <NavBar />
-      <div style={containerStyle}>
+      <div style={styles.pageContainer}>
+        <h2 style={styles.heading}>Staff Details</h2>
         <input
           type="text"
           placeholder="Search staff by name, NIC, email..."
           value={searchQuery}
           onChange={handleSearchChange}
-          style={{
-            marginBottom: "10px",
-            padding: "10px",
-            width: "100%",
-            maxWidth: "400px",
-          }}
+          style={styles.searchBar}
         />
-        <br></br>
+        <br />
         <input
           type="text"
           placeholder="Search by ID..."
-          value={idSearchQuery} // Bind to the new state
-          onChange={handleIdSearchChange} // Handle ID search input
-          style={{
-            marginBottom: "20px",
-            padding: "10px",
-            width: "100%",
-            maxWidth: "400px",
-          }}
+          value={idSearchQuery}
+          onChange={handleIdSearchChange}
+          style={styles.searchBar2}
         />
         {loading ? (
           <p>Loading staff data...</p>
         ) : (
-          <div style={tableWrapperStyle}>
-            <table style={tableStyle}>
-              <thead>
+          <div style={styles.tableWrapper}>
+            <table style={styles.table}>
+              <thead style={styles.tableHeader}>
                 <tr>
-                  <th style={thStyle}>ID</th>
-                  <th style={thStyle}>Name</th>
-                  <th style={thStyle}>NIC</th>
-                  <th style={thStyle}>Email</th>
-                  <th style={thStyle}>Address</th>
-                  <th style={thStyle}>Job Position</th>
-                  <th style={thStyle}>Salary</th>
-                  <th style={thStyle}>Option</th>
+                  <th style={styles.tableHeaderCell}>ID</th>
+                  <th style={styles.tableHeaderCell}>Name</th>
+                  <th style={styles.tableHeaderCell}>NIC</th>
+                  <th style={styles.tableHeaderCell}>Email</th>
+                  <th style={styles.tableHeaderCell}>Address</th>
+                  <th style={styles.tableHeaderCell}>Job Position</th>
+                  <th style={styles.tableHeaderCell}>Salary</th>
+                  <th style={styles.tableHeaderCell}>Options</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredStaff.length > 0 ? (
                   filteredStaff.map((staff) => (
-                    <tr key={staff.id}>
-                      <td style={tdStyle}>{staff._id}</td>
-                      <td style={tdStyle}>{staff.username}</td>
-                      <td style={tdStyle}>{staff.nic}</td>
-                      <td style={tdStyle}>{staff.email}</td>
-                      <td style={tdStyle}>{staff.address}</td>
-                      <td style={tdStyle}>{staff.role}</td>
-                      <td style={tdStyle}>{staff.salary}</td>
-                      <td style={tdStyle}>
+                    <tr key={staff._id} style={styles.tableRow}>
+                      <td style={styles.tableCell}>{"SID" + staff._id.slice(-4)}</td>
+                      <td style={styles.tableCell}>{staff.username}</td>
+                      <td style={styles.tableCell}>{staff.nic}</td>
+                      <td style={styles.tableCell}>{staff.email}</td>
+                      <td style={styles.tableCell}>{staff.address}</td>
+                      <td style={styles.tableCell}>{staff.role}</td>
+                      <td style={styles.tableCell}>{staff.salary}</td>
+                      <td style={styles.tableCell}>
                         <button
-                          style={updateButtonStyle}
+                          style={styles.updateButton}
                           onClick={() => navigate(`/StaffManagmentUpdate/${staff._id}`)}
                         >
                           Update
                         </button>
                         <button
-                          style={deleteButtonStyle}
+                          style={styles.deleteButton}
                           onClick={() => handleDelete(staff._id)}
                         >
                           Delete
@@ -204,7 +135,7 @@ const StaffTable = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="8" style={tdStyle}>
+                    <td colSpan="8" style={styles.tableCell}>
                       No staff data available
                     </td>
                   </tr>
@@ -217,6 +148,87 @@ const StaffTable = () => {
       <Footer />
     </div>
   );
+};
+
+const styles = {
+  pageContainer: {
+    backgroundColor: "#161E38", // Dark background similar to LeaveDetails
+    color: "#fff", // White text for visibility
+    minHeight: "100vh",
+    padding: "20px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  heading: {
+    fontSize: "30px", // Large font for the heading
+    fontWeight: "bold",
+    color: "white", // Bright color for heading
+    textAlign: "center",
+  },
+  searchBar: {
+    marginBottom: "10px", // Consistent spacing
+    padding: "10px", // Padding for input
+    width: "40%", // Set width to 40% to be consistent with LeaveDetails
+    borderRadius: "5px", // Rounded corners
+    border: "1px solid #2C3354", // Border with dark blue shade
+    backgroundColor: "#243055", // Dark input background
+    color: "#fff", // White text inside input
+  },
+  searchBar2: {
+    marginBottom: "40px", // Consistent spacing
+    padding: "10px", // Padding for input
+    width: "40%", // Set width to 40% to be consistent with LeaveDetails
+    borderRadius: "5px", // Rounded corners
+    border: "1px solid #2C3354", // Border with dark blue shade
+    backgroundColor: "#243055", // Dark input background
+    color: "#fff", // White text inside input
+  },
+  tableWrapper: {
+    maxHeight: "80vh", // Limit table height for scrolling if needed
+    overflowY: "auto", // Vertical scroll if content exceeds
+    width: "100%",
+    display: "flex", // Flexbox for centering
+    justifyContent: "center", // Horizontally center the table
+  },
+  table: {
+    width: "80%", // Set table width to 80% of the container
+    maxWidth: "1200px", // Maximum width for better readability
+    borderCollapse: "collapse", // Remove spacing between cells
+  },
+  tableHeader: {
+    backgroundColor: "#2E3A59", // Darker background for the header
+  },
+  tableHeaderCell: {
+    padding: "12px", // Padding inside each header cell
+    borderBottom: "1px solid #444", // Gray border below header cells
+    textAlign: "left", // Align text to the left
+  },
+  tableRow: {
+    borderBottom: "1px solid #444", // Gray border between rows
+  },
+  tableCell: {
+    padding: "12px", // Padding inside regular cells
+    textAlign: "left", // Left-aligned text
+  },
+  updateButton: {
+    padding: "6px 12px", // Padding for the update button
+    backgroundColor: "#f0ad4e", // Amber color for update button
+    color: "#fff", // White text for contrast
+    border: "none", // Remove default button border
+    borderRadius: "4px", // Rounded corners for button
+    cursor: "pointer", // Pointer cursor on hover
+    marginRight: "5px", // Small space between buttons
+  },
+  deleteButton: {
+    padding: "6px 12px", // Padding for the delete button
+    backgroundColor: "#FF6347", // Red color for delete
+    color: "#fff", // White text for contrast
+    border: "none", // Remove default border
+    borderRadius: "4px", // Rounded corners
+    cursor: "pointer", // Pointer cursor on hover
+  },
 };
 
 export default StaffTable;
