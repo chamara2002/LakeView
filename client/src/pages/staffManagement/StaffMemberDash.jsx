@@ -11,18 +11,20 @@ const StaffmemberDash = () => {
   const [salaryData, setSalaryData] = useState({}); // Initialize with an empty object
   const [attendanceMarked, setAttendanceMarked] = useState(false); // Track attendance status
 
+  // Replace with your actual laptop's user agent string
+  const allowedUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0"; 
+
   const handleMarkAttendance = async () => {
     if (!user.user || !user.user._id) {
       console.error("User not authenticated");
       return;
     }
 
-    /*//Check network type
-    const networkType = navigator.connection?.effectiveType;
-    if (networkType !== "4g") {
-      alert("Attendance can only be marked within the company's network.");
+    // Check if the current user agent matches the allowed user agent
+    if (navigator.userAgent !== allowedUserAgent) {
+      alert("Attendance can only be marked from your authorized laptop.");
       return;
-    }*/
+    }
 
     if (attendanceMarked) {
       alert("Attendance already marked. Please end your current attendance before marking again.");
@@ -54,13 +56,6 @@ const StaffmemberDash = () => {
       console.error("User not authenticated or no attendance record found");
       return;
     }
-
-    /*//Check network type
-    const networkType = navigator.connection?.effectiveType;
-    if (networkType !== "4g") {
-      alert("Attendance can only be marked within the company's network.");
-      return;
-    }*/
 
     try {
       const endTime = new Date().toISOString();
@@ -124,27 +119,24 @@ const StaffmemberDash = () => {
         groupedData[staffMember._id].otHours += attendance.ot || 0;
       });
 
-      console.log(salaryData)
-
       // Calculate OT and final salaries for each employee for the current month
-Object.keys(groupedData).forEach((employeeId) => {
-  const employeeData = groupedData[employeeId];
-  
-  // Adjust OT hours if more than 8
-  const otHours = employeeData.otHours > 8 
-    ? employeeData.otHours - 8 
-    : employeeData.otHours;
-  
-  // Calculate OT salary (assuming OT rate is twice the normal rate)
-  employeeData.otSalary = otHours * ((employeeData.normalSalary / 160) * 1.5);
-  
-  // Calculate final salary
-  employeeData.finalSalary = employeeData.normalSalary + employeeData.otSalary;
-  
-  // Store the adjusted OT hours
-  employeeData.OT = otHours;
-});
+      Object.keys(groupedData).forEach((employeeId) => {
+        const employeeData = groupedData[employeeId];
 
+        // Adjust OT hours if more than 8
+        const otHours = employeeData.otHours > 8 
+          ? employeeData.otHours - 8 
+          : employeeData.otHours;
+
+        // Calculate OT salary (assuming OT rate is 1.5 times the normal rate)
+        employeeData.otSalary = otHours * ((employeeData.normalSalary / 160) * 1.5);
+
+        // Calculate final salary
+        employeeData.finalSalary = employeeData.normalSalary + employeeData.otSalary;
+
+        // Store the adjusted OT hours
+        employeeData.OT = otHours;
+      });
 
       return groupedData;
     } catch (error) {
@@ -196,9 +188,9 @@ Object.keys(groupedData).forEach((employeeId) => {
           <h1 style={{ color: "white", marginBottom: "30px" }}>
             STAFF MEMBER DASHBOARD
           </h1>
-          <br></br>
-          <br></br>
-          <br></br>
+          <br />
+          <br />
+          <br />
 
           {/* Button Groups */}
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -286,15 +278,17 @@ Object.keys(groupedData).forEach((employeeId) => {
             </div>
           </div>
         </div>
-        <br></br>
-        <div style={{
-          border: '1px solid #ccc',
-          borderRadius: '5px',
-          padding: '20px',
-          maxWidth: '400px',
-          margin: '0 auto',
-          backgroundColor: '#f9f9f9'
-        }}>
+        <br />
+        <div
+          style={{
+            border: '1px solid #ccc',
+            borderRadius: '5px',
+            padding: '20px',
+            maxWidth: '400px',
+            margin: '0 auto',
+            backgroundColor: '#f9f9f9',
+          }}
+        >
           <p style={{
             fontSize: '16px',
             fontWeight: 'bold',
@@ -316,7 +310,7 @@ Object.keys(groupedData).forEach((employeeId) => {
             color: '#666',
             margin: '10px 0'
           }}>
-            Ot Hours : {salaryData ? salaryData.OT : 'N/A'}
+            OT Hours : {salaryData ? salaryData.OT : 'N/A'}
           </p>
           <p style={{
             fontSize: '16px',
