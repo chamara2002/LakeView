@@ -4,25 +4,25 @@ import Footer from "../../components/core/Footer";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../foodManagement/context/authContext";
 import axios from "axios";
-
+ 
 const LostItemsForm = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-
+ 
   useEffect(() => {
     if (!user || !user.user) {
       navigate('/login');
     }
   }, [user, navigate]);
-
+ 
   if (!user || !user.user) {
     return null; 
   }
-
+ 
   const userId = user.user ? user.user._id : "";
   const userName = user.user ? user.user.name ? user.user.name :user.user.username  : "";
   const userEmail = user.user ? user.user.email : "";
-
+ 
   const [formData, setFormData] = useState({
     userName: userName,
     userId: userId,
@@ -30,14 +30,14 @@ const LostItemsForm = () => {
     contactNumber: "",
     foundItem: "",
     lostPlace: "",
-    foundItemsCategory: "Sport",
+    foundItemsCategory: "",
   });
-
+ 
   // Validation states
   const [contactNumberError, setContactNumberError] = useState("");
   const [foundItemError, setFoundItemError] = useState("");
   const [lostPlaceError, setLostPlaceError] = useState("");
-
+ 
   // Real-time validation useEffect hooks
   useEffect(() => {
     const contactNumberPattern = /^[0-9]{10}$/;
@@ -47,7 +47,7 @@ const LostItemsForm = () => {
       setContactNumberError("");
     }
   }, [formData.contactNumber]);
-
+ 
   useEffect(() => {
     const itemPlacePattern = /^[A-Za-z\s]+$/;
     if (formData.foundItem && !itemPlacePattern.test(formData.foundItem)) {
@@ -56,7 +56,7 @@ const LostItemsForm = () => {
       setFoundItemError("");
     }
   }, [formData.foundItem]);
-
+ 
   useEffect(() => {
     const itemPlacePattern = /^[A-Za-z\s]+$/;
     if (formData.lostPlace && !itemPlacePattern.test(formData.lostPlace)) {
@@ -65,7 +65,7 @@ const LostItemsForm = () => {
       setLostPlaceError("");
     }
   }, [formData.lostPlace]);
-
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -73,16 +73,16 @@ const LostItemsForm = () => {
       [name]: value,
     }));
   };
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+ 
     // Check for validation errors before submitting
     if (contactNumberError || foundItemError || lostPlaceError) {
       alert("Please fix validation errors before submitting.");
       return;
     }
-
+ 
     try {
       const response = await axios.post(
         "http://localhost:3000/api/lostNFound/add-lost-and-found",
@@ -93,7 +93,7 @@ const LostItemsForm = () => {
           },
         }
       );
-
+ 
       if (response.status === 200 || response.status === 201) {
         navigate("/lostitems");
       } else {
@@ -103,44 +103,45 @@ const LostItemsForm = () => {
       console.error("Error:", error.response ? error.response.data : error.message);
     }
   };
-
+ 
   return (
-    <div>
-      <NavBar />
-      <div style={styles.container}>
-        <div style={styles.dashboard}>
-          <button style={styles.dashboardButton}>Dashboard</button>
-          <h2 style={styles.title}>Lost Items Form</h2>
-        </div>
-
+<div>
+<NavBar />
+<div style={styles.container}>
+<div style={styles.dashboard}>
+<button style={styles.dashboardButton}>Dashboard</button>
+<h2 style={styles.title}>Lost Items Form</h2>
+</div>
+ 
         <form onSubmit={handleSubmit} style={styles.formContainer}>
-          <div style={styles.formRow}>
-            <input
+<div style={styles.formRow}>
+<input
               type="text"
               name="userName"
               value={userName}
               readOnly
               style={styles.input}
             />
-            <select
+<select
               name="foundItemsCategory"
               value={formData.foundItemsCategory}
               onChange={handleChange}
               style={styles.input}
-            >
-              <option value="Sport">Sport</option>
-              <option value="Accessories">Accessories</option>
-            </select>
-          </div>
-          <div style={styles.formRow}>
-            <input
+>
+<option value="" disabled>Select Category</option>
+<option value="Sport">Sport</option>
+<option value="Accessories">Accessories</option>
+</select>
+</div>
+<div style={styles.formRow}>
+<input
               type="email"
               name="email"
               value={formData.email}
               readOnly
               style={styles.input}
             />
-            <input
+<input
               type="text"
               name="foundItem"
               value={formData.foundItem}
@@ -149,9 +150,9 @@ const LostItemsForm = () => {
               style={styles.input}
             />
             {foundItemError && <p style={styles.errorText}>{foundItemError}</p>}
-          </div>
-          <div style={styles.formRow}>
-            <input
+</div>
+<div style={styles.formRow}>
+<input
               type="text"
               name="contactNumber"
               value={formData.contactNumber}
@@ -160,7 +161,7 @@ const LostItemsForm = () => {
               style={styles.input}
             />
             {contactNumberError && <p style={styles.errorText}>{contactNumberError}</p>}
-            <input
+<input
               type="text"
               name="lostPlace"
               value={formData.lostPlace}
@@ -169,21 +170,21 @@ const LostItemsForm = () => {
               style={styles.input}
             />
             {lostPlaceError && <p style={styles.errorText}>{lostPlaceError}</p>}
-          </div>
-          <div style={styles.buttonContainer}>
-            <button type="submit" style={styles.submitButton}>
+</div>
+<div style={styles.buttonContainer}>
+<button type="submit" style={styles.submitButton}>
               Submit
-            </button>
-          </div>
-        </form>
-
+</button>
+</div>
+</form>
+ 
         
-      </div>
-      <Footer />
-    </div>
+</div>
+<Footer />
+</div>
   );
 };
-
+ 
 const styles = {
   container: {
     padding: "40px",
@@ -271,5 +272,6 @@ const styles = {
     marginTop: "5px",
   },
 };
-
+ 
 export default LostItemsForm;
+

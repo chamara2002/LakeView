@@ -4,31 +4,30 @@ import NavBar from "../../components/core/NavBar";
 import Footer from "../../components/core/Footer";
 import { useAuth } from "../foodManagement/context/authContext";
 import { useNavigate } from "react-router-dom";
-
+ 
 const InquiryForm = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-
+ 
   useEffect(() => {
     if (!user || !user.user) {
       navigate('/login');
     }
   }, [user, navigate]);
-
+ 
   if (!user || !user.user) {
     return null; 
   }
-  
   const [formData, setFormData] = useState({
     userName: "",
     email: "",
     contactNumber: "",
-    inquiryCategory: "Food",
+    inquiryCategory: "",
     inquiryMessage: "",
   });
-
-  const [categories] = useState(["Food", "Games", "Movies"]); 
-
+ 
+  const [categories] = useState(["Food", "Games", "Movies"]);
+ 
   useEffect(() => {
     if (user) {
       setFormData((prevData) => ({
@@ -39,7 +38,7 @@ const InquiryForm = () => {
       }));
     }
   }, [user]);
-
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -47,7 +46,7 @@ const InquiryForm = () => {
       [name]: value,
     }));
   };
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -57,23 +56,23 @@ const InquiryForm = () => {
       console.error("Error submitting the form:", error);
     }
   };
-
+ 
   console.log(user.user)
-
+ 
   return (
-    <div>
-      <NavBar />
-      <div style={styles.background}>
-        <div style={styles.container}>
-          <div style={styles.sidebar}>
-            <h2 style={styles.sidebarHeading}>Dashboard</h2>
-            <button style={styles.sidebarButton}>Inquiry Form</button>
-          </div>
-          <div style={styles.formContainer}>
-            <h2 style={styles.formHeading}>Inquiry Form</h2>
-            <form style={styles.form} onSubmit={handleSubmit}>
-              <div style={styles.formGroup}>
-                <input
+<div>
+<NavBar />
+<div style={styles.background}>
+<div style={styles.container}>
+<div style={styles.sidebar}>
+<h2 style={styles.sidebarHeading}>Dashboard</h2>
+<button style={styles.sidebarButton}>Inquiry Form</button>
+</div>
+<div style={styles.formContainer}>
+<h2 style={styles.formHeading}>Inquiry Form</h2>
+<form style={styles.form} onSubmit={handleSubmit}>
+<div style={styles.formGroup}>
+<input
                   type="text"
                   name="userName"
                   placeholder="Name"
@@ -81,21 +80,22 @@ const InquiryForm = () => {
                   readOnly
                   style={styles.inputField}
                 />
-                <select
+<select
                   name="inquiryCategory"
                   value={formData.inquiryCategory}
                   onChange={handleChange}
                   style={styles.inputField}
-                >
+>
+<option value="" disabled>select category</option>
                   {categories.map((category) => (
-                    <option key={category} value={category}>
+<option key={category} value={category}>
                       {category}
-                    </option>
+</option>
                   ))}
-                </select>
-              </div>
-              <div style={styles.formGroup}>
-                <input
+</select>
+</div>
+<div style={styles.formGroup}>
+<input
                   type="email"
                   name="email"
                   placeholder="Email"
@@ -103,16 +103,16 @@ const InquiryForm = () => {
                   readOnly
                   style={styles.inputField}
                 />
-                <textarea
+<textarea
                   name="inquiryMessage"
                   placeholder="Inquiry"
                   value={formData.inquiryMessage}
                   onChange={handleChange}
                   style={{ ...styles.inputField, height: "100px" }}
-                ></textarea>
-              </div>
-              <div style={styles.formGroup}>
-                <input
+></textarea>
+</div>
+<div style={styles.formGroup}>
+<input
                   type="text"
                   name="contactNumber"
                   placeholder="Contact Number"
@@ -120,27 +120,21 @@ const InquiryForm = () => {
                   onChange={handleChange}
                   style={styles.inputField}
                 />
-              </div>
-              <div style={styles.buttonGroup}>
-                <button type="submit" style={styles.submitButton}>
+</div>
+<div style={styles.buttonGroup}>
+<button type="submit" style={styles.submitButton}>
                   Submit
-                </button>
-                <button type="button" style={styles.editButton}>
-                  Edit
-                </button>
-                <button type="button" style={styles.deleteButton}>
-                  Delete
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <Footer />
-    </div>
+</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<Footer />
+</div>
   );
 };
-
+ 
 const styles = {
   background: {
     height: "80vh",
@@ -226,5 +220,6 @@ const styles = {
     cursor: "pointer",
   },
 };
-
+ 
 export default InquiryForm;
+

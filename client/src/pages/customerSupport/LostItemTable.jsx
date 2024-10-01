@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import jsPDF from "jspdf";
+import "jspdf-autotable"; // Import the jsPDF autotable plugin
 import NavBar from "../../components/core/NavBar";
 import Footer from "../../components/core/Footer";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../foodManagement/context/authContext";
-
+ 
 const LostItemsTable = () => {
   const [lostItems, setLostItems] = useState([]);
   const [showOptions, setShowOptions] = useState(false); // Control visibility of the options column
@@ -12,17 +14,17 @@ const LostItemsTable = () => {
   const [categorySearch, setCategorySearch] = useState(""); // Search term for lost items category
   const { user } = useAuth();
   const navigate = useNavigate();
-
+ 
   useEffect(() => {
     if (!user || !user.user) {
       navigate('/login');
     }
   }, [user, navigate]);
-
+ 
   if (!user || !user.user) {
     return null; 
   }
-
+ 
   useEffect(() => {
     if (user.user.role) {
       setShowOptions(true);
@@ -30,7 +32,7 @@ const LostItemsTable = () => {
       setShowOptions(false);
     }
   }, [user]);
-
+ 
   useEffect(() => {
     const fetchLostItems = async () => {
       try {
@@ -43,10 +45,10 @@ const LostItemsTable = () => {
         alert("Failed to fetch lost items. Please try again later.");
       }
     };
-
+ 
     fetchLostItems();
   }, []);
-
+ 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this item?"
@@ -64,111 +66,137 @@ const LostItemsTable = () => {
       }
     }
   };
-
+ 
   const filteredLostItems = lostItems.filter(item =>
     item.email.toLowerCase().includes(emailSearch.toLowerCase()) &&
     item.foundItemsCategory.toLowerCase().includes(categorySearch.toLowerCase())
   );
-
+ 
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    doc.text("Lost Items Report", 14, 20);
+ 
+    // Create the table with jsPDF-autotable
+    doc.autoTable({
+      head: [['Name', 'Email', 'Contact Number', 'Lost Items Category', 'Lost Item', 'Lost Item Place', 'Found']],
+      body: filteredLostItems.map(item => [
+        item.userName,
+        item.email,
+        item.contactNumber,
+        item.foundItemsCategory,
+        item.foundItem,
+        item.lostPlace,
+        item.found ? 'Yes' : 'No',
+      ]),
+      startY: 30,
+    });
+ 
+    // Total count of lost items
+    doc.text(`Total Lost Items: ${filteredLostItems.length}`, 14, doc.autoTable.previous.finalY + 10);
+ 
+    // Save the PDF
+    doc.save("lost-items-report.pdf");
+  };
+ 
   return (
-    <div>
-      <NavBar />
-      <div style={styles.container}>
-        <div style={styles.dashboard}>
-          <h3 style={styles.dashboardTitle}>My Dashboard</h3>
-        </div>
-
+<div>
+<NavBar />
+<div style={styles.container}>
+<div style={styles.dashboard}>
+<h3 style={styles.dashboardTitle}>My Dashboard</h3>
+</div>
+ 
         <div style={styles.tableContainer}>
-          <h2 style={styles.title}>Lost Items Form</h2>
-          <div style={styles.searchContainer}>
-            <input
+<h2 style={styles.title}>Lost Items Form</h2>
+<div style={styles.searchContainer}>
+<input
               type="text"
               placeholder="Search by email..."
               value={emailSearch}
               onChange={(e) => setEmailSearch(e.target.value)}
               style={styles.searchBar}
             />
-            <input
+<input
               type="text"
               placeholder="Search by category..."
               value={categorySearch}
               onChange={(e) => setCategorySearch(e.target.value)}
               style={styles.searchBar}
             />
-          </div>
-          <div style={styles.tableWrapper}>
-            <div style={styles.tableHeaderWrapper}>
-              <table style={styles.table}>
-                <thead>
-                  <tr>
-                    <th style={styles.th}>Name</th>
-                    <th style={styles.th}>Email</th>
-                    <th style={styles.th}>Contact Number</th>
-                    <th style={styles.th}>Lost Items Category</th>
-                    <th style={styles.th}>Lost Item</th>
-                    <th style={styles.th}>Lost Item Place</th>
+</div>
+<div style={styles.tableWrapper}>
+<div style={styles.tableHeaderWrapper}>
+<table style={styles.table}>
+<thead>
+<tr>
+<th style={styles.th}>Name</th>
+<th style={styles.th}>Email</th>
+<th style={styles.th}>Contact Number</th>
+<th style={styles.th}>Lost Items Category</th>
+<th style={styles.th}>Lost Item</th>
+<th style={styles.th}>Lost Item Place</th>
                     {showOptions && <th style={styles.th}>Options</th>}
-                    <th style={styles.th}>Found</th>
-                  </tr>
-                </thead>
-              </table>
-            </div>
-            <div style={styles.tableBodyWrapper}>
-              <table style={styles.table}>
-                <tbody>
+<th style={styles.th}>Found</th>
+</tr>
+</thead>
+</table>
+</div>
+<div style={styles.tableBodyWrapper}>
+<table style={styles.table}>
+<tbody>
                   {filteredLostItems.map((item, index) => (
-                    <tr key={index}>
-                      <td style={styles.td}>{item.userName}</td>
-                      <td style={styles.td}>{item.email}</td>
-                      <td style={styles.td}>{item.contactNumber}</td>
-                      <td style={styles.td}>{item.foundItemsCategory}</td>
-                      <td style={styles.td}>{item.foundItem}</td>
-                      <td style={styles.td}>{item.lostPlace}</td>
+<tr key={index}>
+<td style={styles.td}>{item.userName}</td>
+<td style={styles.td}>{item.email}</td>
+<td style={styles.td}>{item.contactNumber}</td>
+<td style={styles.td}>{item.foundItemsCategory}</td>
+<td style={styles.td}>{item.foundItem}</td>
+<td style={styles.td}>{item.lostPlace}</td>
                       {showOptions && (
-                        <td style={styles.td}>
-                          <div style={styles.optionsContainer}>
-                            <button
+<td style={styles.td}>
+<div style={styles.optionsContainer}>
+<button
                               style={styles.optionButton}
                               onClick={() =>
                                 navigate(`/lostNfound/edit/${item._id}`)
                               }
-                            >
+>
                               Edit
-                            </button>
-                            <button
+</button>
+<button
                               style={styles.optionButton}
                               onClick={() => handleDelete(item._id)}
-                            >
+>
                               Delete
-                            </button>
-                          </div>
-                        </td>
+</button>
+</div>
+</td>
                       )}
-                      <td style={styles.td}>
-                        <button
+<td style={styles.td}>
+<button
                           style={styles.foundButton}
                           onClick={() => navigate(`/foundItm/${item._id}`)}
-                        >
+>
                           Found
-                        </button>
-                      </td>
-                    </tr>
+</button>
+</td>
+</tr>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
+</tbody>
+</table>
+</div>
+</div>
+</div>
+ 
         <div style={styles.buttonGroup}>
-          <button style={styles.generateButton}>Generate Reports</button>
-        </div>
-      </div>
-      <Footer />
-    </div>
+<button style={styles.generateButton} onClick={generatePDF}>Generate Reports</button>
+</div>
+</div>
+<Footer />
+</div>
   );
 };
-
+ 
 const styles = {
   container: {
     fontFamily: "Arial, sans-serif",
@@ -285,5 +313,8 @@ const styles = {
     cursor: "pointer",
   },
 };
-
+ 
 export default LostItemsTable;
+ 
+ 
+ 
