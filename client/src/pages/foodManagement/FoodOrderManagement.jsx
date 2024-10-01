@@ -8,20 +8,69 @@ import ReportButton from "../../components/reUseable/ReportButton";
 import DropdownNavBar from "../../components/core/DropDownbar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Pie } from "react-chartjs-2"; // Import the Pie chart component
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'; // Import Chart.js components
+
+// Register Chart.js components
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const FoodOrderManagement = () => {
   const [orders, setOrders] = useState([]);
   const [searchIdQuery, setSearchIdQuery] = useState("");
   const [completionStatus, setCompletionStatus] = useState("");
+  const [foodSalesData, setFoodSalesData] = useState({}); // State for food sales data
+
 
   useEffect(() => {
     axios
       .get("http://localhost:3000/api/order/")
       .then((response) => {
         setOrders(response.data);
+        calculateFoodSales(response.data);
       })
       .catch((error) => console.error("Error fetching orders:", error));
   }, []);
+
+  const calculateFoodSales = (orders) => {
+    const foodCount = {};
+
+    orders.forEach((order) => {
+      order.meals.forEach((meal) => {
+        const foodName = meal.food?.name || "Unknown Food";
+        const quantity = meal.quantity;
+
+        // Increment the quantity for each food item
+        foodCount[foodName] = (foodCount[foodName] || 0) + quantity;
+      });
+    });
+
+    // Sort food items by count and get the top 5 most sold
+    const sortedFoods = Object.entries(foodCount)
+      .sort((a, b) => b[1] - a[1]) // Sort by quantity sold in descending order
+      .slice(0, 5); // Get top 5 foods
+
+    const labels = sortedFoods.map((food) => food[0]);
+    const data = sortedFoods.map((food) => food[1]);
+
+    // Set the pie chart data
+    setFoodSalesData({
+      labels: labels,
+      datasets: [
+        {
+          label: 'Most Sold Foods',
+          data: data,
+          backgroundColor: [
+            '#FF6384',
+            '#36A2EB',
+            '#FFCE56',
+            '#4BC0C0',
+            '#9966FF',
+          ],
+        },
+      ],
+    });
+  };
+
 
   const handleComplete = (orderId) => {
     axios
@@ -224,6 +273,30 @@ const FoodOrderManagement = () => {
         </button>
         <br /><br /><br />
       </div>
+      <div style={{ backgroundColor: "#161E38", padding: "20px", borderRadius: "5px" }}>
+  <h3 style={{ color: "white", textAlign: "center", fontSize: "24px" }}>Most Sold Foods</h3>
+  {Object.keys(foodSalesData).length > 0 ? (
+    <Pie 
+      data={foodSalesData} 
+      options={{ 
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: 'white', // Legend text color
+            }
+          },
+          tooltip: {
+            backgroundColor: '#161E38', // Tooltip background color
+          }
+        }
+      }} 
+      style={{ maxHeight: "400px", width: "100%" }} 
+    />
+  ) : (
+    <p style={{ color: "white", textAlign: "center" }}>No sales data available</p>
+  )}
+</div>
 
       <ToastContainer />
       <Footer />
