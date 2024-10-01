@@ -16,6 +16,7 @@ const AddEvent = () => {
     location: '', 
     price: '',
     status: 'active',
+    poster: '', // Changed from file to URL
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -42,6 +43,7 @@ const AddEvent = () => {
     if (!event.capacity || isNaN(event.capacity)) validationErrors.capacity = 'Capacity is required and must be a number';
     if (!event.location) validationErrors.location = 'Location is required';
     if (!event.price || isNaN(event.price)) validationErrors.price = 'Price is required and must be a number';
+    if (!event.poster) validationErrors.poster = 'Photo URL is required';
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -102,6 +104,11 @@ const AddEvent = () => {
           Price:
           <input type="number" name="price" value={event.price} onChange={handleChange} style={inputStyle} />
           {errors.price && <span style={errorStyle}>{errors.price}</span>}
+        </label>
+        <label style={labelStyle}>
+          Photo URL:
+          <input type="text" name="poster" value={event.poster} onChange={handleChange} style={inputStyle} />
+          {errors.poster && <span style={errorStyle}>{errors.poster}</span>}
         </label>
         <label style={labelStyle}>
           Status:
