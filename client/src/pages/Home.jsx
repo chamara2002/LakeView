@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Home = () => {
-  const images = ["/image1.jpg", "/image2.jpg", "/image3.jpg", "/game1.png", "/game2.png", "/game3.png"];
+  const images = ["/im8.jpeg" ,"/game1.png", "/game2.png", "/im1.jpg","/im3.jpg","/im4.jpg","/im5.jpg","/im6.jpg","/im7.jpg"];
 
   // State for games and movies
   const [games, setGames] = useState([]);

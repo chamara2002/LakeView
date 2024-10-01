@@ -48,7 +48,7 @@ const ItemCard = () => {
             width={300} 
             height={400}  
             style={{
-              borderRadius: "10px",
+              borderRadius: "20px",
               padding: 10,
               filter: hoveredIndex === index ? 'blur(5px)' : 'none',
               transition: "filter 0.3s ease",
