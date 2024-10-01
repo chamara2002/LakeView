@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Footer from "../../components/core/Footer";
 import NavBar from "../../components/core/NavBar";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 
 const BookingManagement = () => {
   const [payments, setPayments] = useState([]);
@@ -53,64 +51,6 @@ const BookingManagement = () => {
   // Generate Booking ID based on payment ID
   const generateBookingId = (paymentId) => {
     return `EB${paymentId.slice(-5)}`; // Custom Booking ID with 'EB' prefix followed by last 5 characters of payment ID
-  };
-
-  // Handle generating PDF report with custom colors
-  const handleDownloadPDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(18);
-    doc.text("Event Booking Report", 14, 20); // Report title
-
-    const tableColumn = [
-      "Booking ID",
-      "Event Name",
-      "Customer Email",
-      "Price",
-      "Payment Status",
-    ];
-    const tableRows = filteredPayments.map((payment) => [
-      generateBookingId(payment._id), // Generate Booking ID here
-      payment.event?.name || "Unknown Event",
-      payment.participant?.email || "Unknown Customer",
-      `Rs.${payment.amount}`,
-      payment.status,
-    ]);
-
-    autoTable(doc, {
-      head: [tableColumn],
-      body: tableRows,
-      startY: 30,
-      styles: {
-        fillColor: [30, 144, 255], // Light blue cell background
-        textColor: [0, 0, 0], // Black text in cells
-        halign: "center", // Center-align text in cells
-      },
-      headStyles: {
-        fillColor: [0, 51, 102], // Dark blue for header background
-        textColor: [255, 255, 255], // White text in headers
-      },
-      alternateRowStyles: {
-        fillColor: [240, 240, 240], // Light gray background for alternate rows
-      },
-    });
-
-    // Add total payment count and total amount at the end
-    const totalAmount = filteredPayments.reduce(
-      (acc, payment) => acc + payment.amount,
-      0
-    );
-    doc.text(
-      `Total Payments: ${filteredPayments.length}`,
-      14,
-      doc.lastAutoTable.finalY + 20
-    );
-    doc.text(
-      `Total Amount: Rs.${totalAmount.toFixed(2)}`,
-      14,
-      doc.lastAutoTable.finalY + 30
-    );
-
-    doc.save("event_booking_report.pdf"); // Save PDF with the filename
   };
 
   return (
@@ -228,13 +168,6 @@ const BookingManagement = () => {
             )}
           </tbody>
         </table>
-        <br />
-        {/* Generate report button */}
-        <center>
-          <button onClick={handleDownloadPDF} style={styles.button}>
-            Generate Report
-          </button>
-        </center>
       </div>
       <Footer />
     </div>
@@ -252,20 +185,6 @@ const thStyle = {
 const tdStyle = {
   borderBottom: "1px solid #ddd",
   padding: "12px",
-};
-
-// Button styles
-const styles = {
-  button: {
-    padding: "10px 20px",
-    backgroundColor: "#90EE90", // Light green background
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    fontSize: "16px",
-    cursor: "pointer",
-    transition: "background-color 0.3s ease",
-  },
 };
 
 export default BookingManagement;

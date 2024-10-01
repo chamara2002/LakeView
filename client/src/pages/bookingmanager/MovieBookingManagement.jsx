@@ -3,6 +3,10 @@ import axios from "axios";
 import Footer from "../../components/core/Footer";
 import NavBar from "../../components/core/NavBar";
 import ReportButton from "../../components/reUseable/ReportButton";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const MovieBookingManagement = () => {
   const [bookings, setBookings] = useState([]);
@@ -41,7 +45,6 @@ const MovieBookingManagement = () => {
       .catch((error) => console.error("Error deleting booking:", error));
   };
 
-  // Search logic that filters based on movie name
   const filteredBookings = bookings.filter((booking) =>
     booking.movie?.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -55,10 +58,65 @@ const MovieBookingManagement = () => {
     0
   );
 
-  // Helper function to generate custom booking ID in the format MB1234567
   const generateBookingId = (booking) => {
-    const shortId = booking._id.slice(-5); // Take the last 5 characters of the existing ID
-    return `MB${shortId}`; // Combine prefix with the short ID
+    const shortId = booking._id.slice(-5);
+    return `MB${shortId}`;
+  };
+
+  const confirmedCount = filteredBookings.filter(booking => booking.confirmed).length;
+  const notConfirmedCount = filteredBookings.length - confirmedCount;
+
+  const pieData = {
+    labels: ["Confirmed", "Not Confirmed"],
+    datasets: [
+      {
+        label: "Booking Status",
+        data: [confirmedCount, notConfirmedCount],
+        backgroundColor: ["#28a745", "#dc3545"],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const pieOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+    },
+  };
+
+  // Prepare data for the second pie chart (Ticket numbers by movie)
+  const movieTicketCounts = {};
+
+  filteredBookings.forEach((booking) => {
+    const movieName = booking.movie?.name || "Unknown Movie";
+    const ticketCount = booking.seatNumbers ? booking.seatNumbers.length : 0;
+    movieTicketCounts[movieName] = (movieTicketCounts[movieName] || 0) + ticketCount;
+  });
+
+  const moviePieData = {
+    labels: Object.keys(movieTicketCounts),
+    datasets: [
+      {
+        label: "Tickets Sold by Movie",
+        data: Object.values(movieTicketCounts),
+        backgroundColor: [
+          "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40"
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const moviePieOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+    },
   };
 
   return (
@@ -91,7 +149,7 @@ const MovieBookingManagement = () => {
             <tbody>
               {filteredBookings.map((booking) => (
                 <tr key={booking._id} style={trStyle}>
-                  <td style={tdStyle}>{generateBookingId(booking)}</td> {/* Use the custom booking ID format */}
+                  <td style={tdStyle}>{generateBookingId(booking)}</td>
                   <td style={tdStyle}>{booking.movie?.name || "Unknown Movie"}</td>
                   <td style={tdStyle}>{booking.customer?.email || "Unknown Customer"}</td>
                   <td style={tdStyle}>{booking.seatNumbers ? booking.seatNumbers.length : 0}</td>
@@ -133,6 +191,21 @@ const MovieBookingManagement = () => {
             fileName="movie_bookings_report.pdf"
           />
         </center>
+
+        {/* Container for Pie Charts */}
+        <div style={{ display: "flex", justifyContent: "space-around", margin: "20px auto", width: "80%" }}>
+          {/* First Pie Chart for Booking Status */}
+          <div style={{ width: "35%" }}>
+            <h3 style={{ color: "#fff", textAlign: "center" }}>Booking Status Breakdown</h3>
+            <Pie data={pieData} options={pieOptions} />
+          </div>
+
+          {/* Second Pie Chart for Tickets Sold by Movie */}
+          <div style={{ width: "35%" }}>
+            <h3 style={{ color: "#fff", textAlign: "center" }}>Tickets Sold by Movie</h3>
+            <Pie data={moviePieData} options={moviePieOptions} />
+          </div>
+        </div>
       </div>
       <Footer />
     </div>
@@ -147,16 +220,16 @@ const searchBarContainerStyle = {
 };
 
 const searchBarStyle = {
-  width: "60%", // Responsive width for large screens
-  maxWidth: "800px", // Maximum width
+  width: "60%",
+  maxWidth: "800px",
   padding: "15px 20px",
   borderRadius: "30px",
   border: "1px solid #ccc",
-  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow effect
-  transition: "all 0.3s ease", // Smooth transitions
+  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+  transition: "all 0.3s ease",
   outline: "none",
   fontSize: "16px",
-  backgroundColor: "#f9f9f9", // Light background for focus
+  backgroundColor: "#f9f9f9",
   color: "#333",
 };
 

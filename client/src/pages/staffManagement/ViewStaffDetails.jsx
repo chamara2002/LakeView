@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const StaffTable = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [idSearchQuery, setIdSearchQuery] = useState(""); // New state for ID search
+  const [idSearchQuery, setIdSearchQuery] = useState(""); 
   const [staffData, setStaffData] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -152,8 +152,8 @@ const StaffTable = () => {
 
 const styles = {
   pageContainer: {
-    backgroundColor: "#161E38", // Dark background similar to LeaveDetails
-    color: "#fff", // White text for visibility
+    backgroundColor: "#161E38", 
+    color: "#fff", 
     minHeight: "100vh",
     padding: "20px",
     display: "flex",
@@ -162,72 +162,72 @@ const styles = {
     alignItems: "center",
   },
   heading: {
-    fontSize: "30px", // Large font for the heading
+    fontSize: "30px", 
     fontWeight: "bold",
-    color: "white", // Bright color for heading
+    color: "white", 
     textAlign: "center",
   },
   searchBar: {
-    marginBottom: "10px", // Consistent spacing
-    padding: "10px", // Padding for input
-    width: "40%", // Set width to 40% to be consistent with LeaveDetails
-    borderRadius: "5px", // Rounded corners
-    border: "1px solid #2C3354", // Border with dark blue shade
-    backgroundColor: "#243055", // Dark input background
-    color: "#fff", // White text inside input
+    marginBottom: "10px", 
+    padding: "10px", 
+    width: "40%", 
+    borderRadius: "5px", 
+    border: "1px solid #2C3354", 
+    backgroundColor: "#243055", 
+    color: "#fff", 
   },
   searchBar2: {
-    marginBottom: "40px", // Consistent spacing
-    padding: "10px", // Padding for input
-    width: "40%", // Set width to 40% to be consistent with LeaveDetails
-    borderRadius: "5px", // Rounded corners
-    border: "1px solid #2C3354", // Border with dark blue shade
-    backgroundColor: "#243055", // Dark input background
-    color: "#fff", // White text inside input
+    marginBottom: "40px", 
+    padding: "10px",
+    width: "40%", 
+    borderRadius: "5px", 
+    border: "1px solid #2C3354", 
+    backgroundColor: "#243055", 
+    color: "#fff", 
   },
   tableWrapper: {
-    maxHeight: "80vh", // Limit table height for scrolling if needed
-    overflowY: "auto", // Vertical scroll if content exceeds
+    maxHeight: "80vh", 
+    overflowY: "auto", 
     width: "100%",
-    display: "flex", // Flexbox for centering
-    justifyContent: "center", // Horizontally center the table
+    display: "flex", 
+    justifyContent: "center",
   },
   table: {
-    width: "80%", // Set table width to 80% of the container
-    maxWidth: "1200px", // Maximum width for better readability
-    borderCollapse: "collapse", // Remove spacing between cells
+    width: "80%", 
+    maxWidth: "1200px", 
+    borderCollapse: "collapse", 
   },
   tableHeader: {
-    backgroundColor: "#2E3A59", // Darker background for the header
+    backgroundColor: "#2E3A59", 
   },
   tableHeaderCell: {
-    padding: "12px", // Padding inside each header cell
-    borderBottom: "1px solid #444", // Gray border below header cells
-    textAlign: "left", // Align text to the left
+    padding: "12px", 
+    borderBottom: "1px solid #444", 
+    textAlign: "left", 
   },
   tableRow: {
-    borderBottom: "1px solid #444", // Gray border between rows
+    borderBottom: "1px solid #444", 
   },
   tableCell: {
-    padding: "12px", // Padding inside regular cells
-    textAlign: "left", // Left-aligned text
+    padding: "12px", 
+    textAlign: "left", 
   },
   updateButton: {
-    padding: "6px 12px", // Padding for the update button
-    backgroundColor: "#f0ad4e", // Amber color for update button
-    color: "#fff", // White text for contrast
-    border: "none", // Remove default button border
-    borderRadius: "4px", // Rounded corners for button
-    cursor: "pointer", // Pointer cursor on hover
-    marginRight: "5px", // Small space between buttons
+    padding: "6px 12px", 
+    backgroundColor: "#f0ad4e", 
+    color: "#fff", 
+    border: "none", 
+    borderRadius: "4px", 
+    cursor: "pointer", 
+    marginRight: "5px", 
   },
   deleteButton: {
-    padding: "6px 12px", // Padding for the delete button
-    backgroundColor: "#FF6347", // Red color for delete
-    color: "#fff", // White text for contrast
-    border: "none", // Remove default border
-    borderRadius: "4px", // Rounded corners
-    cursor: "pointer", // Pointer cursor on hover
+    padding: "6px 12px", 
+    backgroundColor: "#FF6347", 
+    color: "#fff", 
+    border: "none", 
+    borderRadius: "4px", 
+    cursor: "pointer", 
   },
 };
 

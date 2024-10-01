@@ -2,8 +2,17 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
+import { Pie } from "react-chartjs-2"; // Only importing Pie chart
 import Footer from "../../components/core/Footer";
 import NavBar from "../../components/core/NavBar";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const GameBookingManagement = () => {
   const [bookings, setBookings] = useState([]);
@@ -89,6 +98,34 @@ const GameBookingManagement = () => {
     doc.save("game_bookings_report.pdf");
   };
 
+  // Data for the pie chart
+  const bookingStatusCounts = {
+    Paid: filteredBookings.filter((booking) => booking.confirmed).length,
+    "Not Paid": filteredBookings.filter((booking) => !booking.confirmed).length,
+  };
+
+  const pieData = {
+    labels: Object.keys(bookingStatusCounts),
+    datasets: [
+      {
+        data: Object.values(bookingStatusCounts),
+        backgroundColor: [
+          "rgba(75, 192, 192, 0.8)", 
+          "rgba(255, 99, 132, 0.8)",
+        ],
+      },
+    ],
+  };
+
+  const pieOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+    },
+  };
+
   return (
     <div>
       <NavBar />
@@ -121,7 +158,7 @@ const GameBookingManagement = () => {
           <table style={tableStyle}>
             <thead>
               <tr>
-                <th style={thStyle}>Booking ID</th> {/* Booking ID column */}
+                <th style={thStyle}>Booking ID</th>
                 <th style={thStyle}>Game Name</th>
                 <th style={thStyle}>Customer Email</th>
                 <th style={thStyle}>Seats</th>
@@ -133,7 +170,7 @@ const GameBookingManagement = () => {
             <tbody>
               {filteredBookings.map((booking) => (
                 <tr key={booking._id} style={trStyle}>
-                  <td style={tdStyle}>{generateBookingId(booking._id)}</td> {/* Display custom Booking ID */}
+                  <td style={tdStyle}>{generateBookingId(booking._id)}</td>
                   <td style={tdStyle}>{booking.game?.name || "Unknown Game"}</td>
                   <td style={tdStyle}>{booking.customer?.email || "Unknown Customer"}</td>
                   <td style={tdStyle}>{booking.seatNumbers ? booking.seatNumbers.length : 0}</td>
@@ -184,6 +221,11 @@ const GameBookingManagement = () => {
             Generate Report
           </button>
         </center>
+
+        {/* Pie chart for booking status */}
+        <div style={{ marginTop: "40px", width: "400px", height: "400px", margin: "20px auto", borderRadius: "15px", boxShadow: "0 4px 10px rgba(0,0,0,0.3)", backgroundColor: "#fff" }}>
+          <Pie data={pieData} options={pieOptions} />
+        </div>
       </div>
       <Footer />
     </div>

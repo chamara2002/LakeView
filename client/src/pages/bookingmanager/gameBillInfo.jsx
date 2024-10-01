@@ -55,7 +55,7 @@ const GameBillInfo = () => {
         <div style={styles.paymentMethod}>
           
           <button style={styles.button} onClick={() => navigate(`/PayOnline`)}>Card Payment &rarr;</button>
-          <button style={styles.button} onClick={handleCashPay}>Cash on Delivery &rarr;</button>
+          <button style={styles.button} onClick={handleCashPay}>Cash on Arrival &rarr;</button>
           <button style={styles.button} onClick={() => navigate('/games')}>Cancel</button>
         </div>
       </div>

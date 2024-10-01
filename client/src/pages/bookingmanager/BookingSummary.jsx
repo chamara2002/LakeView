@@ -18,10 +18,16 @@ const BookingSummary = () => {
 
   // Available time slots
   const timeSlots = [
-    "10:30 - 13:30",
-    "14:30 - 17:30",
-    "18:30 - 21:30"
+    "6.00am - 9.00am",
+    "9.00am - 12.00pm",
+    "12.00pm - 3.00pm"
   ];
+
+  // const ticketSlots = [
+  //   "1",
+  //   "2",
+  //   "3"
+  // ];
 
   useEffect(() => {
     if (!bookingDetails.itemId) {
@@ -104,6 +110,23 @@ const BookingSummary = () => {
             {!isDateValid && <p style={styles.error}>Please select a valid date.</p>}
           </div>
 
+
+
+          {/* <div style={styles.formGroup}>
+            <label style={styles.label} htmlFor="tickets">
+               Select a No of Tickets:
+            </label>
+            <input
+              type="number"
+              id="tickets"
+              value={selectedDate}
+              onChange={handleDateChange}
+              style={styles.input}
+              min={1}
+            />
+            {!isDateValid && <p style={styles.error}>Please select a valid range.</p>}
+          </div> */}
+
           <div style={styles.formGroup}>
             <label style={styles.label} htmlFor="time">
               Select a Time:
@@ -122,6 +145,25 @@ const BookingSummary = () => {
               ))}
             </select>
           </div>
+
+          {/* <div style={styles.formGroup}>
+            <label style={styles.label} htmlFor="tickets">
+              Select a Ticket:
+            </label>
+            <select
+              id="tickets"
+              value={selectedTime}
+              onChange={handleTimeChange}
+              style={styles.input}
+            >
+              <option value="">Select a Tickets</option>
+              {ticketSlots.map((time, index) => (
+                <option key={index} value={time}>
+                  {time}
+                </option>
+              ))}
+            </select>
+          </div> */}
 
           <button
             style={styles.button}

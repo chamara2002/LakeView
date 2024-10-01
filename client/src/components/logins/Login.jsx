@@ -58,12 +58,9 @@ const Login = () => {
         </form>
         {error && <p className={styles["error-message"]}>{error}</p>}
         <div className={styles["footer-links"]}>
-          <a href="#" className={styles["forgot-password"]}>
-            Forgot password?
-          </a>
-         
           
-          <a href='/staff/login' style={{marginLeft: '2px'}}><></>Admin login ?</a>
+         
+          <a href='/staff/login' style={{marginLeft: '75px'}}><></>Admin login </a>
           
         </div>
       </div>

@@ -112,7 +112,7 @@ const GamesDetails = () => {
             feedbacks.map((feedback) => (
               <div key={feedback._id} style={feedbackStyle}>
                 <p>
-                <strong>Reviewer:</strong> {"UID" +feedback.customerId.slice(-4)}
+                <strong>Reviewer ID:</strong> {"UID" +feedback.customerId.slice(-4)}
                 </p>
                 <p>
                   <strong>Rating:</strong> {feedback.score}
