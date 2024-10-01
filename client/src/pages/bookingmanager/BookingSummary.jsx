@@ -9,11 +9,19 @@ import { FaCalendarAlt, FaUser, FaEnvelope } from "react-icons/fa"; // Icons
 
 const BookingSummary = () => {
   const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState(""); // State for selected time
   const [item, setItem] = useState({});
   const [isDateValid, setIsDateValid] = useState(true);
   const navigate = useNavigate();
   const { user } = useAuth();
   const { bookingDetails } = useContext(BookingContext);
+
+  // Available time slots
+  const timeSlots = [
+    "10:30 - 13:30",
+    "14:30 - 17:30",
+    "18:30 - 21:30"
+  ];
 
   useEffect(() => {
     if (!bookingDetails.itemId) {
@@ -44,9 +52,13 @@ const BookingSummary = () => {
     setIsDateValid(selected >= today);
   };
 
+  const handleTimeChange = (e) => {
+    setSelectedTime(e.target.value);
+  };
+
   const handleConfirm = () => {
-    if (selectedDate) {
-      alert(`Booking confirmed for ${selectedDate}`);
+    if (selectedDate && selectedTime) {
+      alert(`Booking confirmed for ${selectedDate} at ${selectedTime}`);
       bookingDetails.type === "movie" ? navigate("/movieBillinfo") : navigate("/gameBillInfo");
     }
   };
@@ -64,8 +76,8 @@ const BookingSummary = () => {
         <div style={styles.content}>
           <div style={styles.card}>
             <h3>Bill Information</h3>
-            <p>{`${item.name} booking fee = R.S.${item.price} X ${bookingDetails.seatNumbers.length} seats`}</p>
-            <p>{`Total amount = R.S.${bookingDetails.total}`}</p>
+            <p>{`${item.name} booking fee = RS${item.price} X ${bookingDetails.seatNumbers.length} seats`}</p>
+            <p>{`Total amount = RS${bookingDetails.total}`}</p>
           </div>
 
           <div style={styles.card}>
@@ -91,10 +103,30 @@ const BookingSummary = () => {
             />
             {!isDateValid && <p style={styles.error}>Please select a valid date.</p>}
           </div>
+
+          <div style={styles.formGroup}>
+            <label style={styles.label} htmlFor="time">
+              Select a Time:
+            </label>
+            <select
+              id="time"
+              value={selectedTime}
+              onChange={handleTimeChange}
+              style={styles.input}
+            >
+              <option value="">Select a time</option>
+              {timeSlots.map((time, index) => (
+                <option key={index} value={time}>
+                  {time}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <button
             style={styles.button}
             onClick={handleConfirm}
-            disabled={!selectedDate || !isDateValid}
+            disabled={!selectedDate || !isDateValid || !selectedTime}
           >
             Confirm Booking
           </button>

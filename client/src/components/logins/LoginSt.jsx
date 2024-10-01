@@ -28,7 +28,7 @@ const Login = () => {
   return (
     <div className={styles["login-container"]}>
       <div className={styles["login-box"]}>
-        <h2>Login</h2>
+        <h2>Staff Login</h2>
         <form onSubmit={handleSubmit}>
           <div className={styles["input-group"]}>
             <label>Email</label>
@@ -56,12 +56,8 @@ const Login = () => {
         </form>
         {error && <p className={styles["error-message"]}>{error}</p>}
         <div className={styles["footer-links"]}>
-          <a href="#" className={styles["forgot-password"]}>
-            Forgot password?
-          </a>
-          <a href="#" className={styles["sign-up"]}>
-            Sign Up
-          </a>
+          
+        <a href='/login' style={{marginLeft: '65px'}}><></>Customer login </a>
         </div>
       </div>
     </div>

@@ -56,13 +56,23 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
       if (prevSelectedSeats.includes(seatNumber)) {
         return prevSelectedSeats.filter((seat) => seat !== seatNumber);
       } else {
+        // Check if the selection exceeds the limit of 10 seats
+        if (prevSelectedSeats.length >= 10) {
+          alert("You can only book a maximum of 10 seats.");
+          return prevSelectedSeats; // Return the previous state if limit is reached
+        }
         return [...prevSelectedSeats, seatNumber];
       }
     });
   };
 
   const confirmSelection = () => {
-    addSeats(selectedSeats);
+    if (selectedSeats.length > 0) {
+      addSeats(selectedSeats);
+      navigate("/booking-summary"); // Navigate to booking summary after confirming selection
+    } else {
+      alert("Please select at least one seat.");
+    }
   };
 
   const renderSeats = () => {
@@ -102,7 +112,7 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
 
   return (
     <div style={{ backgroundColor: "#161E38", minHeight: "80vh" }}>
-      <NavBar /> {/* Navigation bar is kept as is */}
+      <NavBar />
       <div style={{ textAlign: "center", padding: "20px" }}>
         <h3 style={{ marginBottom: "20px", color: "#ffffff", fontSize: "1.8rem" }}>
           Select Your Tickets

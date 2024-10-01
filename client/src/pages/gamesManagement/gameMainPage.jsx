@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; 
 import NavFunction from "../../functions/navFunction"; // Ensure the path is correct
 import Footer from "../../components/core/Footer"; // Ensure the path is correct
 import ActivitiesGrid from "./ActivitiesGrid";
@@ -9,6 +9,7 @@ const GameMainPage = () => {
   const [games, setGames] = useState([]);
   const [filteredGames, setFilteredGames] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [activeCategory, setActiveCategory] = useState("All"); // Track the selected category
 
   useEffect(() => {
     const fetchGames = async () => {
@@ -26,46 +27,54 @@ const GameMainPage = () => {
     fetchGames();
   }, []);
 
+  // Function to handle filtering based on category
+  const filterGames = (category, searchTerm) => {
+    let filtered = games;
+
+    if (category !== "All") {
+      filtered = filtered.filter((game) => game.category === category);
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter((game) =>
+        game.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredGames(filtered);
+  };
+
   const handleIndoorClick = () => {
-    console.log("Indoor Games clicked");
-    setFilteredGames(games.filter((game) => game.category === "Indoor"));
+    setActiveCategory("Indoor");
+    filterGames("Indoor", searchQuery);
   };
 
   const handleOutdoorClick = () => {
-    console.log("Outdoor Games clicked");
-    setFilteredGames(games.filter((game) => game.category === "Outdoor"));
+    setActiveCategory("Outdoor");
+    filterGames("Outdoor", searchQuery);
   };
 
   const handleWaterClick = () => {
-    console.log("Water Games clicked");
-    setFilteredGames(games.filter((game) => game.category === "Water"));
+    setActiveCategory("Water");
+    filterGames("Water", searchQuery);
   };
 
   const handleCategoryClick = () => {
-    console.log("Show All Games clicked");
-    setFilteredGames(games); // Reset to show all games
+    setActiveCategory("All");
+    filterGames("All", searchQuery); // Show all games
   };
 
   const handleSearch = (event) => {
-    const query = event.target.value.toLowerCase();
+    const query = event.target.value;
     setSearchQuery(query);
-
-    if (query === "") {
-      setFilteredGames(games); // Show all games if search is cleared
-    } else {
-      setFilteredGames(
-        games.filter((game) => game.name.toLowerCase().includes(query))
-      );
-    } 
+    filterGames(activeCategory, query);
   };
 
   const handleTodayClick = () => {
     const today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
-
     const todayGames = games.filter((game) => {
       return game.availableTimes.some((time) => time.split('T')[0] === today);
     });
-  
     setFilteredGames(todayGames);
   };
 
@@ -112,7 +121,11 @@ const GameMainPage = () => {
               }}
             />
           </div>
-          <ActivitiesGrid activities={filteredGames} />
+          {filteredGames.length > 0 ? (
+            <ActivitiesGrid activities={filteredGames} />
+          ) : (
+            <p style={{ color: "#fff", textAlign: "center" }}>No games found.</p>
+          )}
         </div>
       </div>
       <Footer />
