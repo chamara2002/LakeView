@@ -275,6 +275,9 @@ const UpdateGame = () => {
               value={image}
               onChange={(e) => setImage(e.target.value)}
             />
+            {image && (
+              <img src={image} alt="Preview" style={styles.imagePreview} />
+            )}
           </div>
 
           <button type="submit" style={styles.addButton}>
@@ -373,6 +376,11 @@ const styles = {
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: "10px",
+  },
+  imagePreview: {
+    marginTop: "10px",
+    maxWidth: "200px",
+    borderRadius: "5px",
   },
   removeButton: {
     padding: "5px 10px",
