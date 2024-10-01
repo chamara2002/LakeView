@@ -45,7 +45,7 @@ const SalaryTable = () => {
     const startTime = new Date(start);
     const endTime = new Date(end);
     const diffInMs = (endTime - startTime);
-    return diffInMs / (1000 * 60 * 60); // Convert milliseconds to hours
+    return diffInMs / (1000 * 60 * 60); 
   };
 
   const groupByEmployeeAndMonth = () => {
@@ -91,12 +91,12 @@ Object.keys(groupedData).forEach((employeeId) => {
 
     
 
-      // Adjust OT hours if more than 8
+      // Adjust OT hours if more than 8 and less than 8
       const otHours = employeeMonthData.otHours > 8 
       ? employeeMonthData.otHours - 8 :0;
       
 
-    // Calculate OT salary (assuming OT rate is two times the normal rate)
+    // Calculate OT salary (assuming OT rate is 1.5 times the normal rate)
     employeeMonthData.otSalary = otHours * ((employeeMonthData.normalSalary / 160) * 1.5);
     
     // Calculate final salary
@@ -142,7 +142,7 @@ Object.keys(groupedData).forEach((employeeId) => {
 
   const tableContainerStyle = {
     marginTop: "20px",
-    overflowX: "auto", // Adds horizontal scrolling for small screens
+    overflowX: "auto", // horizontal scrolling for small screens
   };
 
   const tableStyle = {
