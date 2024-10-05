@@ -28,10 +28,32 @@ const LeaveDetails = () => {
   }, []);
 
   const calculateHours = (start, end) => {
-    if (!end) return "working";
+    if (!end) return "working"; 
+    
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    
+    // Calculate total hours worked
+    const totalHours = Math.round((endDate - startDate) / (1000 * 60 * 60));
+    
+    
+    if (totalHours <= 8) {
+      return 0;
+    }
+    
+    const overtimeHours = totalHours - 8;
+    
+    return overtimeHours;
+  };
+  
+
+
+  const calculatewHours = (start, end) => {
+    
     const startDate = new Date(start);
     const endDate = new Date(end);
     const hours = Math.round((endDate - startDate) / (1000 * 60 * 60));
+    
     return hours;
   };
 
@@ -119,6 +141,7 @@ const LeaveDetails = () => {
               <th style={styles.tableHeaderCell}>Attendant Time</th>
               <th style={styles.tableHeaderCell}>Leave Time</th>
               <th style={styles.tableHeaderCell}>OT Hours</th>
+              <th style={styles.tableHeaderCell}>Working Hours</th>
               <th style={styles.tableHeaderCell}>Options</th>
             </tr>
           </thead>
@@ -137,6 +160,7 @@ const LeaveDetails = () => {
                   {leave.end ? new Date(leave.end).toLocaleTimeString() : "N/A"}
                 </td>
                 <td style={styles.tableCell}>{calculateHours(leave.start, leave.end)}</td>
+                <td style={styles.tableCell}>{calculatewHours(leave.start, leave.end)}</td>
                 <td style={styles.tableCell}>
                   <button
                     style={styles.deleteButton}
