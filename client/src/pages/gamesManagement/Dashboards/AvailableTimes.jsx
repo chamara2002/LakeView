@@ -107,17 +107,21 @@ const AvailableTimes = () => {
               style={styles.searchInput}
             />
             <select
-              value={selectedDate}
-              onChange={handleDateChange}
-              style={styles.dateSelect}
-            >
-              <option value="">Select Date</option>
-              {uniqueDates.map((date) => (
+            value={selectedDate}
+            onChange={handleDateChange}
+            style={styles.dateSelect}
+          >
+            <option value="">Select Date</option>
+            {uniqueDates
+              .slice() // Create a copy of the array to avoid mutating the original
+              .sort((a, b) => new Date(a) - new Date(b)) // Sort dates in ascending order
+              .map((date) => (
                 <option key={date} value={date}>
                   {date}
                 </option>
               ))}
-            </select>
+          </select>
+
           </div>
           <div style={styles.tableContainer}>
             <table style={styles.table}>
