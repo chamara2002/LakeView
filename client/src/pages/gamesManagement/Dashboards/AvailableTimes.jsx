@@ -5,7 +5,7 @@ import { useAuth } from "../../foodManagement/context/authContext";
 const AvailableTimes = () => {
   const [games, setGames] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [dateSearchTerm, setDateSearchTerm] = useState(""); // New state for date search
+  const [selectedDate, setSelectedDate] = useState(""); // Selected date for filtering
   const [gameIdToUpdate, setGameIdToUpdate] = useState(null);
   const [newTimes, setNewTimes] = useState({});
 
@@ -28,14 +28,33 @@ const AvailableTimes = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleDateSearchChange = (event) => {
-    setDateSearchTerm(event.target.value);
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value);
   };
+
+  // Extract unique dates from the available times
+  const uniqueDates = [
+    ...new Set(
+      games.flatMap((game) =>
+        game.availableTimes.map((time) =>
+          new Date(time).toLocaleDateString("en-CA")
+        )
+      )
+    ),
+  ];
 
   const filteredGames = games
     .filter((game) =>
       game.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    )
+    .map((game) => ({
+      ...game,
+      availableTimes: game.availableTimes.filter((time) => {
+        const timeDate = new Date(time).toLocaleDateString("en-CA"); // Format to match YYYY-MM-DD
+        return selectedDate === "" || timeDate === selectedDate;
+      }),
+    }))
+    .filter((game) => game.availableTimes.length > 0);
 
   const handleTimeDelete = (gameId, time) => async () => {
     const updatedTimes = games
@@ -73,79 +92,94 @@ const AvailableTimes = () => {
   }, [newTimes, gameIdToUpdate]);
 
   return (
-   <div>
-     <div style={styles.pageContainer}>
-     
-     <div style={styles.content}>
-       <div style={styles.header}>
-       <h2 style={styles.title}><center>Available Times</center> </h2>
-         <input
-           type="text"
-           placeholder="Search by game name"
-           value={searchTerm}
-           onChange={handleSearchChange}
-           style={styles.searchInput}
-         />
-       </div>
-       <div style={styles.tableContainer}>
-         <table style={styles.table}>
-           <thead>
-             <tr>
-               <th style={styles.tableHeader}>Game ID</th>
-               <th style={styles.tableHeader}>Game Name</th>
-               <th style={styles.tableHeader}>Available Time</th>
-               <th style={styles.tableHeader}>Available Date</th>
-               {user.user.role ? (
-                 <th style={styles.tableHeader}>Action</th>
-               ) : (
-                 <></>
-               )}
-             </tr>
-           </thead>
-           <tbody>
-             {filteredGames.length > 0 ? (
-               filteredGames.map((game) =>
-                 game.availableTimes.map((time, index) => (
-                   <tr key={`${game._id}-${index}`} style={styles.tableRow}>
-                     <td style={styles.tableCell}>{"GID" + game._id.slice(-4)}</td>
-                     <td style={styles.tableCell}>{game.name}</td>
-                     <td style={styles.tableCell}>
-                       {new Date(time).toLocaleTimeString([], {
-                         hour: "2-digit",
-                         minute: "2-digit",
-                       })}
-                     </td>
-                     <td style={styles.tableCell}>
-                       {new Date(time).toLocaleDateString()}
-                     </td>
-                     {user.user.role ? (
-                       <td style={styles.tableCell}>
-                         <button
-                           style={styles.deleteButton}
-                           onClick={handleTimeDelete(game._id, time)}
-                         >
-                           Delete
-                         </button>
-                       </td>
-                     ) : (
-                       <></>
-                     )}
-                   </tr>
-                 ))
-               )
-             ) : (
-               <tr style={styles.tableRow}>
-                 <td style={styles.tableCell} colSpan="5">
-                   No games available
-                 </td>
-               </tr>
-             )}
-           </tbody>
-         </table>
-       </div>
-     </div>
-   </div>
-   </div>
+    <div>
+      <div style={styles.pageContainer}>
+        <div style={styles.content}>
+          <div style={styles.header}>
+            <h2 style={styles.title}>
+              <center>Available Times</center>
+            </h2>
+            <input
+              type="text"
+              placeholder="Search by game name"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              style={styles.searchInput}
+            />
+            <select
+              value={selectedDate}
+              onChange={handleDateChange}
+              style={styles.dateSelect}
+            >
+              <option value="">Select Date</option>
+              {uniqueDates.map((date) => (
+                <option key={date} value={date}>
+                  {date}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div style={styles.tableContainer}>
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  <th style={styles.tableHeader}>Game ID</th>
+                  <th style={styles.tableHeader}>Game Name</th>
+                  <th style={styles.tableHeader}>Available Time</th>
+                  <th style={styles.tableHeader}>Available Date</th>
+                  {user.user.role ? (
+                    <th style={styles.tableHeader}>Action</th>
+                  ) : (
+                    <></>
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {filteredGames.length > 0 ? (
+                  filteredGames.map((game) =>
+                    game.availableTimes.map((time, index) => (
+                      <tr key={`${game._id}-${index}`} style={styles.tableRow}>
+                        <td style={styles.tableCell}>
+                          {"GID" + game._id.slice(-4)}
+                        </td>
+                        <td style={styles.tableCell}>{game.name}</td>
+                        <td style={styles.tableCell}>
+                          {new Date(time).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </td>
+                        <td style={styles.tableCell}>
+                          {new Date(time).toLocaleDateString()}
+                        </td>
+                        {user.user.role ? (
+                          <td style={styles.tableCell}>
+                            <button
+                              style={styles.deleteButton}
+                              onClick={handleTimeDelete(game._id, time)}
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        ) : (
+                          <></>
+                        )}
+                      </tr>
+                    ))
+                  )
+                ) : (
+                  <tr style={styles.tableRow}>
+                    <td style={styles.tableCell} colSpan="5">
+                      No games available
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -159,27 +193,6 @@ const styles = {
     minHeight: "100vh",
     backgroundColor: "#161E38",
     color: "#fff",
-  },
-  sidebar: {
-    width: "250px",
-    backgroundColor: "#1B2138",
-    padding: "20px",
-  },
-  sidebarMenu: {
-    listStyleType: "none",
-    padding: 0,
-  },
-  sidebarMenuItem: {
-    padding: "10px 20px",
-    color: "#fff",
-    cursor: "pointer",
-  },
-  sidebarMenuItemActive: {
-    padding: "10px 20px",
-    color: "#FFD700",
-    cursor: "pointer",
-    backgroundColor: "#1E2749",
-    borderRadius: "5px",
   },
   content: {
     flex: 1,
@@ -200,6 +213,15 @@ const styles = {
     backgroundColor: "#243055",
     color: "#fff",
   },
+  dateSelect: {
+    marginBottom: "10px",
+    padding: "10px",
+    width: "42.1%",
+    borderRadius: "5px",
+    border: "1px solid #2C3354",
+    backgroundColor: "#243055",
+    color: "#fff",
+  },
   tableContainer: {
     backgroundColor: "#1E2749",
     padding: "20px",
@@ -208,34 +230,32 @@ const styles = {
   },
   table: {
     width: "100%",
-    maxWidth: "1200px", 
+    maxWidth: "1200px",
     borderCollapse: "collapse",
   },
   tableHeader: {
-    padding: "12px",  
-    backgroundColor: "#2E3A59",  
+    padding: "12px",
+    backgroundColor: "#2E3A59",
     color: "#fff",
     textAlign: "left",
-    borderBottom: "1px solid #444",  
+    borderBottom: "1px solid #444",
   },
   tableRow: {
-    borderBottom: "1px solid #444",  
+    borderBottom: "1px solid #444",
   },
   tableCell: {
     padding: "12px",
-    textAlign: "left",  
-    borderBottom: "1px solid #444",  
+    textAlign: "left",
+    borderBottom: "1px solid #444",
   },
   deleteButton: {
-    backgroundColor: "#FF6347",  
+    backgroundColor: "#FF6347",
     color: "#fff",
     border: "none",
-    padding: "6px 12px",  
-    borderRadius: "4px",  
+    padding: "6px 12px",
+    borderRadius: "4px",
     cursor: "pointer",
   },
 };
-
-
 
 export default AvailableTimes;

@@ -79,7 +79,13 @@ const LeaveDetails = () => {
 
     // Add company information to the PDF
     doc.setFontSize(14);
+    doc.setTextColor(30, 39, 73); // Set text color to #1E2749 (RGB: 30, 39, 73)
+    doc.setFont("Helvetica", "bold"); // Set font to bold
     doc.text(companyName, 20, 20);
+    
+    // Reset text color and font for the rest of the text
+    doc.setTextColor(0, 0, 0); // Reset text color to black
+    doc.setFont("Helvetica", "normal"); // Set font to normal for the rest
     doc.setFontSize(10);
     doc.text(companyAddress, 20, 30);
     doc.text(companyPhone, 20, 35);
@@ -90,7 +96,9 @@ const LeaveDetails = () => {
 
     // Add the report title
     doc.setFontSize(16);
-    doc.text("Attendance Details Report", 70, 60);
+    doc.setFont("Helvetica", "bold"); // Set font to bold for title
+    doc.text("Feedback and Ratings Details Report", 55, 60);
+    doc.setFont("Helvetica", "normal"); // Set font back to normal for rest of content
 
     // Generate the table data
     const tableData = filteredLeaves.map((leave) => [
