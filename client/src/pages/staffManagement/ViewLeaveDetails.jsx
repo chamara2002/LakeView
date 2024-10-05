@@ -97,7 +97,7 @@ const LeaveDetails = () => {
     // Add the report title
     doc.setFontSize(16);
     doc.setFont("Helvetica", "bold"); // Set font to bold for title
-    doc.text("Feedback and Ratings Details Report", 55, 60);
+    doc.text("Attendance Details Report", 65, 60);
     doc.setFont("Helvetica", "normal"); // Set font back to normal for rest of content
 
     // Generate the table data
