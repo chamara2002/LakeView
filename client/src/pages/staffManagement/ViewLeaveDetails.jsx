@@ -57,14 +57,14 @@ const LeaveDetails = () => {
     return hours;
   };
 
-  const handleDelete = async (id) => {
+  {/*const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/api/attendance/attendance/${id}`);
       setLeaves((prevLeaves) => prevLeaves.filter((leave) => leave._id !== id));
     } catch (error) {
       console.error("Error deleting leave:", error);
     }
-  };
+  };*/}
 
   const handleSearchByDate = (event) => {
     setSearchTermByDate(event.target.value); // Date is now in YYYY-MM-DD format
@@ -97,10 +97,12 @@ const LeaveDetails = () => {
       new Date(leave.start).toLocaleTimeString(),
       leave.end ? new Date(leave.end).toLocaleTimeString() : "N/A",
       calculateHours(leave.start, leave.end),
+      calculatewHours(leave.start, leave.end),
+
     ]);
 
     doc.autoTable({
-      head: [["Attendance ID", "Staff ID", "Date", "Attendant Time", "Leave Time", "OT Hours"]],
+      head: [["Attendance ID", "Staff ID", "Date", "Attendant Time", "Leave Time", "OT Hours","Working Hours"]],
       body: tableData,
       startY: 30,
       theme: "grid",
@@ -142,7 +144,7 @@ const LeaveDetails = () => {
               <th style={styles.tableHeaderCell}>Leave Time</th>
               <th style={styles.tableHeaderCell}>OT Hours</th>
               <th style={styles.tableHeaderCell}>Working Hours</th>
-              <th style={styles.tableHeaderCell}>Options</th>
+              {/*<th style={styles.tableHeaderCell}>Options</th>*/}
             </tr>
           </thead>
           <tbody>
@@ -161,14 +163,14 @@ const LeaveDetails = () => {
                 </td>
                 <td style={styles.tableCell}>{calculateHours(leave.start, leave.end)}</td>
                 <td style={styles.tableCell}>{calculatewHours(leave.start, leave.end)}</td>
-                <td style={styles.tableCell}>
+                 {/*<td style={styles.tableCell}>
                   <button
                     style={styles.deleteButton}
                     onClick={() => handleDelete(leave._id)}
                   >
                     Delete
                   </button>
-                </td>
+                </td>*/}
               </tr>
             ))}
           </tbody>
