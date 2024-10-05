@@ -41,8 +41,32 @@ const FeedbackDetails = () => {
   const handleExportPDF = () => {
     const doc = new jsPDF();
 
-    // Add title to the PDF
-    doc.text("Feedback and Ratings Details Report", 14, 20);
+    // Company Information
+    const companyName = "LakeView Gaming Zone"; 
+    const companyAddress = "Gampaha, Sri Lanka"; 
+    const companyPhone = "+9433-7628316"; 
+    const companyEmail = "lakeviewgaming01@gmail.com"; 
+
+    // Logo (Replace with your actual base64 string or image URL)
+    const logo = "reportLogo.png"; 
+
+    // Add the logo to the PDF
+    doc.addImage(logo, "PNG", 150, 10, 40, 35); 
+
+    // Add company information to the PDF
+    doc.setFontSize(14);
+    doc.text(companyName, 20, 20);
+    doc.setFontSize(10);
+    doc.text(companyAddress, 20, 30);
+    doc.text(companyPhone, 20, 35);
+    doc.text(companyEmail, 20, 40);
+    
+    // Add a line for separation
+    doc.line(20, 45, 190, 45); 
+
+    // Add the report title
+    doc.setFontSize(16);
+    doc.text("Feedback and Ratings Details Report", 60, 60);
 
     // Filter feedbacks based on search query
     const filteredFeedbacks = feedbacks.filter(feedback =>
@@ -62,7 +86,7 @@ const FeedbackDetails = () => {
     doc.autoTable({
       head: [['Game ID', 'Game Name', 'User', 'Feedback', 'Rating']],
       body: tableData,
-      startY: 30,
+      startY: 70,
       theme: 'grid',
       headStyles: { fillColor: [22, 30, 56] },  // Table header style
       styles: { cellPadding: 3, fontSize: 10 }
@@ -100,9 +124,9 @@ const FeedbackDetails = () => {
               <th style={styles.tableHeaderCell}>User Name</th>
               <th style={styles.tableHeaderCell}>Feedback</th>
               <th style={styles.tableHeaderCell}>Rating(Stars)</th>
-              {user.user.role ? (
+              {/*{user.user.role ? (
                 <th style={styles.tableHeaderCell}>Action</th>
-              ) : null}
+              ) : null}*/}
             </tr>
           </thead>
           <tbody>
@@ -113,7 +137,7 @@ const FeedbackDetails = () => {
                 <td style={styles.tableCell}>{feedback.user}</td>
                 <td style={styles.tableCell}>{feedback.feedback}</td>
                 <td style={styles.tableCell}>{feedback.score}</td>
-                {user.user.role ? (
+                {/*{user.user.role ? (
                   <td style={styles.tableCell}>
                     <button
                       style={styles.deleteButton}
@@ -124,7 +148,7 @@ const FeedbackDetails = () => {
                       Delete
                     </button>
                   </td>
-                ) : null}
+                ) : null}*/}
               </tr>
             ))}
           </tbody>

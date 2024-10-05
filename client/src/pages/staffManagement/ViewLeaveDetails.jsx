@@ -9,7 +9,7 @@ import ReportButton from "../../components/reUseable/ReportButton";
 const LeaveDetails = () => {
   const [leaves, setLeaves] = useState([]);
   const [searchTermByDate, setSearchTermByDate] = useState("");
-  const [searchTermByStaffId, setSearchTermByStaffId] = useState(""); // New state for Staff ID search
+  const [searchTermByStaffId, setSearchTermByStaffId] = useState("");
 
   useEffect(() => {
     const fetchLeaves = async () => {
@@ -32,64 +32,67 @@ const LeaveDetails = () => {
     
     const startDate = new Date(start);
     const endDate = new Date(end);
-    
-    // Calculate total hours worked
     const totalHours = Math.round((endDate - startDate) / (1000 * 60 * 60));
     
-    
-    if (totalHours <= 8) {
-      return 0;
-    }
-    
-    const overtimeHours = totalHours - 8;
-    
-    return overtimeHours;
+    return totalHours <= 8 ? 0 : totalHours - 8; // Return overtime hours
   };
-  
-
 
   const calculatewHours = (start, end) => {
-    
     const startDate = new Date(start);
     const endDate = new Date(end);
-    const hours = Math.round((endDate - startDate) / (1000 * 60 * 60));
-    
-    return hours;
+    return Math.round((endDate - startDate) / (1000 * 60 * 60));
   };
 
-  {/*const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:3000/api/attendance/attendance/${id}`);
-      setLeaves((prevLeaves) => prevLeaves.filter((leave) => leave._id !== id));
-    } catch (error) {
-      console.error("Error deleting leave:", error);
-    }
-  };*/}
-
   const handleSearchByDate = (event) => {
-    setSearchTermByDate(event.target.value); // Date is now in YYYY-MM-DD format
+    setSearchTermByDate(event.target.value);
   };
 
   const handleSearchByStaffId = (event) => {
-    setSearchTermByStaffId(event.target.value); // Handle Staff ID search term
+    setSearchTermByStaffId(event.target.value);
   };
 
-  // Filter leaves by date and staff ID
   const filteredLeaves = leaves.filter((leave) => {
-    const leaveDate = new Date(leave.start).toISOString().slice(0, 10); // Format as YYYY-MM-DD
-    const staffId = "SID" + leave.userId._id.slice(-4); // Add "SID" prefix to staffId
+    const leaveDate = new Date(leave.start).toISOString().slice(0, 10);
+    const staffId = "SID" + leave.userId._id.slice(-4);
 
     return (
       (searchTermByDate ? leaveDate.includes(searchTermByDate) : true) &&
-      (searchTermByStaffId ? staffId.includes(searchTermByStaffId) : true) // Now searches with "SID" prefix
+      (searchTermByStaffId ? staffId.includes(searchTermByStaffId) : true)
     );
   });
 
   // Function to generate the PDF report
   const handleExportPDF = () => {
     const doc = new jsPDF();
-    doc.text("Attendance Details Report", 14, 20);
 
+    // Company Information
+    const companyName = "LakeView Gaming Zone"; 
+    const companyAddress = "Gampaha, Sri Lanka"; 
+    const companyPhone = "+9433-7628316"; 
+    const companyEmail = "lakeviewgaming01@gmail.com";
+
+    // Logo (Replace with your actual base64 string or image URL)
+    const logo = "reportLogo.png"; 
+
+    // Add the logo to the PDF
+    doc.addImage(logo, "PNG", 150, 10, 40, 35); 
+
+    // Add company information to the PDF
+    doc.setFontSize(14);
+    doc.text(companyName, 20, 20);
+    doc.setFontSize(10);
+    doc.text(companyAddress, 20, 30);
+    doc.text(companyPhone, 20, 35);
+    doc.text(companyEmail, 20, 40);
+    
+    // Add a line for separation
+    doc.line(20, 45, 190, 45); 
+
+    // Add the report title
+    doc.setFontSize(16);
+    doc.text("Attendance Details Report", 70, 60);
+
+    // Generate the table data
     const tableData = filteredLeaves.map((leave) => [
       "AID" + leave._id.slice(-4),
       "SID" + leave.userId._id.slice(-4),
@@ -98,18 +101,19 @@ const LeaveDetails = () => {
       leave.end ? new Date(leave.end).toLocaleTimeString() : "N/A",
       calculateHours(leave.start, leave.end),
       calculatewHours(leave.start, leave.end),
-
     ]);
 
+    // Create the table with autoTable
     doc.autoTable({
-      head: [["Attendance ID", "Staff ID", "Date", "Attendant Time", "Leave Time", "OT Hours","Working Hours"]],
+      head: [["Attendance ID", "Staff ID", "Date", "Attendant Time", "Leave Time", "OT Hours", "Working Hours"]],
       body: tableData,
-      startY: 30,
+      startY: 70, 
       theme: "grid",
       headStyles: { fillColor: [22, 30, 56] },
       styles: { cellPadding: 3, fontSize: 10 },
     });
 
+    // Save the PDF
     doc.save("attendance_details_report.pdf");
   };
 
@@ -121,15 +125,15 @@ const LeaveDetails = () => {
         <br />
         <h2 style={styles.heading}>Attendance Details</h2>
         <input
-          type="date" // Changed input type to "date"
-          placeholder="Search by Date (MM/DD/YYYY)"
+          type="date" 
+          placeholder="Search by Date (YYYY-MM-DD)"
           value={searchTermByDate}
           onChange={handleSearchByDate}
           style={styles.searchBar}
         />
         <input
           type="text"
-          placeholder="Search by Staff ID" // New search bar for Staff ID
+          placeholder="Search by Staff ID" 
           value={searchTermByStaffId}
           onChange={handleSearchByStaffId}
           style={styles.searchBar}
@@ -144,7 +148,6 @@ const LeaveDetails = () => {
               <th style={styles.tableHeaderCell}>Leave Time</th>
               <th style={styles.tableHeaderCell}>OT Hours</th>
               <th style={styles.tableHeaderCell}>Working Hours</th>
-              {/*<th style={styles.tableHeaderCell}>Options</th>*/}
             </tr>
           </thead>
           <tbody>
@@ -163,14 +166,6 @@ const LeaveDetails = () => {
                 </td>
                 <td style={styles.tableCell}>{calculateHours(leave.start, leave.end)}</td>
                 <td style={styles.tableCell}>{calculatewHours(leave.start, leave.end)}</td>
-                 {/*<td style={styles.tableCell}>
-                  <button
-                    style={styles.deleteButton}
-                    onClick={() => handleDelete(leave._id)}
-                  >
-                    Delete
-                  </button>
-                </td>*/}
               </tr>
             ))}
           </tbody>
@@ -232,15 +227,6 @@ const styles = {
   tableCell: {
     padding: "12px",
     textAlign: "left",
-  },
-  deleteButton: {
-    padding: "6px 12px",
-    backgroundColor: "#FF6347",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    marginRight: "5px",
   },
   exportButton: {
     padding: "10px 20px",
