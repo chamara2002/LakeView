@@ -267,14 +267,14 @@ const FeedbackDetails = () => {
 
         <br /><br />
         <button style={styles.exportButton} onClick={handleExportPDF}>
-          Export Report as PDF
+          Download Report as PDF
         </button>
 
         <br /><br /><br />
 
         {/* Bar Chart */}
         <div style={{ width: "80%", margin: "0 auto" }}>
-          <h3 style={styles.chartHeading}>Average Ratings for Games</h3>
+          <h2 style={styles.chartHeading}>Average Ratings for Games</h2><br></br>
           <Bar ref={chartRef} data={chartData} options={chartOptions} />
           
           {/* Chart Description 
