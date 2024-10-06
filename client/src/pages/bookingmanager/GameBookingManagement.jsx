@@ -64,6 +64,53 @@ const GameBookingManagement = () => {
   // Generate PDF report
   const generatePDF = () => {
     const doc = new jsPDF();
+
+    // Company Information
+    const companyName = "LakeView Gaming Zone"; 
+    const companyAddress = "Gampaha, Sri Lanka"; 
+    const companyPhone = "+9433-7628316"; 
+    const companyEmail = "lakeviewgaming01@gmail.com";
+  
+    // Logo (Replace with your actual base64 string or image URL)
+    const logo = "/reportLogo.png"; 
+  
+    // Add the logo to the PDF
+    try {
+      doc.addImage(logo, "PNG", 150, 10, 40, 35); 
+    } catch (error) {
+      console.error("Error adding logo:", error);
+    }
+  
+    // Add company information to the PDF
+    doc.setFontSize(14);
+    doc.setTextColor(30, 39, 73);
+    doc.setFont("Helvetica", "bold");
+    doc.text(companyName, 20, 20);
+    
+    doc.setTextColor(0, 0, 0);
+    doc.setFont("Helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(companyAddress, 20, 30);
+    doc.text(companyPhone, 20, 35);
+    doc.text(companyEmail, 20, 40);
+    
+    // Add a line for separation
+    doc.line(20, 45, 190, 45); 
+
+    // Add the report title
+    doc.setFontSize(16);
+    doc.setFont("Helvetica", "bold");
+    doc.text("Games Booking Report", 65, 60);
+    doc.setFont("Helvetica", "normal");
+    
+    // Generate the table data
+    if (!filteredBookings || filteredBookings.length === 0) {
+      console.warn("No bookings to display.");
+      doc.text("No bookings available for this report.", 14, 60);
+      doc.save("game_bookings_report.pdf");
+      return;
+    }
+
     const tableColumn = ["Booking ID", "Game Name", "Customer Email", "Seats", "Price", "Booking Status"];
     const tableRows = [];
 
@@ -80,11 +127,13 @@ const GameBookingManagement = () => {
       tableRows.push(bookingData);
     });
 
-    // Generate the table in the PDF
+    // Generate the table in the PDF, adjusting the Y-position to avoid overlap
     doc.autoTable({
       head: [tableColumn],
       body: tableRows,
+      startY: 70, // Adjust this Y-position to ensure the table starts below the header
     });
+
 
     // Calculate total bookings and total price
     const totalBookings = filteredBookings.length;
