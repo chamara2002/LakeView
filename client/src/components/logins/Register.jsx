@@ -159,7 +159,7 @@ const RegistrationForm = () => {
     <NavBar></NavBar>
      <div style={pageStyle}>
       <div style={formStyle}>
-        <h2 style={{ marginBottom: '20px', color: '#00796b' }}>Register</h2>
+        <h2 style={{ marginBottom: '20px', color: '#1D284C' }}>Registration Form</h2><br></br><br></br>
         <form onSubmit={handleSubmit}>
           <label htmlFor="username" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#333' }}>First & Last Name:</label>
           <input
@@ -206,14 +206,14 @@ const RegistrationForm = () => {
             onChange={handleChange}
             style={inputStyle}
             required
-          />
+          /><br></br><br></br><br></br><br></br>
           {errors.confirmPassword && <p style={{ color: 'red', fontSize: '14px' }}>{errors.confirmPassword}</p>}
 
           <button
             type="submit"
             style={buttonStyle}
             onMouseOver={(e) => e.target.style.backgroundColor = buttonHoverStyle.backgroundColor}
-            onMouseOut={(e) => e.target.style.backgroundColor = '#00796b'}
+            onMouseOut={(e) => e.target.style.backgroundColor = '#1D284C'}
           >
             Register
           </button>
