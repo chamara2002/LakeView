@@ -3,7 +3,8 @@ import React from 'react';
 import NavFunction from '../functions/navFunction'; // Ensure the path is correct
 import Footer from '../components/core/Footer'; // Ensure the path is correct
 import Login from '../components/logins/Login'; // Ensure the path is correct
-import { useAuth } from "../pages/foodManagement/context/AuthContext.jsx"; 
+import { useAuth } from './foodManagement/context/authContext';
+// import { useAuth } from "../pages/foodManagement/context/AuthContext.jsx"; 
 
 const LoginPage = () => {
 
