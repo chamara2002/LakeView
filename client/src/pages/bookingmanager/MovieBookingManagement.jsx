@@ -50,7 +50,8 @@ const MovieBookingManagement = () => {
   );
 
   const totalSeats = filteredBookings.reduce(
-    (acc, booking) => acc + (booking.seatNumbers ? booking.seatNumbers.length : 0),
+    (acc, booking) =>
+      acc + (booking.seatNumbers ? booking.seatNumbers.length : 0),
     0
   );
   const totalRevenue = filteredBookings.reduce(
@@ -63,7 +64,9 @@ const MovieBookingManagement = () => {
     return `MB${shortId}`;
   };
 
-  const confirmedCount = filteredBookings.filter(booking => booking.confirmed).length;
+  const confirmedCount = filteredBookings.filter(
+    (booking) => booking.confirmed
+  ).length;
   const notConfirmedCount = filteredBookings.length - confirmedCount;
 
   const pieData = {
@@ -92,8 +95,11 @@ const MovieBookingManagement = () => {
 
   filteredBookings.forEach((booking) => {
     const movieName = booking.movie?.name || "Unknown Movie";
-    const ticketCount = booking.seatNumbers ? booking.seatNumbers.length : 0;
-    movieTicketCounts[movieName] = (movieTicketCounts[movieName] || 0) + ticketCount;
+    const ticketCount = booking.seatNumbers
+      ? booking.seatNumbers.length
+      : 0;
+    movieTicketCounts[movieName] =
+      (movieTicketCounts[movieName] || 0) + ticketCount;
   });
 
   const moviePieData = {
@@ -103,7 +109,12 @@ const MovieBookingManagement = () => {
         label: "Tickets Sold by Movie",
         data: Object.values(movieTicketCounts),
         backgroundColor: [
-          "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40"
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4BC0C0",
+          "#9966FF",
+          "#FF9F40",
         ],
         borderWidth: 1,
       },
@@ -122,7 +133,9 @@ const MovieBookingManagement = () => {
   return (
     <div>
       <NavBar />
-      <div style={{ backgroundColor: "#161E38", minHeight: "100vh", padding: "20px" }}>
+      <div
+        style={{ backgroundColor: "#161E38", minHeight: "100vh", padding: "20px" }}
+      >
         <div style={searchBarContainerStyle}>
           <input
             type="text"
@@ -150,23 +163,37 @@ const MovieBookingManagement = () => {
               {filteredBookings.map((booking) => (
                 <tr key={booking._id} style={trStyle}>
                   <td style={tdStyle}>{generateBookingId(booking)}</td>
-                  <td style={tdStyle}>{booking.movie?.name || "Unknown Movie"}</td>
-                  <td style={tdStyle}>{booking.customer?.email || "Unknown Customer"}</td>
-                  <td style={tdStyle}>{booking.seatNumbers ? booking.seatNumbers.length : 0}</td>
-                  <td style={tdStyle}>Rs.{booking.totalPrice.toFixed(2)}</td>
-                  <td style={tdStyle}>{booking.confirmed ? "Paid" : "Not paid"}</td>
+                  <td style={tdStyle}>
+                    {booking.movie?.name || "Unknown Movie"}
+                  </td>
+                  <td style={tdStyle}>
+                    {booking.customer?.email || "Unknown Customer"}
+                  </td>
+                  <td style={tdStyle}>
+                    {booking.seatNumbers ? booking.seatNumbers.length : 0}
+                  </td>
+                  <td style={tdStyle}>
+                    Rs.{booking.totalPrice.toFixed(2)}
+                  </td>
+                  <td style={tdStyle}>
+                    {booking.confirmed ? "Paid" : "Not paid"}
+                  </td>
                   <td style={tdStyle}>
                     <button
                       onClick={() => handleConfirm(booking._id)}
                       disabled={booking.confirmed}
                       style={{
                         ...cardButtonStyle,
-                        backgroundColor: booking.confirmed ? "#28a745" : "#007bff",
+                        backgroundColor: booking.confirmed
+                          ? "#28a745"
+                          : "#007bff",
                         cursor: booking.confirmed ? "default" : "pointer",
                         marginRight: "10px",
                       }}
                     >
-                      {booking.confirmed ? "Payment confirmed" : "Confirm Payment"}
+                      {booking.confirmed
+                        ? "Payment confirmed"
+                        : "Confirm Payment"}
                     </button>
                     <button
                       onClick={() => handleDelete(booking._id)}
@@ -193,19 +220,35 @@ const MovieBookingManagement = () => {
         </center>
 
         {/* Container for Pie Charts */}
-        <div style={{ display: "flex", justifyContent: "space-around", margin: "20px auto", width: "80%" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-around",
+            margin: "20px auto",
+            width: "80%",
+          }}
+        >
           {/* First Pie Chart for Booking Status */}
           <div style={{ width: "35%" }}>
-            <h3 style={{ color: "#fff", textAlign: "center" }}>Booking Status Breakdown</h3>
+            <h3 style={{ color: "#fff", textAlign: "center" }}>
+              Booking Status Breakdown
+            </h3>
             <Pie data={pieData} options={pieOptions} />
           </div>
 
           {/* Second Pie Chart for Tickets Sold by Movie */}
           <div style={{ width: "35%" }}>
-            <h3 style={{ color: "#fff", textAlign: "center" }}>Tickets Sold by Movie</h3>
+            <h3 style={{ color: "#fff", textAlign: "center" }}>
+              Tickets Sold by Movie
+            </h3>
             <Pie data={moviePieData} options={moviePieOptions} />
           </div>
         </div>
+
+        {/* Generate Pie Chart Button */}
+        <center>
+          <button style={generateChartButtonStyle}>Generate Pie Chart</button>
+        </center>
       </div>
       <Footer />
     </div>
@@ -269,6 +312,16 @@ const cardButtonStyle = {
   color: "#fff",
   border: "none",
   borderRadius: "4px",
+  cursor: "pointer",
+};
+
+const generateChartButtonStyle = {
+  backgroundColor: "#28a745", // Light green color
+  color: "#fff",
+  padding: "12px 24px",
+  borderRadius: "8px",
+  border: "none",
+  fontSize: "16px",
   cursor: "pointer",
 };
 
