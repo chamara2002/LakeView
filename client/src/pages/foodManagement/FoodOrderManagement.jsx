@@ -117,7 +117,54 @@ const FoodOrderManagement = () => {
 
   const handleExportPDF = () => {
     const doc = new jsPDF();
-    doc.text("Food Orders Report", 14, 20);
+   
+    // Company Information
+    const companyName = "LakeView Gaming Zone"; 
+    const companyAddress = "Gampaha, Sri Lanka"; 
+    const companyPhone = "+9433-7628316"; 
+    const companyEmail = "lakeviewgaming01@gmail.com";
+  
+    // Logo (Replace with your actual base64 string or image URL)
+    const logo = "/reportLogo.png"; 
+  
+    // Add the logo to the PDF
+    try {
+      doc.addImage(logo, "PNG", 150, 10, 40, 35); 
+    } catch (error) {
+      console.error("Error adding logo:", error);
+    }
+  
+    // Add company information to the PDF
+    doc.setFontSize(14);
+    doc.setTextColor(30, 39, 73);
+    doc.setFont("Helvetica", "bold");
+    doc.text(companyName, 20, 20);
+    
+    doc.setTextColor(0, 0, 0);
+    doc.setFont("Helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text(companyAddress, 20, 30);
+    doc.text(companyPhone, 20, 35);
+    doc.text(companyEmail, 20, 40);
+    
+    // Add a line for separation
+    doc.line(20, 45, 190, 45); 
+
+    // Add the report title
+    doc.setFontSize(16);
+    doc.setFont("Helvetica", "bold");
+    doc.text("Food Orders Report", 65, 60);
+    doc.setFont("Helvetica", "normal");
+    doc.setFontSize(12); // Smaller font size for summary
+    
+    // Generate the table data
+    if (!filteredOrders || filteredOrders.length === 0) {
+      console.warn("No orders to display.");
+      doc.text("No orders available for this report.", 14, 60);
+      doc.save("food_orders_report.pdf");
+      return;
+    }
+    //doc.text("Food Orders Report", 14, 105); // Adjusted position for the title
     const tableData = filteredOrders.map((order) => [
       formatId(order._id, "OID"),
       formatId(order.userId, "CID"),
@@ -125,30 +172,29 @@ const FoodOrderManagement = () => {
       `Rs.${order.totalPrice.toFixed(2)}`,
       order.isCompleted ? "Paid" : "Not Paid",
     ]);
-
+  
     doc.autoTable({
       head: [["Order ID", "Customer ID", "Meals", "Total Price", "Status"]],
       body: tableData,
-      startY: 30,
+      startY: 70, // Adjusted start position for the table
       theme: "grid",
       headStyles: { fillColor: [22, 30, 56] },
       styles: { cellPadding: 3, fontSize: 10 },
     });
-
+  
     // Calculate summary data
     const totalPaid = filteredOrders.filter(order => order.isCompleted).length;
     const totalNotPaid = filteredOrders.filter(order => !order.isCompleted).length;
     const totalRevenue = filteredOrders.reduce((total, order) => total + (order.isCompleted ? order.totalPrice : 0), 0).toFixed(2);
-
+  
     // Add summary to PDF
     doc.text(`Total Orders: ${filteredOrders.length}`, 14, doc.autoTable.previous.finalY + 10);
     doc.text(`Total Paid: ${totalPaid}`, 14, doc.autoTable.previous.finalY + 20);
     doc.text(`Total Not Paid: ${totalNotPaid}`, 14, doc.autoTable.previous.finalY + 30);
     doc.text(`Total Revenue: Rs.${totalRevenue}`, 14, doc.autoTable.previous.finalY + 40);
-
     doc.save("food_orders_report.pdf");
   };
-
+  
   // Utility function to format the ID with a prefix
   const formatId = (id, prefix) => {
     return `${prefix}${id.slice(0, 7)}`; // Return the prefix and first 4 characters of the ID
@@ -305,6 +351,7 @@ const FoodOrderManagement = () => {
 };
 
 const thStyle = {
+  border: "1px solid #ddd",
   borderBottom: "2px solid #ddd",
   padding: "18px",
   textAlign: "left",
@@ -315,6 +362,7 @@ const thStyle = {
 };
 
 const tdStyle = {
+  border: "1px solid #ddd",
   borderBottom: "1px solid #ddd",
   padding: "16px",
 };
@@ -332,5 +380,4 @@ const styles = {
     fontWeight: "bold",
   },
 };
-
 export default FoodOrderManagement;
