@@ -45,6 +45,7 @@ const EventManagement = () => {
             <p><strong>Capacity:</strong> {event.capacity}</p>
             <p><strong>Location:</strong> {event.location}</p>
             <p><strong>Price:</strong> ${event.price}</p>
+            <p><strong>Poster:</strong> {event.poster}</p>
             <div style={buttonContainerStyle}>
               <button onClick={() => handleEdit(event._id)} style={editButtonStyle}>Edit</button>
               <button onClick={() => handleDelete(event._id)} style={deleteButtonStyle}>Delete</button>
@@ -57,47 +58,69 @@ const EventManagement = () => {
 };
 
 const containerStyle = {
-  backgroundColor: '#161E38',
+  backgroundColor: '#00072D',
   minHeight: '100vh',
   padding: '20px',
   color: '#fff',
+  alignItems: 'center',
+  
+  borderRadius: '8px',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  fontFamily: '"segoe UI", Tahoma, Geneva, Verdana, sens-serif',
+  margin: '0 auto',
+  
+
 };
 
 const headerStyle = {
   textAlign: 'center',
-  marginBottom: '20px',
+  marginBottom: '10px',
+  color: '#ADD8E6',
+  fontSize: '2.5rem'
 };
+
 
 const addButtonStyle = {
   backgroundColor: '#007bff',
   color: '#fff',
-  padding: '10px 20px',
+  padding: '9px 20px',
   border: 'none',
   borderRadius: '5px',
   cursor: 'pointer',
   display: 'block',
-  margin: '0 auto 20px auto',
+  margin: '0px auto 20px',
+  transition: 'background-color 0.3s ease',
+  fontSize: '1rem',
 };
+
 
 const gridStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
   gap: '20px',
+  
 };
 
 const cardStyle = {
-  backgroundColor: '#222',
+  backgroundColor: '#4A4A4A',
   padding: '20px',
   borderRadius: '10px',
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+  transition: 'transform 0.2s ease',
+};
+
+cardStyle[':hover']={
+  transform: 'scale(1.02)',
 };
 
 const cardTitleStyle = {
   marginTop: '0',
   marginBottom: '15px',
   fontSize: '18px',
-  color: '#ffcc00',
+  color: '#000000',
 };
+
+
 
 const buttonContainerStyle = {
   display: 'flex',
@@ -106,21 +129,33 @@ const buttonContainerStyle = {
 };
 
 const editButtonStyle = {
-  backgroundColor: '#007bff',
+  backgroundColor: '#f0ad4e',
   color: '#fff',
-  padding: '8px 12px',
+  padding: '8px 16px',
   border: 'none',
   borderRadius: '5px',
   cursor: 'pointer',
+  transition: 'background-color 0.3s ease'
 };
 
+editButtonStyle[':hover']={
+  backgroundColor: '#ec971f'
+};
+
+
+
 const deleteButtonStyle = {
-  backgroundColor: '#dc3545',
+  backgroundColor: '#d9534f',
   color: '#fff',
-  padding: '8px 12px',
+  padding: '8px 16px',
   border: 'none',
   borderRadius: '5px',
   cursor: 'pointer',
+  transition: 'background-color 0.3s ease',
+};
+
+deleteButtonStyle[':hover']={
+  backgroundColor: '#c9302c'
 };
 
 export default EventManagement;
