@@ -67,7 +67,7 @@ const AddEvent = () => {
         </label>
         <label style={labelStyle}>
           Description:
-          <textarea name="description" value={event.description} onChange={handleChange} style={textareaStyle}></textarea>
+          < input type="text" name="description" value={event.description} onChange={handleChange} style={inputStyle}/>
           {errors.description && <span style={errorStyle}>{errors.description}</span>}
         </label>
         <label style={labelStyle}>
@@ -87,7 +87,12 @@ const AddEvent = () => {
         </label>
         <label style={labelStyle}>
           Category:
-          <input type="text" name="category" value={event.category} onChange={handleChange} style={inputStyle} />
+          <select name="category" value={event.category} onChange={handleChange} style={inputStyle}>
+          <option value="">Select a category</option>
+          <option value="gaming">Gaming Tournaments</option>
+          <option value="music">Musical Events</option>
+          <option value="others">Others</option> </select>
+        
           {errors.category && <span style={errorStyle}>{errors.category}</span>}
         </label>
         <label style={labelStyle}>
@@ -131,13 +136,16 @@ const containerStyle = {
   padding: '20px',
   borderRadius: '8px',
   minHeight: '100vh',  // Full viewport height
+  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+  fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+
 };
 
 const contentStyle = {
   maxWidth: '800px',
   margin: 'auto',
-  backgroundColor: '#2A2E4A',
-  padding: '20px',
+  backgroundColor: '#0E4D92',
+  padding: '10px',
   borderRadius: '8px',
 };
 
@@ -149,19 +157,28 @@ const headerStyle = {
 const formStyle = {
   display: 'flex',
   flexDirection: 'column',
+  gap: '20px',
+  
 };
 
 const labelStyle = {
-  margin: '10px 0',
+  margin: '10px 80px',
+  display: 'flex',
+  flexDirection: 'column',
+  fontWeight: 'bold',
+  fontSize: '1.1rem',
 };
 
 const inputStyle = {
   padding: '10px',
   marginTop: '5px',
-  borderRadius: '4px',
+  borderRadius: '5px',
   border: '1px solid #ddd',
-  backgroundColor: '#2A2E4A',
-  color: '#FFF',
+  backgroundColor: '#ADD8E6',
+  color: '#000000',
+  width: '80%',
+  fontSize: '1rem',
+
 };
 
 const textareaStyle = {
@@ -190,5 +207,7 @@ const errorStyle = {
   fontSize: '0.9em',
   marginTop: '5px',
 };
+
+
 
 export default AddEvent;
