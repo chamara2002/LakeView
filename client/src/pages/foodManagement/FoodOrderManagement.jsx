@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
@@ -10,23 +10,23 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Pie } from "react-chartjs-2"; // Import the Pie chart component
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'; // Import Chart.js components
+import html2canvas from "html2canvas";
 
 // Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const FoodOrderManagement = () => {
   const [orders, setOrders] = useState([]);
-  const [searchIdQuery, setSearchIdQuery] = useState("");
-  const [completionStatus, setCompletionStatus] = useState("");
+  const [searchQuery, handleSearch] = useState("");
+  const [searchTermByDate, handleSearchByDate] = useState("");
   const [foodSalesData, setFoodSalesData] = useState({}); // State for food sales data
-
+  const pieChartRef = useRef();
 
   useEffect(() => {
     axios
       .get("http://localhost:3000/api/order/")
       .then((response) => {
         setOrders(response.data);
-        conso
         calculateFoodSales(response.data);
       })
       .catch((error) => console.error("Error fetching orders:", error));
@@ -52,6 +52,14 @@ const FoodOrderManagement = () => {
 
     const labels = sortedFoods.map((food) => food[0]);
     const data = sortedFoods.map((food) => food[1]);
+
+    const handleSearch = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+    const handleSearchByDate = (event) => {
+      searchTermByDate(event.target.value);
+    };
 
     // Set the pie chart data
     setFoodSalesData({
@@ -106,14 +114,14 @@ const FoodOrderManagement = () => {
   };
 
   const filteredOrders = orders.filter((order) => {
-    const matchesId = order._id.toLowerCase().includes(searchIdQuery.toLowerCase());
-    const matchesCompletion =
-      completionStatus === ""
-        ? true
-        : completionStatus === "completed"
-        ? order.isCompleted
-        : !order.isCompleted;
-    return matchesId && matchesCompletion;
+  const matchesId = order._id.toLowerCase().includes(searchQuery.toLowerCase());
+  const matchesEmail = order.userEmail.toLowerCase().includes(searchQuery.toLowerCase());
+  const matchesStatus = (order.isCompleted ? "paid" : "not paid").toLowerCase().includes(searchQuery.toLowerCase());
+  const matchesDate = searchTermByDate
+      ? new Date(order.createdAt).toLocaleDateString() === new Date(searchTermByDate).toLocaleDateString()
+      : true;
+
+    return (matchesId || matchesEmail || matchesStatus) && matchesDate;
   });
 
   const handleExportPDF = () => {
@@ -168,14 +176,14 @@ const FoodOrderManagement = () => {
     //doc.text("Food Orders Report", 14, 105); // Adjusted position for the title
     const tableData = filteredOrders.map((order) => [
       formatId(order._id, "OID"),
-      formatId(order.userId, "CID"),
+      order.userEmail,
       order.meals.map((meal) => `${meal.food?.name || "Unknown"} (${meal.quantity})`).join(", "),
       `Rs.${order.totalPrice.toFixed(2)}`,
       order.isCompleted ? "Paid" : "Not Paid",
     ]);
   
     doc.autoTable({
-      head: [["Order ID", "Customer ID", "Meals", "Total Price", "Status"]],
+      head: [["Order ID", "Customer Email", "Meals", "Total Price", "Status"]],
       body: tableData,
       startY: 70, // Adjusted start position for the table
       theme: "grid",
@@ -196,6 +204,96 @@ const FoodOrderManagement = () => {
     doc.save("food_orders_report.pdf");
   };
   
+  
+  const handleGenerateChartReport = async () => { 
+    const doc = new jsPDF();
+    const companyName = "LakeView Gaming Zone";
+    const companyAddress = "Gampaha, Sri Lanka";
+    const companyPhone = "+9433-7628316";
+    const companyEmail = "lakeviewgaming01@gmail.com";
+    const logo = "/reportLogo.png"; // Logo for the report
+
+    // Add logo and company information
+    try {
+        await doc.addImage(logo, "PNG", 150, 10, 40, 35);
+    } catch (error) {
+        console.error("Error adding logo:", error);
+    }
+
+    // Company Information
+    doc.setFontSize(14);
+    doc.setTextColor(30, 39, 73);
+    doc.setFont("Helvetica", "bold");
+    doc.text(companyName, 20, 20);
+    doc.setFontSize(10);
+    doc.setFont("Helvetica", "normal");
+    doc.setTextColor(0, 0, 0);
+    doc.text(companyAddress, 20, 30);
+    doc.text(companyPhone, 20, 35);
+    doc.text(companyEmail, 20, 40);
+    doc.line(20, 45, 190, 45);
+
+    // Add title
+    doc.setFontSize(16);
+    doc.text("Top 5 Most Sold Food Items", 65, 60);
+
+    // Capture the Pie chart as an image using html2canvas
+    if (pieChartRef.current) {
+        try {
+            const pieChartCanvas = await html2canvas(pieChartRef.current, {
+                scale: 2,
+            });
+            const imgData = pieChartCanvas.toDataURL("image/png");
+            // Define the desired size of the pie chart
+        const size = 280; // Set this to your desired size (height and width will be the same)
+        
+        // Calculate x position to center the image
+        const x = (doc.internal.pageSize.getWidth() - size) / 2; // Center horizontally
+        const y = 80; // Set the y position as needed
+
+        doc.addImage(imgData, "PNG", x, y, size, 80); // Centered position with equal width and height
+        } catch (error) {
+            console.error("Error capturing pie chart:", error);
+        }
+    } else {
+        console.error("Pie chart reference is not valid.");
+    }
+
+   // Prepare the list of most sold food items
+   const mostSoldFoods = foodSalesData.labels.map((label, index) => ({
+    name: label,
+    quantity: foodSalesData.datasets[0].data[index],
+    color: foodSalesData.datasets[0].backgroundColor[index],
+}));
+
+     // Add a section for most sold food items
+     doc.setFontSize(14);
+     doc.text("Most Sold Food Items:", 20, 190);
+     doc.setFontSize(12);
+ 
+     // Adding each food item with its corresponding color box and name
+     mostSoldFoods.forEach((food, index) => {
+         const x = 20; 
+         const y = 210 + index * 14; 
+ 
+         // Draw a colored rectangle for the food item color
+         doc.setFillColor(food.color);
+         doc.rect(x, y - 5, 10, 10, 'F');
+ 
+         // Set text color for the food item name
+         doc.setTextColor(0, 0, 0);
+         doc.text(food.name, x + 15, y);
+         doc.text(`: ${food.quantity}`, x + 15 + doc.getTextWidth(food.name) + 5, y);
+     });
+ 
+     // Reset text color back to default
+     doc.setTextColor(0, 0, 0);
+ 
+     // Save the PDF
+     doc.save("food_sales_report.pdf");
+};
+
+
   // Utility function to format the ID with a prefix
   const formatId = (id, prefix) => {
     return `${prefix}${id.slice(0, 7)}`; // Return the prefix and first 4 characters of the ID
@@ -209,36 +307,35 @@ const FoodOrderManagement = () => {
         <h2 style={{ color: "white", textAlign: "center", fontSize: "30px" }}>Manage Orders </h2>
         <br />
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
+    
+         <input
+        type="text"
+        placeholder="Search by Order ID, Customer Email, or Status"
+        value={searchQuery}
+        onChange={(e) => handleSearch(e.target.value)}
+        style={{
+          width: "30%",
+          padding: "10px",
+          borderRadius: "4px",
+          border: "1px solid #ccc",
+          color: "#000",
+          fontSize: "16px",
+        }}    
+        />
           <input
-            type="text"
-            placeholder="Search by order ID"
-            value={searchIdQuery}
-            onChange={(e) => setSearchIdQuery(e.target.value)}
-            style={{
-              width: "40%",
-              padding: "10px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              color: "#000",
-              fontSize: "16px",
-            }}
-          />
-          <select
-            value={completionStatus}
-            onChange={(e) => setCompletionStatus(e.target.value)}
-            style={{
-              width: "30%",
-              padding: "10px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              color: "#000",
-              fontSize: "16px",
-            }}
-          >
-            <option value="">Status of payment</option>
-            <option value="completed">Paid</option>
-            <option value="not_completed">Not Paid</option>
-          </select>
+          type="date" 
+          placeholder="Search by Date (YYYY-MM-DD)"
+          value={searchTermByDate}
+          onChange={(e) => handleSearchByDate(e.target.value)}
+          style={{
+            width: "30%",
+            padding: "10px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+            color: "#000",
+            fontSize: "16px",
+          }}
+        />
         </div>
         <br />
         <table
@@ -250,6 +347,7 @@ const FoodOrderManagement = () => {
               <th style={thStyle}>Customer Email</th>
               <th style={thStyle}>Meals</th>
               <th style={thStyle}>Total Price</th>
+              <th style={thStyle}>Date</th>
               <th style={thStyle}>Status</th>
               <th style={thStyle}>Complete</th>
               <th style={thStyle}>Delete</th>
@@ -273,6 +371,7 @@ const FoodOrderManagement = () => {
                     ))}
                   </td>
                   <td style={tdStyle}>Rs.{order.totalPrice.toFixed(2)}</td>
+                  <td style={tdStyle}>{new Date(order.createdAt).toLocaleDateString('en-CA')}</td>
                   <td style={tdStyle}>{order.isCompleted ? "Paid" : "Not Paid"}</td>
                   <td style={tdStyle}>
                     <button
@@ -322,8 +421,9 @@ const FoodOrderManagement = () => {
       </div>
       <div style={{ backgroundColor: "#161E38", padding: "20px", borderRadius: "5px" }}>
   <h3 style={{ color: "white", textAlign: "center", fontSize: "24px" }}>Most Sold Foods</h3>
-  {Object.keys(foodSalesData).length > 0 ? (
-    <Pie 
+  {foodSalesData.labels && foodSalesData.labels.length > 0 ? (
+    <div ref={pieChartRef}>
+    <Pie  
       data={foodSalesData} 
       options={{ 
         maintainAspectRatio: false,
@@ -339,10 +439,14 @@ const FoodOrderManagement = () => {
         }
       }} 
       style={{ maxHeight: "400px", width: "100%" }} 
-    />
+    /></div>
   ) : (
     <p style={{ color: "white", textAlign: "center" }}>No sales data available</p>
   )}
+  {/* New Button to Download Chart as PDF */}
+<button style={styles.exportButton} onClick={handleGenerateChartReport} label="Generate Chart Report">
+          Download Chart as PDF
+        </button>
 </div>
 
       <ToastContainer />
