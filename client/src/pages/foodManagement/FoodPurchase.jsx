@@ -45,10 +45,13 @@ const FoodPurchase = () => {
       // Post request to the backend
       await axios.post("http://localhost:3000/api/order/add-order", {
         userId: user.user._id,
+        userEmail: user.user.email,
         meals,
         totalPrice: total,
         isCompleted: false,
       });
+
+      console.log("user ", user);
 
       // Show success toast
       toast.success("Order placed successfully!");

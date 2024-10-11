@@ -29,17 +29,25 @@ const MovieBillInfo = () => {
 
   const handleCashPay = async () => {
     try {
-      await axios.post("http://localhost:3000/api/bkm/bookings", {
+      const response = await axios.post("http://localhost:3000/api/bkm/bookings", {
         customer: user.user._id,
         movie: bookingDetails.itemId,
         seatNumbers: bookingDetails.seatNumbers,
-        totalPrice: bookingDetails.total,
+        totalPrice: bookingDetails.totalAmount,
+        confirmed: false, // Assuming cash payment is considered confirmed
+        date: bookingDetails.date,
+        time: bookingDetails.time
       });
-      alert('Payment Successful');
-      navigate(`/movies`);
-    } catch (e) {
-      alert('Payment Failed');
-      console.error('Error paying for event:', e);
+
+      if (response.status === 201) {
+        alert('Booking Successful');
+        navigate(`/movies`);
+      } else {
+        throw new Error('Booking failed');
+      }
+    } catch (error) {
+      alert('Booking Failed');
+      console.error('Error booking movie:', error);
     }
   };
 

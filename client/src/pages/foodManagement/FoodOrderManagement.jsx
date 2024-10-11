@@ -26,6 +26,7 @@ const FoodOrderManagement = () => {
       .get("http://localhost:3000/api/order/")
       .then((response) => {
         setOrders(response.data);
+        conso
         calculateFoodSales(response.data);
       })
       .catch((error) => console.error("Error fetching orders:", error));
@@ -246,7 +247,7 @@ const FoodOrderManagement = () => {
           <thead>
             <tr>
               <th style={thStyle}>Order ID</th>
-              <th style={thStyle}>Customer ID</th>
+              <th style={thStyle}>Customer Email</th>
               <th style={thStyle}>Meals</th>
               <th style={thStyle}>Total Price</th>
               <th style={thStyle}>Status</th>
@@ -263,7 +264,7 @@ const FoodOrderManagement = () => {
               filteredOrders.map((order) => (
                 <tr key={order._id}>
                   <td style={tdStyle}>{formatId(order._id, "OID")}</td>
-                  <td style={tdStyle}>{formatId(order.userId, "CID")}</td>
+                  <td style={tdStyle}>{order.userEmail}</td>
                   <td style={tdStyle}>
                     {order.meals.map((meal) => (
                       <div key={meal.food?._id}>

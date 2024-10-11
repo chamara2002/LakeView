@@ -6,6 +6,7 @@ const OrderSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Customer",
         required: true},
+    userEmail : {type: String, required: true},
     meals : [
         {
             food: {type: Schema.Types.ObjectId, ref: "Food", required: true},

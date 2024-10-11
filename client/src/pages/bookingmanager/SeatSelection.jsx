@@ -7,10 +7,18 @@ import Footer from "../../components/core/Footer";
 
 // SeatSelection Component
 const SeatSelection = ({ movieId, pricePerSeat }) => {
-  const [unavailableSeats, setUnavailableSeats] = useState([]);
+  const [unavailableSeats, setUnavailableSeats] = useState({});
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
   const { bookingDetails, setBookingItem, addSeats } = useContext(BookingContext);
   const navigate = useNavigate();
+
+  const timeSlots = [
+    "6.00am - 9.00am",
+    "9.00am - 12.00pm",
+    "12.00pm - 3.00pm"
+  ];
 
   useEffect(() => {
     // Check if itemId is valid before making API requests
@@ -36,9 +44,17 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
         }
 
         const bookingsData = response.data || [];
-        // Flatten the seatNumbers arrays from all bookings into one array
-        const seats = bookingsData.flatMap((booking) => booking.seatNumbers);
-        setUnavailableSeats(seats);
+        const unavailableSeatsMap = {};
+        
+        bookingsData.forEach(booking => {
+          const key = `${booking.date}_${booking.time}`;
+          if (!unavailableSeatsMap[key]) {
+            unavailableSeatsMap[key] = [];
+          }
+          unavailableSeatsMap[key].push(...booking.seatNumbers);
+        });
+
+        setUnavailableSeats(unavailableSeatsMap);
       } catch (error) {
         console.error("Error fetching bookings:", error);
       }
@@ -48,7 +64,8 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
   }, [bookingDetails.itemId, bookingDetails.type]);
 
   const handleSeatClick = (seatNumber) => {
-    if (unavailableSeats.includes(seatNumber)) {
+    const currentUnavailableSeats = unavailableSeats[`${selectedDate}_${selectedTime}`] || [];
+    if (currentUnavailableSeats.includes(seatNumber)) {
       return; // If the seat is unavailable, do nothing
     }
 
@@ -67,18 +84,39 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
   };
 
   const confirmSelection = () => {
-    if (selectedSeats.length > 0) {
-      addSeats(selectedSeats);
-      navigate("/booking-summary"); // Navigate to booking summary after confirming selection
+    if (selectedSeats.length > 0 && selectedDate && selectedTime) {
+      const totalAmount = selectedSeats.length * bookingDetails.price;
+      setBookingItem(
+        bookingDetails.type,
+        bookingDetails.itemId,
+        bookingDetails.price,
+        selectedDate,
+        selectedTime,
+        selectedSeats,
+        totalAmount
+      );
+      navigate("/booking-summary");
     } else {
-      alert("Please select at least one seat.");
+      alert("Please select at least one seat, a date, and a time.");
     }
+  };
+
+  const handleDateChange = (e) => {
+    setSelectedDate(e.target.value);
+    setSelectedTime(""); // Reset time when date changes
+  };
+
+  const handleTimeChange = (e) => {
+    setSelectedTime(e.target.value);
   };
 
   const renderSeats = () => {
     const seats = [];
+    const currentUnavailableSeats = unavailableSeats[`${selectedDate}_${selectedTime}`] || [];
+
     for (let i = 1; i <= 50; i++) {
       const seatNumber = `S${i}`;
+      const isUnavailable = currentUnavailableSeats.includes(seatNumber);
       seats.push(
         <div
           key={seatNumber}
@@ -90,8 +128,8 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
             justifyContent: "center",
             borderRadius: "5px",
             border: "1px solid #333",
-            cursor: unavailableSeats.includes(seatNumber) ? "not-allowed" : "pointer",
-            backgroundColor: unavailableSeats.includes(seatNumber)
+            cursor: isUnavailable || !selectedDate || !selectedTime ? "not-allowed" : "pointer",
+            backgroundColor: isUnavailable
               ? "grey"
               : selectedSeats.includes(seatNumber)
               ? "green"
@@ -100,8 +138,13 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
             fontWeight: "bold",
             userSelect: "none",
             transition: "transform 0.3s, background-color 0.3s",
+            opacity: !selectedDate || !selectedTime ? 0.5 : 1,
           }}
-          onClick={() => handleSeatClick(seatNumber)}
+          onClick={() => {
+            if (selectedDate && selectedTime && !isUnavailable) {
+              handleSeatClick(seatNumber);
+            }
+          }}
         >
           {seatNumber}
         </div>
@@ -117,6 +160,40 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
         <h3 style={{ marginBottom: "20px", color: "#ffffff", fontSize: "1.8rem" }}>
           Select Your Tickets
         </h3>
+        
+        {/* Date and Time Selection */}
+        <div style={{ marginBottom: "20px" }}>
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={handleDateChange}
+            style={{
+              padding: "10px",
+              marginRight: "10px",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+              backgroundColor: "#ffffff",
+            }}
+          />
+          <select
+            value={selectedTime}
+            onChange={handleTimeChange}
+            style={{
+              padding: "10px",
+              borderRadius: "5px",
+              border: "1px solid #ccc",
+              backgroundColor: "#ffffff",
+            }}
+          >
+            <option value="">Select Time</option>
+            {timeSlots.map((slot) => (
+              <option key={slot} value={slot}>
+                {slot}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div
           style={{
             display: "grid",
@@ -152,27 +229,6 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
           onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           Confirm Selection
-        </button>
-        <button
-          onClick={() => navigate("/booking-summary")}
-          style={{
-            padding: "12px 30px",
-            backgroundColor: "#007BFF",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-            borderRadius: "5px",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            transition: "background-color 0.3s, transform 0.2s",
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#0056b3")}
-          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#007BFF")}
-          onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.98)")}
-          onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
-        >
-          Proceed
         </button>
       </div>
       <Footer />
