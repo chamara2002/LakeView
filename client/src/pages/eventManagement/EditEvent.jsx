@@ -10,13 +10,14 @@ const EditEvent = () => {
     name: '',
     description: '',
     date: '',
-    start_date: '',
+    start_time: '',
     end_time: '',
     category: '',
     capacity: '',
     location: '',
     price: '',
     status: 'active',
+    poster: '',
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -50,6 +51,7 @@ const EditEvent = () => {
     if (!event.capacity || isNaN(event.capacity)) validationErrors.capacity = 'Capacity is required and must be a number';
     if (!event.location) validationErrors.location = 'Location is required';
     if (!event.price || isNaN(event.price)) validationErrors.price = 'Price is required and must be a number';
+    if (!event.poster) validationErrors.poster = 'Photo URL is required';
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -61,131 +63,157 @@ const EditEvent = () => {
   };
 
   return (
-   <div>
-    <NavBar></NavBar>
-     <div className="edit-event-container">
-      <h1>Edit Event</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
+   <div style={containerStyle}>
+    <NavBar/>
+      <div style={contentStyle}>
+      <h1 style={headerStyle}>Edit Event</h1>
+      <form onSubmit={handleSubmit} style={formStyle}>
+        <label style={labelStyle}>
           Name:
-          <input type="text" name="name" value={event.name} onChange={handleChange} />
-          {errors.name && <span>{errors.name}</span>}
+          <input type="text" name="name" value={event.name} onChange={handleChange} style={inputStyle} />
+          {errors.name && <span style={errorStyle}>{errors.name}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Description:
-          <textarea name="description" value={event.description} onChange={handleChange}></textarea>
-          {errors.description && <span>{errors.description}</span>}
+          <input type="text" name="description" value={event.description} onChange={handleChange} style={inputStyle}/>
+          {errors.description && <span style={errorStyle}>{errors.description}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Date:
-          <input type="date" name="date" value={event.date} onChange={handleChange} />
-          {errors.date && <span>{errors.date}</span>}
+          <input type="date" name="date" value={event.date} onChange={handleChange} style={inputStyle} />
+          {errors.date && <span style={errorStyle} >{errors.date}</span>}
         </label>
-        <label>
-          Start Date:
-          <input type="date" name="start_date" value={event.start_date} onChange={handleChange} />
-          {errors.start_date && <span>{errors.start_date}</span>}
+        <label style={labelStyle}>
+          Start Time:
+          <input type="datetime-local" name="start_time" value={event.start_time} onChange={handleChange} style={inputStyle} />
+          {errors.start_time && <span style={errorStyle}>{errors.start_time}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           End Time:
-          <input type="datetime-local" name="end_time" value={event.end_time} onChange={handleChange} />
-          {errors.end_time && <span>{errors.end_time}</span>}
+          <input type="datetime-local" name="end_time" value={event.end_time} onChange={handleChange} style={inputStyle} />
+          {errors.end_time && <span style={errorStyle}>{errors.end_time}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Category:
-          <input type="text" name="category" value={event.category} onChange={handleChange} />
-          {errors.category && <span>{errors.category}</span>}
+          <select name="category" value={event.category} onChange={handleChange} style={inputStyle}>
+          <option value="">Select a category</option>
+          <option value="gaming">Gaming Tournaments</option>
+          <option value="music">Musical Events</option>
+          <option value="others">Others</option> </select>
+          {errors.category && <span style={errorStyle}>{errors.category}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Capacity:
-          <input type="number" name="capacity" value={event.capacity} onChange={handleChange} />
-          {errors.capacity && <span>{errors.capacity}</span>}
+          <input type="number" name="capacity" value={event.capacity} onChange={handleChange} style={inputStyle} />
+          {errors.capacity && <span style={errorStyle}>{errors.capacity}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Location:
-          <input type="text" name="location" value={event.location} onChange={handleChange} />
-          {errors.location && <span>{errors.location}</span>}
+          <input type="text" name="location" value={event.location} onChange={handleChange} style={inputStyle} />
+          {errors.location && <span style={errorStyle}>{errors.location}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
           Price:
-          <input type="number" name="price" value={event.price} onChange={handleChange} />
-          {errors.price && <span>{errors.price}</span>}
+          <input type="number" name="price" value={event.price} onChange={handleChange} style={inputStyle} />
+          {errors.price && <span style={errorStyle}>{errors.price}</span>}
         </label>
-        <label>
+        <label style={labelStyle}>
+          Photo URL:
+          <input type="text" name="poster" value={event.poster} onChange={handleChange} style={inputStyle} />
+          {errors.poster && <span style={errorStyle}>{errors.poster}</span>}
+        </label>
+        <label style={labelStyle}>
           Status:
-          <select name="status" value={event.status} onChange={handleChange}>
+          <select name="status" value={event.status} onChange={handleChange} style={inputStyle} >
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </select>
         </label>
-        <button type="submit">Update Event</button>
+        <button type="submit" style={buttonStyle}>Update Event</button>
       </form>
 
-      {/* Inline CSS */}
-      <style jsx>{`
-        .edit-event-container {
-          background-color: #161E38; /* Adding the background color */
-          color: #fff;
-          padding: 20px;
-          min-height: 100vh;
-        }
-
-        form {
-          display: flex;
-          flex-direction: column;
-          max-width: 600px;
-          margin: auto;
-          padding: 20px;
-          background-color: #222B45; /* Darker background for the form */
-          border-radius: 8px;
-          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow */
-        }
-
-        label {
-          margin: 15px 0;
-          font-weight: bold;
-        }
-
-        input, textarea, select {
-          margin-top: 5px;
-          padding: 12px;
-          border: 1px solid #555;
-          border-radius: 4px;
-          background-color: #1E2A38; /* Darker input background */
-          color: #fff; /* White text */
-        }
-
-        input::placeholder, textarea::placeholder {
-          color: #999; /* Placeholder text color */
-        }
-
-        button {
-          margin-top: 20px;
-          padding: 12px;
-          border: none;
-          border-radius: 4px;
-          background-color: #4CAF50;
-          color: white;
-          cursor: pointer;
-          font-size: 16px;
-          font-weight: bold;
-        }
-
-        button:hover {
-          background-color: #45a049;
-        }
-
-        span {
-          color: red;
-          font-size: 0.9em;
-          display: block;
-          margin-top: 5px;
-        }
-      `}</style>
     </div>
-    <Footer></Footer>
+    <Footer/>
    </div>
   );
+};
+
+const containerStyle = {
+  backgroundColor: '#1B1F38',
+  color: '#FFFFFF',
+  padding: '20px',
+  borderRadius: '8px',
+  minHeight: '100vh',  // Full viewport height
+  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+  fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+
+};
+
+const contentStyle = {
+  maxWidth: '800px',
+  margin: 'auto',
+  backgroundColor: '#0E4D92',
+  padding: '10px',
+  borderRadius: '8px',
+};
+
+const headerStyle = {
+  textAlign: 'center',
+  marginBottom: '20px',
+};
+
+const formStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '20px',
+  
+};
+
+const labelStyle = {
+  margin: '10px 80px',
+  display: 'flex',
+  flexDirection: 'column',
+  fontWeight: 'bold',
+  fontSize: '1.1rem',
+};
+
+const inputStyle = {
+  padding: '10px',
+  marginTop: '5px',
+  borderRadius: '5px',
+  border: '1px solid #ddd',
+  backgroundColor: '#ADD8E6',
+  color: '#000000',
+  width: '80%',
+  fontSize: '1rem',
+
+};
+
+const textareaStyle = {
+  padding: '10px',
+  marginTop: '5px',
+  borderRadius: '4px',
+  border: '1px solid #ddd',
+  backgroundColor: '#2A2E4A',
+  color: '#FFF',
+  minHeight: '100px',
+};
+
+const buttonStyle = {
+  padding: '10px 20px',
+  marginTop: '20px',
+  border: 'none',
+  borderRadius: '4px',
+  backgroundColor: '#4CAF50',
+  color: 'white',
+  cursor: 'pointer',
+  alignSelf: 'center',
+};
+
+const errorStyle = {
+  color: 'red',
+  fontSize: '0.9em',
+  marginTop: '5px',
 };
 
 export default EditEvent;

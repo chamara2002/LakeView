@@ -39,7 +39,7 @@ const EventManagement = () => {
             <h3 style={cardTitleStyle}>{event.name}</h3>
             <p><strong>Description:</strong> {event.description}</p>
             <p><strong>Date:</strong> {new Date(event.date).toLocaleDateString()}</p>
-            <p><strong>Start Date:</strong> {new Date(event.start_date).toLocaleDateString()}</p>
+            <p><strong>Start Time:</strong> {new Date(event.start_time).toLocaleDateString()}</p>
             <p><strong>End Time:</strong> {new Date(event.end_time).toLocaleDateString()}</p>
             <p><strong>Category:</strong> {event.category}</p>
             <p><strong>Capacity:</strong> {event.capacity}</p>
