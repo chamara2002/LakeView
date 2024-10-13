@@ -90,7 +90,7 @@ const AddEvent = () => {
           <select name="category" value={event.category} onChange={handleChange} style={inputStyle}>
           <option value="">Select a category</option>
           <option value="gaming">Gaming Tournaments</option>
-          <option value="music">Musical Events</option>
+          <option value="musical">Musical Events</option>
           <option value="others">Others</option> </select>
         
           {errors.category && <span style={errorStyle}>{errors.category}</span>}
