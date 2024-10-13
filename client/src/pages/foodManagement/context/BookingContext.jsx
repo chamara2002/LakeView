@@ -8,17 +8,21 @@ export const BookingProvider = ({ children }) => {
     itemId: null, // ID of the movie or game
     price: 0, // Price of the movie or game
     seatNumbers: [], // Selected seat numbers
-    total: 0, // Total price
+    date: "", // Add date field
+    time: "", // Add time field
+    totalAmount: 0, // Total amount
   });
 
   // Function to set or update the booking item
-  const setBookingItem = (type, itemId, price) => {
+  const setBookingItem = (type, itemId, price, date, time, seatNumbers, totalAmount) => {
     setBookingDetails({
       type,
       itemId,
       price,
-      seatNumbers: [],
-      total: 0,
+      seatNumbers,
+      date,
+      time,
+      totalAmount,
     });
   };
 
@@ -42,7 +46,6 @@ export const BookingProvider = ({ children }) => {
   // Function to confirm seat selection
   const confirmSelection = () => {
     console.log("Selected Seats:", bookingDetails.seatNumbers);
-    // Assuming price per seat is already set in bookingDetails.price
     addSeats(bookingDetails.seatNumbers);
     console.log("Booking Confirmed:", bookingDetails);
   };

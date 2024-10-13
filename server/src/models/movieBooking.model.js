@@ -6,7 +6,9 @@ const movieBookingSchema = new Schema({
   movie: { type: Schema.Types.ObjectId, ref: 'Movie', required: true },
   seatNumbers: { type: [String], required: true },
   totalPrice: { type: Number, required: true },
-  confirmed: { type: Boolean, default: false }
+  confirmed: { type: Boolean, default: false },
+  date: { type: String, required: true },
+  time: { type: String, required: true }
 }, { timestamps: true });
 
 const MovieBooking = mongoose.model('MovieBooking', movieBookingSchema);

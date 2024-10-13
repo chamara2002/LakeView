@@ -17,7 +17,7 @@ exports.getOrders = async (req, res) => {
 
 exports.addOrder = async (req, res) => {
   try {
-    const { userId, meals, totalPrice, isCompleted } = req.body;
+    const { userId, userName, userEmail, meals, totalPrice, isCompleted } = req.body;
 
     if (!userId || !meals || !totalPrice) {
       return res.status(400).json({ error: "Missing required fields" });
@@ -25,6 +25,7 @@ exports.addOrder = async (req, res) => {
 
     const newOrder = new Order({
       userId,
+      userEmail,
       meals,
       totalPrice,
       isCompleted,

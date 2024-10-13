@@ -102,6 +102,7 @@ const CardPayF = () => {
 
       await axios.post("http://localhost:3000/api/order/add-order", {
         userId: user.user._id,
+        userEmail: user.user.email,
         meals,
         totalPrice,
         isCompleted: true,

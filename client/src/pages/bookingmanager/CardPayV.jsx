@@ -97,36 +97,41 @@ const CardPayV = () => {
       return; // Stop submission if the form is invalid
     }
 
-    if (bookingDetails.type === "movie") {
-      try {
-        await axios.post("http://localhost:3000/api/bkm/bookings", {
+    try {
+      let response;
+      if (bookingDetails.type === "movie") {
+        response = await axios.post("http://localhost:3000/api/bkm/bookings", {
           customer: user.user._id,
           movie: bookingDetails.itemId,
           seatNumbers: bookingDetails.seatNumbers,
-          totalPrice: bookingDetails.total,
+          totalPrice: bookingDetails.totalAmount,
           confirmed: true,
+          date: bookingDetails.date,
+          time: bookingDetails.time
         });
-        alert("Payment Successful");
-        navigate(`/movies`);
-      } catch (e) {
-        alert("Payment Failed");
-        console.error("Error paying for event:", e);
-      }
-    } else {
-      try {
-        await axios.post("http://localhost:3000/api/bkg/game-bookings", {
+      } else if (bookingDetails.type === "game") {
+        response = await axios.post("http://localhost:3000/api/bkg/game-bookings", {
           customer: user.user._id,
           game: bookingDetails.itemId,
           seatNumbers: bookingDetails.seatNumbers,
-          totalPrice: bookingDetails.total,
+          totalPrice: bookingDetails.totalAmount,
           confirmed: true,
+          date: bookingDetails.date,
+          time: bookingDetails.time
         });
-        alert("Payment Successful");
-        navigate(`/games`);
-      } catch (e) {
-        alert("Payment Failed");
-        console.error("Error paying for event:", e);
+      } else {
+        throw new Error("Invalid booking type");
       }
+
+      if (response.status === 201) {
+        alert("Payment Successful");
+        navigate(bookingDetails.type === "movie" ? "/movies" : "/games");
+      } else {
+        throw new Error("Payment failed");
+      }
+    } catch (error) {
+      alert("Payment Failed");
+      console.error("Error processing payment:", error);
     }
   };
 

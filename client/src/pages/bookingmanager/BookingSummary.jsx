@@ -5,29 +5,13 @@ import Footer from "../../components/core/Footer";
 import axios from "axios";
 import { useAuth } from "../foodManagement/context/authContext";
 import { BookingContext } from "../foodManagement/context/BookingContext";
-import { FaCalendarAlt, FaUser, FaEnvelope } from "react-icons/fa"; // Icons
+import { FaCalendarAlt, FaUser, FaEnvelope, FaClock } from "react-icons/fa"; // Icons
 
 const BookingSummary = () => {
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState(""); // State for selected time
   const [item, setItem] = useState({});
-  const [isDateValid, setIsDateValid] = useState(true);
   const navigate = useNavigate();
   const { user } = useAuth();
   const { bookingDetails } = useContext(BookingContext);
-
-  // Available time slots
-  const timeSlots = [
-    "6.00am - 9.00am",
-    "9.00am - 12.00pm",
-    "12.00pm - 3.00pm"
-  ];
-
-  // const ticketSlots = [
-  //   "1",
-  //   "2",
-  //   "3"
-  // ];
 
   useEffect(() => {
     if (!bookingDetails.itemId) {
@@ -51,22 +35,9 @@ const BookingSummary = () => {
     fetchItemDetails();
   }, [bookingDetails.itemId, bookingDetails.type]);
 
-  const handleDateChange = (e) => {
-    const selected = e.target.value;
-    const today = new Date().toISOString().split("T")[0];
-    setSelectedDate(selected);
-    setIsDateValid(selected >= today);
-  };
-
-  const handleTimeChange = (e) => {
-    setSelectedTime(e.target.value);
-  };
-
   const handleConfirm = () => {
-    if (selectedDate && selectedTime) {
-      alert(`Booking confirmed for ${selectedDate} at ${selectedTime}`);
-      bookingDetails.type === "movie" ? navigate("/movieBillinfo") : navigate("/gameBillInfo");
-    }
+    alert(`Booking confirmed for ${bookingDetails.date} at ${bookingDetails.time}`);
+    bookingDetails.type === "movie" ? navigate("/movieBillinfo") : navigate("/gameBillInfo");
   };
 
   return (
@@ -82,8 +53,8 @@ const BookingSummary = () => {
         <div style={styles.content}>
           <div style={styles.card}>
             <h3>Bill Information</h3>
-            <p>{`${item.name} booking fee = RS${item.price} X ${bookingDetails.seatNumbers.length} seats`}</p>
-            <p>{`Total amount = RS${bookingDetails.total}`}</p>
+            <p>{`${item.name || 'Item'} booking fee = RS${bookingDetails.price} X ${bookingDetails.seatNumbers.length} seats`}</p>
+            <p>{`Total amount = RS${bookingDetails.totalAmount}`}</p>
           </div>
 
           <div style={styles.card}>
@@ -96,79 +67,20 @@ const BookingSummary = () => {
             </p>
           </div>
 
-          <div style={styles.formGroup}>
-            <label style={styles.label} htmlFor="date">
-              <FaCalendarAlt /> Select a Date:
-            </label>
-            <input
-              type="date"
-              id="date"
-              value={selectedDate}
-              onChange={handleDateChange}
-              style={styles.input}
-            />
-            {!isDateValid && <p style={styles.error}>Please select a valid date.</p>}
+          <div style={styles.card}>
+            <h3>Booking Details</h3>
+            <p>
+              <FaCalendarAlt /> {`Date: ${bookingDetails.date}`}
+            </p>
+            <p>
+              <FaClock /> {`Time: ${bookingDetails.time}`}
+            </p>
+            <p>{`Selected Seats: ${bookingDetails.seatNumbers.join(', ')}`}</p>
           </div>
-
-
-
-          {/* <div style={styles.formGroup}>
-            <label style={styles.label} htmlFor="tickets">
-               Select a No of Tickets:
-            </label>
-            <input
-              type="number"
-              id="tickets"
-              value={selectedDate}
-              onChange={handleDateChange}
-              style={styles.input}
-              min={1}
-            />
-            {!isDateValid && <p style={styles.error}>Please select a valid range.</p>}
-          </div> */}
-
-          <div style={styles.formGroup}>
-            <label style={styles.label} htmlFor="time">
-              Select a Time:
-            </label>
-            <select
-              id="time"
-              value={selectedTime}
-              onChange={handleTimeChange}
-              style={styles.input}
-            >
-              <option value="">Select a time</option>
-              {timeSlots.map((time, index) => (
-                <option key={index} value={time}>
-                  {time}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* <div style={styles.formGroup}>
-            <label style={styles.label} htmlFor="tickets">
-              Select a Ticket:
-            </label>
-            <select
-              id="tickets"
-              value={selectedTime}
-              onChange={handleTimeChange}
-              style={styles.input}
-            >
-              <option value="">Select a Tickets</option>
-              {ticketSlots.map((time, index) => (
-                <option key={index} value={time}>
-                  {time}
-                </option>
-              ))}
-            </select>
-          </div> */}
 
           <button
             style={styles.button}
             onClick={handleConfirm}
-            disabled={!selectedDate || !isDateValid || !selectedTime}
           >
             Confirm Booking
           </button>

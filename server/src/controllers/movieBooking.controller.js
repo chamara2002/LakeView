@@ -2,14 +2,16 @@ const MovieBooking = require('../models/movieBooking.model');
 
 exports.addMovieBooking = async (req, res) => {
   try {
-    const { customer, movie, seatNumbers, totalPrice, confirmed } = req.body;
+    const { customer, movie, seatNumbers, totalPrice, confirmed, date, time } = req.body;
 
     const newBooking = new MovieBooking({
       customer,
       movie,
       seatNumbers,
       totalPrice,
-      confirmed
+      confirmed,
+      date,
+      time
     });
 
     const savedBooking = await newBooking.save();
@@ -98,4 +100,3 @@ exports.getMovieBookingById = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   }
-  
