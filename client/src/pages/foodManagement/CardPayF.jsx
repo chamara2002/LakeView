@@ -14,7 +14,6 @@ const CardPayF = () => {
   const [cart, setCart] = useState([]);
   const { dispatch } = useCart();
 
-  // State for form values and validation errors
   const [formValues, setFormValues] = useState({
     cardNumber: "",
     cardName: "",
@@ -29,61 +28,57 @@ const CardPayF = () => {
     securityCode: "",
   });
 
-  // Real-time validation function
-  const validateField = (name, value) => {
-    let errorMsg = "";
-
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+  
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth() + 1; 
+  
+    
     switch (name) {
       case "cardNumber":
-        if (!/^\d{16}$/.test(value)) {
-          errorMsg = "Card number must be 16 digits.";
-        }
-        break;
+      let formattedValue = value.replace(/\s+/g, ''); 
+      if (/^\d{0,16}$/.test(formattedValue)) {
+        formattedValue = formattedValue.match(/.{1,4}/g)?.join(' ') || '';
+        setFormValues({ ...formValues, [name]: formattedValue });
+      }
+      break;
       case "cardName":
-        if (!/^[A-Za-z\s]+$/.test(value)) {
-          errorMsg = "Name on card must contain only letters.";
+        if (/^[A-Za-z\s]*$/.test(value)) {
+          setFormValues({ ...formValues, [name]: value });
         }
         break;
       case "expiryDate":
-        const today = new Date();
-        const selectedDate = new Date(value);
-
-        // Check if the expiry date is valid and in the future
-        if (!value) {
-          errorMsg = "Expiry date is required.";
-        } else if (selectedDate < today) {
-          errorMsg = "Expiry date must be in the future.";
+        const [year, month] = value.split("-").map(Number);
+  
+        if (
+          year > currentYear || 
+          (year === currentYear && month >= currentMonth)
+        ) {
+          setFormValues({ ...formValues, [name]: value });
         }
         break;
-      case "securityCode":
-        if (!/^\d{3,4}$/.test(value)) {
-          errorMsg = "Security code must be 3 or 4 digits.";
+        case "securityCode":
+        if (/^\d{0,3}$/.test(value)) {
+          setFormValues({ ...formValues, [name]: value });
         }
         break;
-      default:
+        default:
         break;
     }
-
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
   };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-    validateField(name, value); // Real-time validation on input change
-  };
+  
 
   const handlePayment = async (e) => {
     e.preventDefault();
 
-    // Check if there are any validation errors
     const hasErrors = Object.values(errors).some((error) => error);
     if (hasErrors) {
       toast.error("Please fix the errors in the form.");
       return;
     }
 
-    // Load cart from localStorage
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(storedCart);
 
