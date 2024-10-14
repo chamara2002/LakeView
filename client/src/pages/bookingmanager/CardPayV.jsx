@@ -25,70 +25,88 @@ const CardPayV = () => {
     securityCode: ''
   });
 
+  const formatCardNumber = (value) => {
+    const cleaned = value.replace(/\D/g, '');
+    const limited = cleaned.substring(0, 16);
+    const formatted = limited.replace(/(.{4})/g, '$1 ').trim();
+    return formatted;
+  };
+  
+  const formatSecurityCode = (value) => {
+    return value.replace(/\D/g, '').substring(0, 3);
+  };
+  
   const validateField = (name, value) => {
-    let error = '';
-    
     switch (name) {
       case "cardNumber":
-        if (!/^\d{16}$/.test(value)) {
-          error = "Card number must be exactly 16 digits";
-        }
-        break;
+        const cardNumberCleaned = value.replace(/\s/g, '');
+        return /^\d{16}$/.test(cardNumberCleaned); // Returns true if valid
       case "cardName":
-        if (!/^[A-Za-z\s]+$/.test(value)) {
-          error = "Name on card must contain only letters";
-        }
-        break;
+        return /^[A-Za-z\s]*$/.test(value); // Returns true if valid
       case "expiryDate":
         const currentDate = new Date();
         const selectedDate = new Date(value);
-        if (selectedDate <= currentDate) {
-          error = "Expiry date must be a future month";
-        }
-        break;
+        return (
+          selectedDate.getFullYear() > currentDate.getFullYear() ||
+          (selectedDate.getFullYear() === currentDate.getFullYear() && selectedDate.getMonth() >= currentDate.getMonth())
+        ); // Returns true if valid
       case "securityCode":
-        if (!/^\d{3}$/.test(value)) {
-          error = "Security code must be exactly 3 digits";
-        }
-        break;
+        return /^\d{3}$/.test(value); // Returns true if valid
       default:
-        break;
+        return true;
     }
-
-    return error;
   };
-
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
+  
+    let formattedValue = value;
+  
+    if (name === "cardNumber") {
+      formattedValue = formatCardNumber(value);
+    } else if (name === "securityCode") {
+      formattedValue = formatSecurityCode(value);
+    } else if (name === "cardName") {
+      // Allow only letters and spaces in card name
+      formattedValue = value.replace(/[^A-Za-z\s]/g, '');
+    } else if (name === "expiryDate") {
+      // Prevent selecting previous months
+      const currentDate = new Date();
+      const selectedDate = new Date(value);
+      if (
+        selectedDate.getFullYear() < currentDate.getFullYear() ||
+        (selectedDate.getFullYear() === currentDate.getFullYear() && selectedDate.getMonth() < currentDate.getMonth())
+      ) {
+        formattedValue = ''; // Reset to empty if the selected date is invalid
+      }
+    }
+  
+    // Update the form data and validate
     setFormData({
       ...formData,
-      [name]: value
+      [name]: formattedValue
     });
-
-    // Real-time validation
-    const error = validateField(name, value);
-    setErrors({
-      ...errors,
-      [name]: error
-    });
+  
+    // Check for validity without error messages
+    const isValid = validateField(name, formattedValue);
+    if (!isValid) {
+      // Optionally, you can implement logic to indicate invalid input to the user (e.g., UI changes)
+    }
   };
-
+  
   const validateForm = () => {
     let formIsValid = true;
-    const newErrors = {};
-
+  
     Object.keys(formData).forEach((field) => {
-      const error = validateField(field, formData[field]);
-      if (error) {
-        newErrors[field] = error;
+      const isValid = validateField(field, formData[field]);
+      if (!isValid) {
         formIsValid = false;
       }
     });
-
-    setErrors(newErrors);
+  
     return formIsValid;
   };
+  
 
   const handlePayment = async (e) => {
     e.preventDefault();
@@ -217,7 +235,7 @@ const CardPayV = () => {
                 </div>
               </div>
               <button type="submit" style={styles.submitButton}>
-                Submit
+                Pay Now
               </button>
             </form>
           </div>

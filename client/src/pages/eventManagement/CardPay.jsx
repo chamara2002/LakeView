@@ -34,8 +34,9 @@ const CardPay = () => {
     
     switch (name) {
       case "cardNumber":
-        if (!/^\d{16}$/.test(value)) {
-          error = "Card number must be 16 digits.";
+        // Allow 16 digits with spaces after every 4 digits
+        if (!/^(?:\d{4} ){3}\d{4}$/.test(value) && value.length < 19) {
+          error = "Card number must be in the format 2222 3333 4444 5555.";
         }
         break;
 
@@ -54,6 +55,7 @@ const CardPay = () => {
         break;
 
       case "securityCode":
+        // Allow exactly 3 positive digits
         if (!/^\d{3}$/.test(value)) {
           error = "Security code must be 3 digits.";
         }
@@ -118,6 +120,30 @@ const CardPay = () => {
     }));
   };
 
+  // Function to format card number input
+  const formatCardNumber = (value) => {
+    // Remove non-digit characters and format
+    const cleanedValue = value.replace(/\D/g, "");
+    const formattedValue = cleanedValue
+      .replace(/(\d{4})(?=\d)/g, "$1 ") // Add space after every 4 digits
+      .trim(); // Remove trailing space
+    return formattedValue;
+  };
+
+  const handleCardNumberChange = (e) => {
+    const { value } = e.target;
+    const formattedValue = formatCardNumber(value);
+    
+    // Limit the card number length to 19 (16 digits + 3 spaces)
+    if (formattedValue.replace(/\s/g, "").length <= 16) {
+      setFormData({ ...formData, cardNumber: formattedValue });
+
+      // Validate the formatted value
+      const error = validateField("cardNumber", formattedValue);
+      setErrors((prevErrors) => ({ ...prevErrors, cardNumber: error }));
+    }
+  };
+
   return (
     <>
       <NavBar name="" />
@@ -139,10 +165,10 @@ const CardPay = () => {
                   type="text"
                   id="cardNumber"
                   name="cardNumber"
-                  placeholder="1234 5678 9123 4567"
+                  placeholder="2222 3333 4444 5555"
                   style={styles.input}
                   value={formData.cardNumber}
-                  onChange={handleChange}
+                  onChange={handleCardNumberChange}
                   required
                 />
                 {errors.cardNumber && <span style={styles.error}>{errors.cardNumber}</span>}
@@ -187,7 +213,7 @@ const CardPay = () => {
                     type="password"
                     id="securityCode"
                     name="securityCode"
-                    placeholder="••••"
+                    placeholder="•••"
                     style={styles.input}
                     value={formData.securityCode}
                     onChange={handleChange}

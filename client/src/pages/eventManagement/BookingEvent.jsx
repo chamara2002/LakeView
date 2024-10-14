@@ -26,9 +26,11 @@ const BookingEvent = () => {
     eventDate: '',
     eventTime: '', // New state for event time
     customer: user.user._id,
+    numberOfTickets: '' // New state for number of tickets
   });
 
   const [isDateValid, setIsDateValid] = useState(true);
+  const [isTicketCountValid, setIsTicketCountValid] = useState(true);
 
   // Handle input change
   const handleChange = (e) => {
@@ -37,6 +39,11 @@ const BookingEvent = () => {
     if (name === 'eventDate') {
       const today = new Date().toISOString().split('T')[0];
       setIsDateValid(value >= today);
+    }
+
+    if (name === 'numberOfTickets') {
+      const numValue = parseInt(value);
+      setIsTicketCountValid(numValue >= 1 && numValue <= 10);
     }
 
     setFormData((prevData) => ({
@@ -53,6 +60,8 @@ const BookingEvent = () => {
       return;
     }
 
+    console.log("formData: ", formData);
+
     try {
       await axios.post('http://localhost:3000/api/booking/create', {
         ...formData,
@@ -65,6 +74,7 @@ const BookingEvent = () => {
     } catch (error) {
       console.error('Error booking the event:', error);
     }
+    
   };
 
   return (
@@ -131,7 +141,13 @@ const BookingEvent = () => {
             </select>
           </div>
 
-          <button type="submit" style={styles.submitButton} disabled={!isDateValid}>
+       
+
+          <button
+            type="submit"
+            style={styles.submitButton}
+            disabled={!isDateValid || !isTicketCountValid}
+          >
             Save Details and Next
           </button>
         </form>

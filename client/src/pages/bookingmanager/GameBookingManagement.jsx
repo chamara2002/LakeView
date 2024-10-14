@@ -213,6 +213,7 @@ const GameBookingManagement = () => {
                 <th style={thStyle}>Seats</th>
                 <th style={thStyle}>Price</th>
                 <th style={thStyle}>Date</th>
+               
                 <th style={thStyle}>Booking Status</th>
                 <th style={thStyle}>Actions</th>
               </tr>
@@ -226,6 +227,7 @@ const GameBookingManagement = () => {
                   <td style={tdStyle}>{booking.seatNumbers ? booking.seatNumbers.length : 0}</td>
                   <td style={tdStyle}>Rs.{booking.totalPrice.toFixed(2)}</td>
                   <td style={tdStyle}>{new Date(booking.createdAt).toLocaleDateString('en-CA')}</td>
+              
                   <td style={tdStyle}>{booking.confirmed ? "Paid" : "Not paid"}</td>
                   <td style={tdStyle}>
                     <button

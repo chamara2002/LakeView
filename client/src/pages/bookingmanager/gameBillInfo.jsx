@@ -25,7 +25,7 @@ const GameBillInfo = () => {
       .catch(error => {
         console.error('Error fetching game details:', error);
       });
-  }, [bookingDetails.itemId]); 
+  }, [bookingDetails.itemId]);
 
   const handleCashPay = async () => {
     try {
@@ -33,7 +33,7 @@ const GameBillInfo = () => {
         customer: user.user._id,
         game: bookingDetails.itemId,
         seatNumbers: bookingDetails.seatNumbers,
-        totalPrice: bookingDetails.total,
+        totalPrice: bookingDetails.totalAmount,
       });
       alert('Payment Successful');
       navigate(`/games`);

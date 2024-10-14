@@ -21,7 +21,6 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
   ];
 
   useEffect(() => {
-    // Check if itemId is valid before making API requests
     if (!bookingDetails.itemId) {
       console.warn("No itemId set in bookingDetails");
       return;
@@ -73,10 +72,9 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
       if (prevSelectedSeats.includes(seatNumber)) {
         return prevSelectedSeats.filter((seat) => seat !== seatNumber);
       } else {
-        // Check if the selection exceeds the limit of 10 seats
         if (prevSelectedSeats.length >= 10) {
           alert("You can only book a maximum of 10 seats.");
-          return prevSelectedSeats; // Return the previous state if limit is reached
+          return prevSelectedSeats;
         }
         return [...prevSelectedSeats, seatNumber];
       }
@@ -102,8 +100,16 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
   };
 
   const handleDateChange = (e) => {
+    const today = new Date();
+    const selected = new Date(e.target.value);
+
+    if (selected < today.setHours(0, 0, 0, 0)) {
+      alert("You cannot select a past date.");
+      return;
+    }
+
     setSelectedDate(e.target.value);
-    setSelectedTime(""); // Reset time when date changes
+    setSelectedTime("");
   };
 
   const handleTimeChange = (e) => {
@@ -126,19 +132,20 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            borderRadius: "5px",
-            border: "1px solid #333",
+            borderRadius: "8px",
+            border: "2px solid #444",
             cursor: isUnavailable || !selectedDate || !selectedTime ? "not-allowed" : "pointer",
             backgroundColor: isUnavailable
               ? "grey"
               : selectedSeats.includes(seatNumber)
-              ? "green"
-              : "#fff",
+              ? "#17a2b8"
+              : "#ffffff",
             color: selectedSeats.includes(seatNumber) ? "#fff" : "#000",
-            fontWeight: "bold",
+            fontWeight: "600",
             userSelect: "none",
             transition: "transform 0.3s, background-color 0.3s",
             opacity: !selectedDate || !selectedTime ? 0.5 : 1,
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)"
           }}
           onClick={() => {
             if (selectedDate && selectedTime && !isUnavailable) {
@@ -157,32 +164,33 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
     <div style={{ backgroundColor: "#161E38", minHeight: "80vh" }}>
       <NavBar />
       <div style={{ textAlign: "center", padding: "20px" }}>
-        <h3 style={{ marginBottom: "20px", color: "#ffffff", fontSize: "1.8rem" }}>
+        <h3 style={{ marginBottom: "20px", color: "#ffffff", fontSize: "2rem", letterSpacing: "1px" }}>
           Select Your Tickets
         </h3>
         
         {/* Date and Time Selection */}
-        <div style={{ marginBottom: "20px" }}>
+        <div style={{ marginBottom: "20px", display: "flex", justifyContent: "center", gap: "10px" }}>
           <input
             type="date"
             value={selectedDate}
             onChange={handleDateChange}
             style={{
-              padding: "10px",
-              marginRight: "10px",
-              borderRadius: "5px",
-              border: "1px solid #ccc",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "2px solid #ddd",
               backgroundColor: "#ffffff",
+              boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)"
             }}
           />
           <select
             value={selectedTime}
             onChange={handleTimeChange}
             style={{
-              padding: "10px",
-              borderRadius: "5px",
-              border: "1px solid #ccc",
+              padding: "12px",
+              borderRadius: "8px",
+              border: "2px solid #ddd",
               backgroundColor: "#ffffff",
+              boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)"
             }}
           >
             <option value="">Select Time</option>
@@ -197,10 +205,10 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(10, 40px)",
-            gap: "12px",
-            maxWidth: "450px",
-            margin: "0 auto",
+            gridTemplateColumns: "repeat(10, 1fr)",
+            gap: "10px",
+            maxWidth: "600px",
+            margin: "0 auto"
           }}
         >
           {renderSeats()}
@@ -211,21 +219,20 @@ const SeatSelection = ({ movieId, pricePerSeat }) => {
         <button
           onClick={confirmSelection}
           style={{
-            padding: "12px 30px",
+            padding: "14px 40px",
             backgroundColor: "#28A745",
             color: "white",
             border: "none",
             cursor: "pointer",
-            borderRadius: "5px",
+            borderRadius: "8px",
             fontSize: "1rem",
             fontWeight: "bold",
-            marginRight: "10px",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            transition: "background-color 0.3s, transform 0.2s",
+            boxShadow: "0 6px 12px rgba(0, 0, 0, 0.2)",
+            transition: "background-color 0.3s, transform 0.2s"
           }}
           onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#218838")}
           onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#28A745")}
-          onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.98)")}
+          onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.96)")}
           onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           Confirm Selection

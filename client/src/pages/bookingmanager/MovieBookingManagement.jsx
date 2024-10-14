@@ -11,6 +11,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const MovieBookingManagement = () => {
   const [bookings, setBookings] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchDate, setSearchDate] = useState("");
 
   useEffect(() => {
     axios
@@ -45,9 +46,15 @@ const MovieBookingManagement = () => {
       .catch((error) => console.error("Error deleting booking:", error));
   };
 
-  const filteredBookings = bookings.filter((booking) =>
-    booking.movie?.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredBookings = bookings.filter((booking) => {
+    const matchesMovie = booking.movie?.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesDate = searchDate
+      ? new Date(booking.createdAt).toLocaleDateString("en-CA") === searchDate
+      : true;
+    return matchesMovie && matchesDate;
+  });
 
   const totalSeats = filteredBookings.reduce(
     (acc, booking) =>
@@ -90,14 +97,11 @@ const MovieBookingManagement = () => {
     },
   };
 
-  // Prepare data for the second pie chart (Ticket numbers by movie)
   const movieTicketCounts = {};
 
   filteredBookings.forEach((booking) => {
     const movieName = booking.movie?.name || "Unknown Movie";
-    const ticketCount = booking.seatNumbers
-      ? booking.seatNumbers.length
-      : 0;
+    const ticketCount = booking.seatNumbers ? booking.seatNumbers.length : 0;
     movieTicketCounts[movieName] =
       (movieTicketCounts[movieName] || 0) + ticketCount;
   });
@@ -142,7 +146,13 @@ const MovieBookingManagement = () => {
             placeholder="Search by movie name"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={searchBarStyle}
+            style={leftSearchBarStyle}
+          />
+          <input
+            type="date"
+            value={searchDate}
+            onChange={(e) => setSearchDate(e.target.value)}
+            style={rightSearchBarStyle}
           />
         </div>
 
@@ -156,6 +166,7 @@ const MovieBookingManagement = () => {
                 <th style={thStyle}>Seats</th>
                 <th style={thStyle}>Price</th>
                 <th style={thStyle}>Date</th>
+                <th style={thStyle}>Time</th>
                 <th style={thStyle}>Booking Status</th>
                 <th style={thStyle}>Actions</th>
               </tr>
@@ -177,6 +188,7 @@ const MovieBookingManagement = () => {
                     Rs.{booking.totalPrice.toFixed(2)}
                   </td>
                   <td style={tdStyle}>{new Date(booking.createdAt).toLocaleDateString('en-CA')}</td>
+                  <td style={tdStyle}>{booking.time}</td>
                   <td style={tdStyle}>
                     {booking.confirmed ? "Paid" : "Not paid"}
                   </td>
@@ -260,20 +272,33 @@ const MovieBookingManagement = () => {
 // Styles
 const searchBarContainerStyle = {
   display: "flex",
-  justifyContent: "center",
+  justifyContent: "space-between",
   marginBottom: "20px",
+  alignItems: "center",
 };
 
-const searchBarStyle = {
-  width: "60%",
-  maxWidth: "800px",
-  padding: "15px 20px",
-  borderRadius: "30px",
+const leftSearchBarStyle = {
+  width: "30%",
+  padding: "10px 15px",
+  borderRadius: "20px",
   border: "1px solid #ccc",
   boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
   transition: "all 0.3s ease",
   outline: "none",
-  fontSize: "16px",
+  fontSize: "14px",
+  backgroundColor: "#f9f9f9",
+  color: "#333",
+};
+
+const rightSearchBarStyle = {
+  width: "30%",
+  padding: "10px 15px",
+  borderRadius: "20px",
+  border: "1px solid #ccc",
+  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+  transition: "all 0.3s ease",
+  outline: "none",
+  fontSize: "14px",
   backgroundColor: "#f9f9f9",
   color: "#333",
 };
