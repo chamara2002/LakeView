@@ -76,9 +76,9 @@ const AddEvent = () => {
           {errors.date && <span style={errorStyle}>{errors.date}</span>}
         </label>
         <label style={labelStyle}>
-          Start Date:
-          <input type="date" name="start_date" value={event.start_date} onChange={handleChange} style={inputStyle} />
-          {errors.start_date && <span style={errorStyle}>{errors.start_date}</span>}
+          Start Time:
+          <input type="datetime-local" name="start_time" value={event.start_time} onChange={handleChange} style={inputStyle} />
+          {errors.start_time && <span style={errorStyle}>{errors.start_time}</span>}
         </label>
         <label style={labelStyle}>
           End Time:
@@ -90,7 +90,7 @@ const AddEvent = () => {
           <select name="category" value={event.category} onChange={handleChange} style={inputStyle}>
           <option value="">Select a category</option>
           <option value="gaming">Gaming Tournaments</option>
-          <option value="music">Musical Events</option>
+          <option value="musical">Musical Events</option>
           <option value="others">Others</option> </select>
         
           {errors.category && <span style={errorStyle}>{errors.category}</span>}
