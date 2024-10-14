@@ -11,10 +11,11 @@ const FoundForm = () => {
   const { user } = useAuth();
   const [item, setItem] = useState(null);
   const [newItem, setNewItem] = useState({});
+  const [errors, setErrors] = useState({}); // State for validation errors
+
   let userId = null;
 
   if (user.user) {
-    // console.log(user.user._id);
     userId = user.user._id;
   }
 
@@ -44,8 +45,34 @@ const FoundForm = () => {
     }));
   };
 
+  // Validation function
+  const validate = () => {
+    let formErrors = {};
+    if (!newItem.foundItemsCategory) {
+      formErrors.foundItemsCategory = "Category is required";
+    }
+    if (!newItem.email || !/\S+@\S+\.\S+/.test(newItem.email)) {
+      formErrors.email = "Valid email is required";
+    }
+    if (!newItem.contactNumber || !/^\d+$/.test(newItem.contactNumber)) {
+      formErrors.contactNumber = "Contact number should be numeric";
+    }
+    if (!newItem.foundItemPlace) {
+      formErrors.foundItemPlace = "Place where the item was found is required";
+    }
+    return formErrors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate the form inputs
+    const formErrors = validate();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors); // Set errors if validation fails
+      return;
+    }
+
     try {
       await axios.put(
         `http://localhost:3000/api/lostNFound/update-lost-and-found/${id}`,
@@ -56,9 +83,6 @@ const FoundForm = () => {
       console.error(`Error updating item: ${e}`);
     }
   };
-
-  // console.log(userId);
-  console.log(item);
 
   return (
     <div>
@@ -85,14 +109,20 @@ const FoundForm = () => {
               onChange={handleInputChange}
               style={styles.input}
             />
+            {errors.foundItemsCategory && (
+              <p style={styles.errorText}>{errors.foundItemsCategory}</p>
+            )}
           </div>
           <div style={styles.formRow}>
             <input
               type="email"
               name="email"
               placeholder="Email"
+              value={newItem.email || ""}
+              onChange={handleInputChange}
               style={styles.input}
             />
+            {errors.email && <p style={styles.errorText}>{errors.email}</p>}
             <input
               type="text"
               name="foundItem"
@@ -107,15 +137,24 @@ const FoundForm = () => {
               type="text"
               name="contactNumber"
               placeholder="Contact Number"
+              value={newItem.contactNumber || ""}
+              onChange={handleInputChange}
               style={styles.input}
             />
+            {errors.contactNumber && (
+              <p style={styles.errorText}>{errors.contactNumber}</p>
+            )}
             <input
               type="text"
               name="foundItemPlace"
               placeholder="Found Place"
+              value={newItem.foundItemPlace || ""}
               onChange={handleInputChange}
               style={styles.input}
             />
+            {errors.foundItemPlace && (
+              <p style={styles.errorText}>{errors.foundItemPlace}</p>
+            )}
           </div>
 
           <div style={styles.buttonContainer}>
@@ -216,6 +255,11 @@ const styles = {
     padding: "10px 20px",
     borderRadius: "5px",
     cursor: "pointer",
+  },
+  errorText: {
+    color: "red",
+    fontSize: "12px",
+    marginTop: "5px",
   },
 };
 
