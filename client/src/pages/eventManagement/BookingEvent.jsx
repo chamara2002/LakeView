@@ -199,8 +199,8 @@ const styles = {
   },
   submitButton: {
     padding: '15px 30px',
-    backgroundColor: '#3cd1c2',
-    color: '#fff',
+    backgroundColor: 'yellow',
+    color: '#000000',
     border: 'none',
     borderRadius: '8px',
     fontSize: '18px',
