@@ -38,6 +38,7 @@ const LeaveDetails = () => {
   };
 
   const calculatewHours = (start, end) => {
+    if (!end) return "working"; 
     const startDate = new Date(start);
     const endDate = new Date(end);
     return Math.round((endDate - startDate) / (1000 * 60 * 60));
