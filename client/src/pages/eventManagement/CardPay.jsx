@@ -16,7 +16,6 @@ const CardPay = () => {
     expiryDate: '',
     securityCode: '',
   });
-  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     axios
@@ -29,64 +28,8 @@ const CardPay = () => {
       });
   }, [id]);
 
-  const validateField = (name, value) => {
-    let error = "";
-    
-    switch (name) {
-      case "cardNumber":
-        // Allow 16 digits with spaces after every 4 digits
-        if (!/^(?:\d{4} ){3}\d{4}$/.test(value) && value.length < 19) {
-          error = "Card number must be in the format 2222 3333 4444 5555.";
-        }
-        break;
-
-      case "cardName":
-        if (!/^[A-Za-z\s]+$/.test(value)) {
-          error = "Name on card must only contain letters.";
-        }
-        break;
-
-      case "expiryDate":
-        const currentDate = new Date();
-        const selectedDate = new Date(value);
-        if (selectedDate <= currentDate) {
-          error = "Expiry date must be in the future.";
-        }
-        break;
-
-      case "securityCode":
-        // Allow exactly 3 positive digits
-        if (!/^\d{3}$/.test(value)) {
-          error = "Security code must be 3 digits.";
-        }
-        break;
-
-      default:
-        break;
-    }
-
-    return error;
-  };
-
-  const validateForm = () => {
-    let formErrors = {};
-    Object.keys(formData).forEach((field) => {
-      const error = validateField(field, formData[field]);
-      if (error) {
-        formErrors[field] = error;
-      }
-    });
-
-    setErrors(formErrors);
-    return Object.keys(formErrors).length === 0;
-  };
-
   const handlePayment = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
-
-    if (!validateForm()) {
-      return; // Exit if the form is invalid
-    }
 
     try {
       await axios.post("http://localhost:3000/api/payment/add-payment", {
@@ -106,18 +49,41 @@ const CardPay = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Update form data
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    // Validate inputs in real-time
+    switch (name) {
+      case "cardNumber":
+      // Remove non-digit characters and enforce 16 digits total
+      const cleanedValue = value.replace(/\D/g, "").slice(0, 16); // Allow only digits and limit to 16
+      // Format the cleaned value into "#### #### #### ####"
+      const formattedValue = cleanedValue
+        .replace(/(\d{4})(?=\d)/g, "$1 ") // Add space after every 4 digits
+        .trim(); // Remove trailing space
+      setFormData({ ...formData, cardNumber: formattedValue });
+      break;
 
-    // Validate the field in real-time
-    const error = validateField(name, value);
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: error,
-    }));
+      case "cardName":
+        if (/^[A-Za-z\s]*$/.test(value)) { // Allow letters and spaces only
+          setFormData({ ...formData, cardName: value });
+        }
+        break;
+
+      case "expiryDate":
+        const currentDate = new Date();
+        const selectedDate = new Date(value);
+        if (selectedDate > currentDate) { // Allow only future dates
+          setFormData({ ...formData, expiryDate: value });
+        }
+        break;
+
+      case "securityCode":
+        if (/^\d{0,3}$/.test(value)) { // Allow only 3 digits
+          setFormData({ ...formData, securityCode: value });
+        }
+        break;
+
+      default:
+        break;
+    }
   };
 
   // Function to format card number input
@@ -128,20 +94,6 @@ const CardPay = () => {
       .replace(/(\d{4})(?=\d)/g, "$1 ") // Add space after every 4 digits
       .trim(); // Remove trailing space
     return formattedValue;
-  };
-
-  const handleCardNumberChange = (e) => {
-    const { value } = e.target;
-    const formattedValue = formatCardNumber(value);
-    
-    // Limit the card number length to 19 (16 digits + 3 spaces)
-    if (formattedValue.replace(/\s/g, "").length <= 16) {
-      setFormData({ ...formData, cardNumber: formattedValue });
-
-      // Validate the formatted value
-      const error = validateField("cardNumber", formattedValue);
-      setErrors((prevErrors) => ({ ...prevErrors, cardNumber: error }));
-    }
   };
 
   return (
@@ -168,10 +120,9 @@ const CardPay = () => {
                   placeholder="2222 3333 4444 5555"
                   style={styles.input}
                   value={formData.cardNumber}
-                  onChange={handleCardNumberChange}
+                  onChange={handleChange}
                   required
                 />
-                {errors.cardNumber && <span style={styles.error}>{errors.cardNumber}</span>}
               </div>
               <div style={styles.inputGroup}>
                 <label htmlFor="cardName" style={styles.label}>
@@ -187,7 +138,6 @@ const CardPay = () => {
                   onChange={handleChange}
                   required
                 />
-                {errors.cardName && <span style={styles.error}>{errors.cardName}</span>}
               </div>
               <div style={styles.inputGroupRow}>
                 <div style={styles.inputGroupSmall}>
@@ -203,7 +153,6 @@ const CardPay = () => {
                     onChange={handleChange}
                     required
                   />
-                  {errors.expiryDate && <span style={styles.error}>{errors.expiryDate}</span>}
                 </div>
                 <div style={styles.inputGroupSmall}>
                   <label htmlFor="securityCode" style={styles.label}>
@@ -219,7 +168,6 @@ const CardPay = () => {
                     onChange={handleChange}
                     required
                   />
-                  {errors.securityCode && <span style={styles.error}>{errors.securityCode}</span>}
                 </div>
               </div>
               <button
@@ -322,11 +270,6 @@ const styles = {
     outline: "none",
     boxSizing: "border-box",
     transition: "border-color 0.3s, background-color 0.3s",
-  },
-  error: {
-    color: "red",
-    fontSize: "12px",
-    marginTop: "5px",
   },
   submitButton: {
     padding: "15px 20px",
