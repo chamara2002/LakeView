@@ -49,14 +49,17 @@ const BillInfo = () => {
           <div style={styles.billInformation}>
             <h3 style={styles.sectionTitle}>Bill Information</h3>
             <div style={styles.infoBlock}>
+            <p style={styles.infoText}>
+                <strong>Customer Email:</strong> {event.userEmail || "gimhan@gmail.com"}
+              </p>
               <p style={styles.infoText}>
                 <strong>Event:</strong> {event.name || "Loading..."}
               </p>
               <p style={styles.infoText}>
-                <strong>Booking Fee:</strong> ${event.price || "Loading..."}
+                <strong>Booking Fee:</strong> Rs.{event.price || "Loading..."}
               </p>
               <p style={styles.infoText}>
-                <strong>Total Amount:</strong> ${event.price || "Loading..."}
+                <strong>Total Amount:</strong> Rs.{event.price || "Loading..."}
               </p>
             </div>
           </div>

@@ -109,8 +109,8 @@ const ReportButton = ({ bookings, title, fileName }) => {
 const styles = {
   button: {
     padding: '10px 20px',
-    backgroundColor: '#4CAF50',
-    color: '#fff',
+    backgroundColor: '#FFD700',
+    color: '#000',
     border: 'none',
     borderRadius: '5px',
     fontSize: '16px',
