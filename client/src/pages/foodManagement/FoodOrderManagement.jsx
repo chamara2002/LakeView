@@ -124,16 +124,14 @@ const FoodOrderManagement = () => {
 
   const handleExportPDF = () => {
     const doc = new jsPDF();
-   
     
     const companyName = "LakeView Gaming Zone"; 
     const companyAddress = "Gampaha, Sri Lanka"; 
     const companyPhone = "+9433-7628316"; 
     const companyEmail = "lakeviewgaming01@gmail.com";
-  
     
     const logo = "/reportLogo.png"; 
-  
+    
     
     try {
       doc.addImage(logo, "PNG", 150, 10, 40, 35); 
@@ -154,16 +152,15 @@ const FoodOrderManagement = () => {
     doc.text(companyPhone, 20, 35);
     doc.text(companyEmail, 20, 40);
     
-    
     doc.line(20, 45, 190, 45); 
-
+  
     
     doc.setFontSize(16);
     doc.setFont("Helvetica", "bold");
     doc.text("Food Orders Report", 65, 60);
     doc.setFont("Helvetica", "normal");
-    doc.setFontSize(12); 
-    
+    doc.setFontSize(12);
+  
     
     if (!filteredOrders || filteredOrders.length === 0) {
       console.warn("No orders to display.");
@@ -171,19 +168,23 @@ const FoodOrderManagement = () => {
       doc.save("food_orders_report.pdf");
       return;
     }
+  
     
     const tableData = filteredOrders.map((order) => [
       formatId(order._id, "OID"),
       order.userEmail,
       order.meals.map((meal) => `${meal.food?.name || "Unknown"} (${meal.quantity})`).join(", "),
       `Rs.${order.totalPrice.toFixed(2)}`,
+      new Date(order.createdAt).toLocaleDateString('en-CA'),
+      new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       order.isCompleted ? "Paid" : "Not Paid",
     ]);
   
+    
     doc.autoTable({
-      head: [["Order ID", "Customer Email", "Meals", "Total Price", "Status"]],
+      head: [["Order ID", "Customer Email", "Meals", "Total Price", "Date", "Time", "Status"]],
       body: tableData,
-      startY: 70, 
+      startY: 70,
       theme: "grid",
       headStyles: { fillColor: [22, 30, 56] },
       styles: { cellPadding: 3, fontSize: 10 },
@@ -195,10 +196,23 @@ const FoodOrderManagement = () => {
     const totalRevenue = filteredOrders.reduce((total, order) => total + (order.isCompleted ? order.totalPrice : 0), 0).toFixed(2);
   
     
-    doc.text(`Total Orders: ${filteredOrders.length}`, 14, doc.autoTable.previous.finalY + 10);
-    doc.text(`Total Paid: ${totalPaid}`, 14, doc.autoTable.previous.finalY + 20);
-    doc.text(`Total Not Paid: ${totalNotPaid}`, 14, doc.autoTable.previous.finalY + 30);
-    doc.text(`Total Revenue: Rs.${totalRevenue}`, 14, doc.autoTable.previous.finalY + 40);
+    const finalY = doc.autoTable.previous.finalY;
+    doc.text(`Total Orders: ${filteredOrders.length}`, 14, finalY + 10);
+    doc.text(`Total Paid: ${totalPaid}`, 14, finalY + 20);
+    doc.text(`Total Not Paid: ${totalNotPaid}`, 14, finalY + 30);
+    doc.text(`Total Revenue: Rs.${totalRevenue}`, 14, finalY + 40);
+  
+    
+// Get the current date and time
+const currentDate = new Date();
+const formattedDate = currentDate.toLocaleString(); // Format: MM/DD/YYYY, HH:MM:SS AM/PM
+
+// Add date/time at the bottom of the PDF
+const bottomMargin = 20; // Distance from the bottom
+const yPosition = doc.internal.pageSize.height - bottomMargin; // Calculate Y position
+doc.setFontSize(10);
+doc.text(`Generated on: ${formattedDate}`, 20, yPosition); // Add date/time to the document
+
     doc.save("food_orders_report.pdf");
   };
   
@@ -211,14 +225,12 @@ const FoodOrderManagement = () => {
     const companyEmail = "lakeviewgaming01@gmail.com";
     const logo = "/reportLogo.png"; 
 
-    
     try {
         await doc.addImage(logo, "PNG", 150, 10, 40, 35);
     } catch (error) {
         console.error("Error adding logo:", error);
     }
 
-   
     doc.setFontSize(14);
     doc.setTextColor(30, 39, 73);
     doc.setFont("Helvetica", "bold");
@@ -231,11 +243,9 @@ const FoodOrderManagement = () => {
     doc.text(companyEmail, 20, 40);
     doc.line(20, 45, 190, 45);
 
-    
     doc.setFontSize(16);
     doc.text("Top 5 Most Sold Food Items", 65, 60);
 
-    
     if (pieChartRef.current) {
         try {
             const pieChartCanvas = await html2canvas(pieChartRef.current, {
@@ -243,13 +253,11 @@ const FoodOrderManagement = () => {
             });
             const imgData = pieChartCanvas.toDataURL("image/png");
             
-        const size = 280; 
-        
-       
-        const x = (doc.internal.pageSize.getWidth() - size) / 2; 
-        const y = 80; 
+            const size = 280; 
+            const x = (doc.internal.pageSize.getWidth() - size) / 2; 
+            const y = 80; 
 
-        doc.addImage(imgData, "PNG", x, y, size, 80); 
+            doc.addImage(imgData, "PNG", x, y, size, 80); 
         } catch (error) {
             console.error("Error capturing pie chart:", error);
         }
@@ -257,39 +265,42 @@ const FoodOrderManagement = () => {
         console.error("Pie chart reference is not valid.");
     }
 
-   
-   const mostSoldFoods = foodSalesData.labels.map((label, index) => ({
-    name: label,
-    quantity: foodSalesData.datasets[0].data[index],
-    color: foodSalesData.datasets[0].backgroundColor[index],
-}));
+    const mostSoldFoods = foodSalesData.labels.map((label, index) => ({
+        name: label,
+        quantity: foodSalesData.datasets[0].data[index],
+        color: foodSalesData.datasets[0].backgroundColor[index],
+    }));
 
-     
-     doc.setFontSize(14);
-     doc.text("Most Sold Food Items:", 20, 190);
-     doc.setFontSize(12);
+    doc.setFontSize(14);
+    doc.text("Most Sold Food Items:", 20, 190);
+    doc.setFontSize(12);
  
-     
-     mostSoldFoods.forEach((food, index) => {
-         const x = 20; 
-         const y = 210 + index * 14; 
+    mostSoldFoods.forEach((food, index) => {
+        const x = 20; 
+        const y = 210 + index * 14; 
  
-         
-         doc.setFillColor(food.color);
-         doc.rect(x, y - 5, 10, 10, 'F');
+        doc.setFillColor(food.color);
+        doc.rect(x, y - 5, 10, 10, 'F');
  
-         
-         doc.setTextColor(0, 0, 0);
-         doc.text(food.name, x + 15, y);
-         doc.text(`: ${food.quantity}`, x + 15 + doc.getTextWidth(food.name) + 5, y);
-     });
- 
-     
-     doc.setTextColor(0, 0, 0);
- 
-     
-     doc.save("food_sales_report.pdf");
-};
+        doc.setTextColor(0, 0, 0);
+        doc.text(food.name, x + 15, y);
+        doc.text(`: ${food.quantity}`, x + 15 + doc.getTextWidth(food.name) + 5, y);
+    });
+
+    // Get the current date and time
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleString(); // Format: MM/DD/YYYY, HH:MM:SS AM/PM
+    
+    // Add date/time at the bottom of the PDF
+    const bottomMargin = 20; // Distance from the bottom
+    const yPosition = doc.internal.pageSize.height - bottomMargin; // Calculate Y position
+    doc.setFontSize(10);
+    doc.text(`Generated on: ${formattedDate}`, 20, yPosition); // Add date/time to the document
+
+    doc.setTextColor(0, 0, 0);
+    doc.save("food_sales_report.pdf");
+};   
+
 
 
   
