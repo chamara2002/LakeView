@@ -14,9 +14,38 @@ const AvailableTimes = () => {
   const fetchGames = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/games/games");
-      setGames(response.data);
+      
+      const currentTime = Date.now();
+      const filteredGames = response.data.map((game) => ({
+        ...game,
+        availableTimes: game.availableTimes.filter(
+          (time) => new Date(time).getTime() > currentTime
+        ),
+      }));
+
+      setGames(filteredGames);
+
+      // Automatically update the server with filtered future dates
+      filteredGames.forEach((game) => {
+        if (game.availableTimes.length !== response.data.find(g => g._id === game._id).availableTimes.length) {
+          updateGameTimes(game._id, game.availableTimes);
+        }
+      });
+
     } catch (error) {
       console.error("Error fetching games:", error);
+    }
+  };
+
+  const updateGameTimes = async (gameId, times) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3000/api/games/games/${gameId}`,
+        { availableTimes: times }
+      );
+      console.log("Game updated successfully:", response.data);
+    } catch (error) {
+      console.error("There was an error updating the game:", error);
     }
   };
 
@@ -71,19 +100,7 @@ const AvailableTimes = () => {
   useEffect(() => {
     const updateGame = async () => {
       if (gameIdToUpdate && newTimes[gameIdToUpdate]) {
-        try {
-          const response = await axios.put(
-            `http://localhost:3000/api/games/games/${gameIdToUpdate}`,
-            { availableTimes: newTimes[gameIdToUpdate] }
-          );
-          console.log("Game updated successfully:", response.data);
-        } catch (error) {
-          console.error("There was an error updating the game:", error);
-          console.error(
-            "Error details:",
-            error.response?.data || error.message
-          );
-        }
+        await updateGameTimes(gameIdToUpdate, newTimes[gameIdToUpdate]);
       }
     };
 

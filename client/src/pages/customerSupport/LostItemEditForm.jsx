@@ -1,9 +1,10 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 
 const LostItemEditForm = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [formData, setFormData] = useState({
     userName: "",
     email: "",
@@ -13,12 +14,21 @@ const LostItemEditForm = () => {
     lostPlace: "",
   });
 
+  const [errors, setErrors] = useState({
+    contactNumber: "",
+    email: "",
+    foundItem: "",
+    lostPlace: "",
+  });
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/lostNFound/one-lost-and-found/${id}`);
+        const response = await axios.get(
+          `http://localhost:3000/api/lostNFound/one-lost-and-found/${id}`
+        );
         setFormData(response.data);
       } catch (error) {
         console.error("Error fetching item data:", error);
@@ -36,12 +46,50 @@ const LostItemEditForm = () => {
     });
   };
 
+  const validate = () => {
+    const newErrors = {};
+
+    // Validate contact number (10 digits)
+    if (!/^\d{10}$/.test(formData.contactNumber)) {
+      newErrors.contactNumber = "Contact number must be exactly 10 digits.";
+    }
+
+    // Validate email format
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+
+    // Validate found item (letters and spaces)
+    if (!/^[A-Za-z\s]+$/.test(formData.foundItem)) {
+      newErrors.foundItem = "Found item must contain only letters and spaces.";
+    }
+
+    // Validate lost place (letters and spaces)
+    if (!/^[A-Za-z\s]+$/.test(formData.lostPlace)) {
+      newErrors.lostPlace = "Lost place must contain only letters and spaces.";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validate()) {
+      alert("Please fix validation errors before submitting.");
+      return;
+    }
+
     try {
-      await axios.put(`http://localhost:3000/api/lostNFound/update-lost-and-found/${id}`, formData);
+      await axios.put(
+        `http://localhost:3000/api/lostNFound/update-lost-and-found/${id}`,
+        formData
+      );
       alert("Item updated successfully!");
-      navigate(-1); 
+      navigate(-1);
     } catch (error) {
       console.error("Error updating item:", error);
     }
@@ -82,6 +130,7 @@ const LostItemEditForm = () => {
               onChange={handleChange}
               style={styles.input}
             />
+            {errors.email && <p style={styles.errorText}>{errors.email}</p>}
           </label>
           <label style={styles.label}>
             Lost item:
@@ -92,6 +141,9 @@ const LostItemEditForm = () => {
               onChange={handleChange}
               style={styles.input}
             />
+            {errors.foundItem && (
+              <p style={styles.errorText}>{errors.foundItem}</p>
+            )}
           </label>
         </div>
         <div style={styles.formRow}>
@@ -104,6 +156,9 @@ const LostItemEditForm = () => {
               onChange={handleChange}
               style={styles.input}
             />
+            {errors.contactNumber && (
+              <p style={styles.errorText}>{errors.contactNumber}</p>
+            )}
           </label>
           <label style={styles.label}>
             Lost place:
@@ -114,9 +169,14 @@ const LostItemEditForm = () => {
               onChange={handleChange}
               style={styles.input}
             />
+            {errors.lostPlace && (
+              <p style={styles.errorText}>{errors.lostPlace}</p>
+            )}
           </label>
         </div>
-        <button type="submit" style={styles.submitButton}>Submit</button>
+        <button type="submit" style={styles.submitButton}>
+          Submit
+        </button>
       </form>
     </div>
   );
@@ -150,7 +210,7 @@ const styles = {
     borderRadius: "5px",
     border: "1px solid #ccc",
     marginTop: "5px",
-    backgroundColor: "#d3d3d3", 
+    backgroundColor: "#d3d3d3",
   },
   submitButton: {
     display: "block",
@@ -162,6 +222,12 @@ const styles = {
     borderRadius: "5px",
     cursor: "pointer",
   },
+  errorText: {
+    color: "#FF6347",
+    fontSize: "14px",
+    marginTop: "5px",
+  },
 };
 
 export default LostItemEditForm;
+

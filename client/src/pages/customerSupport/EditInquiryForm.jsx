@@ -17,6 +17,12 @@ const EditInquiryForm = () => {
     inquiryMessage: "",
   });
 
+  const [errors, setErrors] = useState({
+    email: "",
+    contactNumber: "",
+    inquiryMessage: ""
+  });
+
   const [categories] = useState(["Food", "Games", "Movies"]);
 
   useEffect(() => {
@@ -49,8 +55,42 @@ const EditInquiryForm = () => {
     }));
   };
 
+  // Validation function
+  const validateForm = () => {
+    let valid = true;
+    let errors = {};
+
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      errors.email = "Invalid email format.";
+      valid = false;
+    }
+
+    // Validate contact number (example for numeric validation)
+    if (!/^\d+$/.test(formData.contactNumber)) {
+      errors.contactNumber = "Contact number must be numeric.";
+      valid = false;
+    }
+
+    // Ensure inquiry message is not empty
+    if (!formData.inquiryMessage) {
+      errors.inquiryMessage = "Inquiry message cannot be empty.";
+      valid = false;
+    }
+
+    setErrors(errors);
+    return valid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate the form before submission
+    if (!validateForm()) {
+      return; // Do not submit the form if validation fails
+    }
+
     try {
       await axios.put(`http://localhost:3000/api/inquiry/inquiries/${id}`, formData); // Adjust the URL as necessary
       navigate("/customerInquiries"); // Redirect to the customer inquiries page
@@ -58,7 +98,6 @@ const EditInquiryForm = () => {
       console.error("Error updating the form:", error);
     }
   };
-  console.log(formData)
 
   return (
     <div>
@@ -103,6 +142,9 @@ const EditInquiryForm = () => {
                   readOnly
                   style={styles.inputField}
                 />
+                {errors.email && <span style={styles.errorText}>{errors.email}</span>}
+              </div>
+              <div style={styles.formGroup}>
                 <textarea
                   name="inquiryMessage"
                   placeholder="Inquiry"
@@ -110,6 +152,7 @@ const EditInquiryForm = () => {
                   onChange={handleChange}
                   style={{ ...styles.inputField, height: "100px" }}
                 ></textarea>
+                {errors.inquiryMessage && <span style={styles.errorText}>{errors.inquiryMessage}</span>}
               </div>
               <div style={styles.formGroup}>
                 <input
@@ -120,6 +163,7 @@ const EditInquiryForm = () => {
                   onChange={handleChange}
                   style={styles.inputField}
                 />
+                {errors.contactNumber && <span style={styles.errorText}>{errors.contactNumber}</span>}
               </div>
               <div style={styles.buttonGroup}>
                 <button type="submit" style={styles.submitButton}>
@@ -218,6 +262,11 @@ const styles = {
     borderRadius: "5px",
     cursor: "pointer",
   },
+  errorText: {
+    color: "red",
+    fontSize: "12px",
+    marginTop: "5px",
+  },
 };
 
-export default EditInquiryForm;
+export default EditInquiryForm
