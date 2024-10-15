@@ -104,6 +104,20 @@ const FeedbackDetails = () => {
       styles: { cellPadding: 3, fontSize: 10 }
     });
 
+    // Calculate the total number of feedback entries
+    const totalFeedbackCount = filteredFeedbacks.length;
+
+    // Add the total feedback count below the table
+    doc.setFontSize(13);
+    doc.setTextColor(0, 0, 0); // Set text color to black
+    doc.text(`Total Feedbacks: ${totalFeedbackCount}`, 14, doc.lastAutoTable.finalY + 10);
+
+    const now = new Date();
+    const timestamp = now.toLocaleString(); // Formats the current date and time
+    doc.setFontSize(12);
+    doc.setTextColor(6, 64, 43);
+    doc.text(`Report Generated on: ${timestamp}`, 14, doc.lastAutoTable.finalY + 25);
+
     // Save the PDF
     doc.save('feedback_and_ratings_details_report.pdf');
   };
@@ -126,6 +140,11 @@ const FeedbackDetails = () => {
     // Add the chart description below the image
     const chartDescription = generateChartDescription(); // Call the function that generates chart description
 
+    // Get the current date and time
+    const now = new Date();
+    const reportDate = now.toLocaleDateString(); // Format the date
+    const reportTime = now.toLocaleTimeString(); // Format the time
+
     // Set font properties for the chart description
     doc.setFontSize(12);
     doc.setTextColor(50, 50, 50); // Set text color to dark gray
@@ -135,6 +154,12 @@ const FeedbackDetails = () => {
     const descriptionLines = doc.splitTextToSize(chartDescription, 180); // Split the text into lines that fit the PDF width
     const startingY = 180 + (descriptionLines.length * 1); // Calculate starting Y position based on the number of lines
     doc.text(descriptionLines, 10, startingY); // Add text with word wrapping
+
+    const dateText = `Report Generated on: ${reportDate}, ${reportTime}`;
+    const dateYPosition = startingY + (descriptionLines.length * 7); // Adjust the Y position based on the length of the description
+    doc.setFontSize(12);
+    doc.setTextColor(6, 64, 43);
+    doc.text(dateText, 10, dateYPosition); // Add date text below des
 
     // Add the logo to the PDF
     doc.addImage(logo, "PNG", 150, 10, 40, 35); 
