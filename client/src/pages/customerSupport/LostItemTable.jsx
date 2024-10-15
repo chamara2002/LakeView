@@ -74,7 +74,7 @@ const LostItemsTable = () => {
  
   const generatePDF = () => {
     const doc = new jsPDF();
-    doc.text("Lost Items Report", 14, 20);
+    
  
     // Create the table with jsPDF-autotable
     doc.autoTable({
@@ -93,6 +93,19 @@ const LostItemsTable = () => {
  
     // Total count of lost items
     doc.text(`Total Lost Items: ${filteredLostItems.length}`, 14, doc.autoTable.previous.finalY + 10);
+
+  // Function to format date and time
+  const formatDate = (date) => {
+    return date.toLocaleString(); // Format to locale string
+  };
+  
+  // Get the current date and time
+  const currentDate = formatDate(new Date());
+  
+  // Add the date and time to the PDF
+  doc.text("Lost Items Report", 14, 20);
+  doc.text(`Generated on: ${currentDate}`, 14, 220); 
+
  
     // Save the PDF
     doc.save("lost-items-report.pdf");

@@ -259,10 +259,7 @@ const MovieBookingManagement = () => {
           </div>
         </div>
 
-        {/* Generate Pie Chart Button */}
-        <center>
-          <button style={generateChartButtonStyle}>Generate Pie Chart</button>
-        </center>
+       
       </div>
       <Footer />
     </div>
@@ -343,7 +340,7 @@ const cardButtonStyle = {
 };
 
 const generateChartButtonStyle = {
-  backgroundColor: "#28a745", // Light green color
+  backgroundColor: "#FFD700", // Light green color
   color: "#fff",
   padding: "12px 24px",
   borderRadius: "8px",
