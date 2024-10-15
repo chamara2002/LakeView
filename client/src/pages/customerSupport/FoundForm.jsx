@@ -10,7 +10,9 @@ const FoundForm = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [item, setItem] = useState(null);
-  const [newItem, setNewItem] = useState({});
+  const [newItem, setNewItem] = useState({
+    foundItemPlace: "", // Initialize as empty string to avoid auto-filling
+  });
   const [errors, setErrors] = useState({}); // State for validation errors
 
   let userId = null;
@@ -29,12 +31,17 @@ const FoundForm = () => {
         `http://localhost:3000/api/lostNFound/one-lost-and-found/${itemId}`
       );
       setItem(response.data);
-      setNewItem(response.data); // Initialize form with item data
+      setNewItem({
+        ...response.data,
+        foundItemPlace: "", // Keep this as empty to avoid auto-filling
+        email: "",          // Set email as empty to avoid auto-filling
+        contactNumber: "",  // Set contact number as empty to avoid auto-filling
+      });
     } catch (e) {
       console.error(`Error fetching item: ${e}`);
     }
   };
-
+      
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewItem((prevState) => ({
@@ -48,18 +55,32 @@ const FoundForm = () => {
   // Validation function
   const validate = () => {
     let formErrors = {};
+
+    // Name validation: ensure it's not empty and contains only letters (no numbers or symbols allowed)
+    if (!newItem.name || !/^[A-Za-z\s]+$/.test(newItem.name)) {
+      formErrors.name = "Name is required and should contain letters only (no numbers or symbols)";
+    }
+
+    // Category validation
     if (!newItem.foundItemsCategory) {
       formErrors.foundItemsCategory = "Category is required";
     }
+
+    // Email validation
     if (!newItem.email || !/\S+@\S+\.\S+/.test(newItem.email)) {
       formErrors.email = "Valid email is required";
     }
+
+    // Contact number validation
     if (!newItem.contactNumber || !/^\d+$/.test(newItem.contactNumber)) {
       formErrors.contactNumber = "Contact number should be numeric";
     }
+
+    // Found place validation
     if (!newItem.foundItemPlace) {
       formErrors.foundItemPlace = "Place where the item was found is required";
     }
+
     return formErrors;
   };
 
@@ -99,11 +120,14 @@ const FoundForm = () => {
               type="text"
               name="name"
               placeholder="Name"
+              value={newItem.name || ""}
+              onChange={handleInputChange}
               style={styles.input}
             />
+            {errors.name && <p style={styles.errorText}>{errors.name}</p>}
             <input
               type="text"
-              name="category"
+              name="foundItemsCategory"
               placeholder="Found Item Category"
               value={newItem.foundItemsCategory || ""}
               onChange={handleInputChange}

@@ -131,6 +131,7 @@ const LostItemsForm = () => {
 <option value="" disabled>Select Category</option>
 <option value="Sport">Sport</option>
 <option value="Accessories">Accessories</option>
+<option value="Other">Other</option>
 </select>
 </div>
 <div style={styles.formRow}>
