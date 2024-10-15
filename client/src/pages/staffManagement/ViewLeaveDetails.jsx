@@ -122,6 +122,25 @@ const LeaveDetails = () => {
       styles: { cellPadding: 3, fontSize: 10 },
     });
 
+    // Calculate the number of unique staff members who attended
+    const uniqueStaffIds = new Set(filteredLeaves.map(leave => leave.userId._id));
+    const numberOfStaffAttended = uniqueStaffIds.size;
+
+    // Display the number of staff members who attended
+    doc.setFontSize(12);
+
+    const finalX = doc.previousAutoTable.finalY + 15; 
+    doc.text(`Number of Staff Members Attended: ${numberOfStaffAttended}`, 14, finalX);
+
+    // Add the current generated time and date below the table
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString();
+    const formattedTime = currentDate.toLocaleTimeString();
+    const finalY = doc.previousAutoTable.finalY + 30; 
+
+    doc.setFontSize(11);
+    doc.text(`Report Generated On: ${formattedDate} at ${formattedTime}`, 14, finalY)
+
     // Save the PDF
     doc.save("attendance_details_report.pdf");
   };
@@ -239,8 +258,8 @@ const styles = {
   },
   exportButton: {
     padding: "10px 20px",
-    backgroundColor: "#007bff",
-    color: "#fff",
+    backgroundColor: "#FFD700",
+    color: "black",
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
