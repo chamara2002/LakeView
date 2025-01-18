@@ -9,7 +9,7 @@ const AddEvent = () => {
     name: '',
     description: '',
     date: '',
-    start_date: '',
+    start_time: '',
     end_time: '',
     category: '',
     capacity: '',
@@ -37,9 +37,10 @@ const AddEvent = () => {
     if (!event.name) validationErrors.name = 'Name is required';
     if (!event.description) validationErrors.description = 'Description is required';
     if (!event.date) validationErrors.date = 'Date is required';
-    if (!event.start_date) validationErrors.start_date = 'Start date is required';
+    if (!event.start_time) validationErrors.start_time = 'Start time is required';
     if (!event.end_time) validationErrors.end_time = 'End time is required';
     if (!event.category) validationErrors.category = 'Category is required';
+    if (!event.participants) validationErrors.participants = 'Participants is required';
     if (!event.capacity || isNaN(event.capacity)) validationErrors.capacity = 'Capacity is required and must be a number';
     if (!event.location) validationErrors.location = 'Location is required';
     if (!event.price || isNaN(event.price)) validationErrors.price = 'Price is required and must be a number';
@@ -77,12 +78,12 @@ const AddEvent = () => {
         </label>
         <label style={labelStyle}>
           Start Time:
-          <input type="datetime-local" name="start_time" value={event.start_time} onChange={handleChange} style={inputStyle} />
+          <input type="time" name="start_time" value={event.start_time} onChange={handleChange} style={inputStyle} />
           {errors.start_time && <span style={errorStyle}>{errors.start_time}</span>}
         </label>
         <label style={labelStyle}>
           End Time:
-          <input type="datetime-local" name="end_time" value={event.end_time} onChange={handleChange} style={inputStyle} />
+          <input type="time" name="end_time" value={event.end_time} onChange={handleChange} style={inputStyle} />
           {errors.end_time && <span style={errorStyle}>{errors.end_time}</span>}
         </label>
         <label style={labelStyle}>
@@ -121,6 +122,11 @@ const AddEvent = () => {
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </select>
+          <label style={labelStyle}>
+            Participants:
+            <input type="number" name="participants" value={event.participants} onChange={handleChange} style={inputStyle} />
+          {errors.capacity && <span style={errorStyle}>{errors.capacity}</span>}
+          </label>
         </label>
         <button type="submit" style={buttonStyle}>Add Event</button>
       </form>

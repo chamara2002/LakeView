@@ -45,7 +45,7 @@ const EditEvent = () => {
     if (!event.name) validationErrors.name = 'Name is required';
     if (!event.description) validationErrors.description = 'Description is required';
     if (!event.date) validationErrors.date = 'Date is required';
-    if (!event.start_date) validationErrors.start_date = 'Start date is required';
+    if (!event.start_time) validationErrors.start_time = 'Start time is required';
     if (!event.end_time) validationErrors.end_time = 'End time is required';
     if (!event.category) validationErrors.category = 'Category is required';
     if (!event.capacity || isNaN(event.capacity)) validationErrors.capacity = 'Capacity is required and must be a number';
@@ -85,12 +85,12 @@ const EditEvent = () => {
         </label>
         <label style={labelStyle}>
           Start Time:
-          <input type="datetime-local" name="start_time" value={event.start_time} onChange={handleChange} style={inputStyle} />
+          <input type="time" name="start_time" value={event.start_time} onChange={handleChange} style={inputStyle} />
           {errors.start_time && <span style={errorStyle}>{errors.start_time}</span>}
         </label>
         <label style={labelStyle}>
           End Time:
-          <input type="datetime-local" name="end_time" value={event.end_time} onChange={handleChange} style={inputStyle} />
+          <input type="time" name="end_time" value={event.end_time} onChange={handleChange} style={inputStyle} />
           {errors.end_time && <span style={errorStyle}>{errors.end_time}</span>}
         </label>
         <label style={labelStyle}>
